@@ -27,7 +27,8 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Start.cs" />
+    <Compile Include="InputDataTests.cs" />
+    <Compile Include="ConfigFileTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
@@ -36,6 +37,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Helpers\Configs\simpleConfig.json" />
+    <None Include="Helpers\InputFiles\OA5-Breakfast.csv" />
+    <None Include="Helpers\InputFiles\OA5-Lunch.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+    <Folder Include="Helpers\Configs\" />
+    <Folder Include="Helpers\InputFiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BAT.Core\BAT.Core.csproj">
+      <Project>{C77D6A71-ACFA-4553-8E53-5A404DDD60DF}</Project>
+      <Name>BAT.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
