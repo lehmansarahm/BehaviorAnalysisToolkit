@@ -48,6 +48,7 @@
     <Compile Include="Transformers\Impl\LinearAccelerationTransformer.cs" />
     <Compile Include="Filters\Impl\ActivityFilter.cs" />
     <Compile Include="Filters\Impl\CompletionFilter.cs" />
+    <Compile Include="Common\LogManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />
@@ -61,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="log4net.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
