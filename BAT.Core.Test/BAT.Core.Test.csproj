@@ -29,6 +29,7 @@
   <ItemGroup>
     <Compile Include="InputDataTests.cs" />
     <Compile Include="ConfigFileTests.cs" />
+    <Compile Include="BATTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
@@ -37,14 +38,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Helpers\Configs\simpleConfig.json" />
-    <None Include="Helpers\InputFiles\OA5-Breakfast.csv" />
-    <None Include="Helpers\InputFiles\OA5-Lunch.csv" />
+    <None Include="SupportFiles\ConfigFiles\simpleConfig.json" />
+    <None Include="SupportFiles\InputFiles\OA5-Breakfast.csv" />
+    <None Include="SupportFiles\InputFiles\OA5-Lunch.csv" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers\" />
-    <Folder Include="Helpers\Configs\" />
-    <Folder Include="Helpers\InputFiles\" />
+    <Folder Include="SupportFiles\" />
+    <Folder Include="SupportFiles\ConfigFiles\" />
+    <Folder Include="SupportFiles\InputFiles\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BAT.Core\BAT.Core.csproj">

@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace BAT.Core.Test
 {
     [TestFixture]
-    public class InputDataTests
+    public class InputDataTests : BATTest
 	{
 		[SetUp]
 		public void Setup()
@@ -22,7 +22,7 @@ namespace BAT.Core.Test
 		[Test]
 		public void TestBasicDataLoad()
 		{
-            List<SensorReading> inputRecords = SensorReading.ReadSensorFile("./Helpers/InputFiles/OA5-Breakfast.csv");
+            List<SensorReading> inputRecords = SensorReading.ReadSensorFile(GetInputFilePath("OA5-Breakfast.csv"));
             Assert.AreEqual(inputRecords.Count, 2729);
 		}
     }
