@@ -82,14 +82,29 @@ namespace BAT.Core.Common
         /// <param name="inputFields">Input fields.</param>
         public SensorReading(string[] inputFields)
         {
-            this.Time = DateTime.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.TIME]);
-			this.RecordNum = Int32.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.RECORD_NUM]);
-			this.Azimuth = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.AZIMUTH]);
-            this.Pitch = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.PITCH]);
-            this.Roll = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ROLL]);
-            this.AccelX = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_X]);
-            this.AccelY = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_Y]);
-            this.AccelZ = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_Z]);
+            string rawTime = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.TIME];
+            if (!String.IsNullOrEmpty(rawTime)) this.Time = DateTime.Parse(rawTime);
+
+            string rawRecordNum = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.RECORD_NUM];
+			if (!String.IsNullOrEmpty(rawRecordNum)) this.RecordNum = Int32.Parse(rawRecordNum);
+
+			string rawAzimuth = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.AZIMUTH];
+			if (!String.IsNullOrEmpty(rawAzimuth)) this.Azimuth = Double.Parse(rawAzimuth);
+
+            string rawPitch = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.PITCH];
+            if (!String.IsNullOrEmpty(rawPitch)) this.Pitch = Double.Parse(rawPitch);
+
+            string rawRoll = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ROLL];
+			if (!String.IsNullOrEmpty(rawRoll)) this.Roll = Double.Parse(rawRoll);
+
+            string rawAccelX = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_X];
+			if (!String.IsNullOrEmpty(rawAccelX)) this.AccelX = Double.Parse(rawAccelX);
+
+            string rawAccelY = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_Y];
+			if (!String.IsNullOrEmpty(rawAccelY)) this.AccelY = Double.Parse(rawAccelY);
+
+            string rawAccelZ = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_Z];
+			if (!String.IsNullOrEmpty(rawAccelZ)) this.AccelZ = Double.Parse(rawAccelZ);
         }
 
         /// <summary>

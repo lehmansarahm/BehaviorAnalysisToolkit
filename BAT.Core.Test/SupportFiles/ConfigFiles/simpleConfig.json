@@ -1,5 +1,5 @@
 ﻿{
-  "inputs": [ "Helpers/InputFiles/OA5-Breakfast.csv" ]
-  "transformers": [ "LinearAccelerationTransformer" ]
-  "filters": [ "ActivityFilter" ]
+	"inputs": [ "Helpers/InputFiles/OA5-Breakfast.csv" ],
+	"transformers": [ "LinearAccelerationTransformer" ],
+	"filters": [ "ActivityFilter" ]
 }

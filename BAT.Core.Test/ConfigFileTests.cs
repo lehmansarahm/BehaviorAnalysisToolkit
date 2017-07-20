@@ -18,13 +18,13 @@ namespace BAT.Core.Test
 			// do something
 		}
 
-        [Test]
+        [Test]  
         public void TestBasicConfigLoad()
-		{
+		{   
             Configuration config = Configuration.LoadFromFile(GetConfigFilePath("simpleConfig.json"));
-			Assert.AreEqual(config.inputs.Count, 1);
-			Assert.AreEqual(config.transformers.Count, 1);
-			Assert.AreEqual(config.filters.Count, 1);
+			Assert.AreEqual(config.Inputs.Count, 1);
+			Assert.AreEqual(config.Transformers.Count, 1);
+			Assert.AreEqual(config.Filters.Count, 1);
 		}
     }
 }
