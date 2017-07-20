@@ -37,6 +37,7 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -45,7 +46,11 @@
     <Compile Include="Filters\IFilter.cs" />
     <Compile Include="Summarizers\ISummarizer.cs" />
     <Compile Include="Transformers\ITransformer.cs" />
-    <Compile Include="Utils\MyClass.cs" />
+    <Compile Include="Common\SensorReading.cs" />
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Transformers\Impl\LinearAccelerationTransformer.cs" />
+    <Compile Include="Filters\Impl\ActivityFilter.cs" />
+    <Compile Include="Filters\Impl\CompletionFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />
@@ -53,7 +58,9 @@
     <Folder Include="Filters\" />
     <Folder Include="Analyzers\" />
     <Folder Include="Summarizers\" />
-    <Folder Include="Utils\" />
+    <Folder Include="Common\" />
+    <Folder Include="Transformers\Impl\" />
+    <Folder Include="Filters\Impl\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
