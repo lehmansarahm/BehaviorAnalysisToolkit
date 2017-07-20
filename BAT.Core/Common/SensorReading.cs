@@ -26,7 +26,7 @@ namespace BAT.Core.Common
         /// <value><c>true</c> if has valid accel vector; otherwise, <c>false</c>.</value>
         public Boolean HasValidAccelVector
         {
-            get 
+            get
             {
                 return (AccelX != null && AccelY != null && AccelZ != null);
             }
@@ -37,7 +37,7 @@ namespace BAT.Core.Common
         /// </summary>
         /// <value>The accel mag.</value>
         public double AccelMag
-        { 
+        {
             get
             {
                 if (HasValidAccelVector)
@@ -73,7 +73,6 @@ namespace BAT.Core.Common
             this.AccelX = oldReading.AccelX;
             this.AccelY = oldReading.AccelY;
             this.AccelZ = oldReading.AccelZ;
-            this.AccelMag = oldReading.AccelMag;
             this.InstantSpeed = oldReading.InstantSpeed;
 		}
 
@@ -83,7 +82,14 @@ namespace BAT.Core.Common
         /// <param name="inputFields">Input fields.</param>
         public SensorReading(string[] inputFields)
         {
-            // TODO - fill in
+            this.Time = DateTime.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.TIME]);
+			this.RecordNum = Int32.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.RECORD_NUM]);
+			this.Azimuth = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.AZIMUTH]);
+            this.Pitch = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.PITCH]);
+            this.Roll = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ROLL]);
+            this.AccelX = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_X]);
+            this.AccelY = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_Y]);
+            this.AccelZ = Double.Parse(inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_Z]);
         }
 
         /// <summary>
