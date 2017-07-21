@@ -4,21 +4,60 @@ using BAT.Core.Config;
 
 namespace BAT.MCI
 {
-    class MainClass
+    class Program
     {
+        private static bool writePhaseOutputToFiles = true;
+
         public static void Main(string[] args)
         {
-            string configFilepath = "configuration.json";
-            if (args.Length >= 1) configFilepath = args[0]; 
-            else LogManager.Info("No configuration file provided.  Using default.");
+            Configuration config;
+            try {
+				string configFilepath = Constants.DEFAULT_CONFIG_FILE;
+				if (args.Length >= 1) configFilepath = args[0];
+				else LogManager.Info("No configuration file provided.  Using default.");
 
-            try
-			{
-				var config = Configuration.LoadFromFile(configFilepath);
-				LogManager.Info("Configuration file loaded.");
+				config = Configuration.LoadFromFile(configFilepath);
+				LogManager.Info($"Configuration file loaded from {configFilepath}");
             } catch (Exception e) {
-                LogManager.Error("ERROR:  Could not load configuration file.  Exiting program.");
-            }
+                LogManager.Error("ERROR:  Could not load configuration file.  " 
+                                 + "Exiting program.", e, typeof(Program));
+                return;
+			}
+
+			bool success = config.LoadInputs();
+			if (success) LogManager.Info("Input data successfully loaded.");
+			else {
+				LogManager.Error("Something went wrong while loading the input data.  Exiting program.");
+				return;
+			}
+
+			success = config.RunTransformers(writePhaseOutputToFiles);
+			if (success) LogManager.Info("Selected transformations successfully run on input data.");
+			else {
+				LogManager.Error("Something went wrong while running transformations.  Exiting program.");
+				return;
+			}
+
+			success = config.RunFilters(writePhaseOutputToFiles);
+			if (success) LogManager.Info("Selected filters successfully run on input data.");
+			else {
+				LogManager.Error("Something went wrong while running filters.  Exiting program.");
+				return;
+			}
+
+			success = config.RunAnalyzers(writePhaseOutputToFiles);
+			if (success) LogManager.Info("Selected analysis operations successfully run on input data.");
+			else {
+				LogManager.Error("Something went wrong while running analysis operations.  Exiting program.");
+				return;
+			}
+
+			success = config.RunSummarizers(writePhaseOutputToFiles);
+			if (success) LogManager.Info("Selected summary operations successfully run on input data.");
+			else {
+				LogManager.Error("Something went wrong while running summary operations.  Exiting program.");
+				return;
+			}
         }
     }
 }

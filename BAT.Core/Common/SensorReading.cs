@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualBasic.FileIO;
+using System.IO;
+using System.Linq;
 
 namespace BAT.Core.Common
 {
-    public class SensorReading
+    public class SensorReading : ICsvWritable
     {
         // General info
         public DateTime? Time { get; set; }
@@ -121,23 +122,43 @@ namespace BAT.Core.Common
 		}
 
         /// <summary>
+        /// Tos the csv.
+        /// </summary>
+        /// <returns>The csv.</returns>
+        public String ToCsv() {
+			string[] props = new [] {
+				Time.ToString(), RecordNum.ToString(),
+				Azimuth.ToString(), Pitch.ToString(), Roll.ToString(),
+				AccelX.ToString(), AccelY.ToString(), AccelZ.ToString(),
+				AccelMag.ToString(), InstantSpeed.ToString()
+			};
+            return string.Join(",", props);
+        }
+
+        /// <summary>
         /// Reads the sensor file.
         /// </summary>
         /// <returns>The sensor file.</returns>
         /// <param name="filepath">Filepath.</param>
         public static List<SensorReading> ReadSensorFile(string filepath) {
-            List<SensorReading> sensorReadings = new List<SensorReading>();
-            using (TextFieldParser parser = new TextFieldParser(@filepath))
-            {
-                parser.TextFieldType = FieldType.Delimited;
-                parser.SetDelimiters(",");
-                while (!parser.EndOfData)
-                {
-                    string[] fields = parser.ReadFields();
-                    sensorReadings.Add(new SensorReading(fields));
-                }
+            try
+			{
+				List<SensorReading> sensorReadings = new List<SensorReading>();
+				using (var reader = new StreamReader(@filepath))
+				{
+					while (!reader.EndOfStream)
+					{
+						var line = reader.ReadLine();
+						string[] fields = line.Split(',');
+						sensorReadings.Add(new SensorReading(fields));
+					}
+				}
+				return sensorReadings;
+            } catch (FileNotFoundException ex) {
+                LogManager.Error("Unable to read data from input file.  Exiting program.", 
+                                 ex, typeof(SensorReading));
+                return null;
             }
-            return sensorReadings;
         }
     }
 }

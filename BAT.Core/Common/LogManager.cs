@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using log4net.Config;
 
 namespace BAT.Core.Common
@@ -30,11 +29,11 @@ namespace BAT.Core.Common
 		/// <returns>The debug.</returns>
 		/// <param name="source">Source.</param>
 		/// <param name="message">Message.</param>
-		public static void Debug(string message, Type source = null)
+		public static void Debug(string message, object source = null)
 		{
-			checkConfigInit(source);
+			checkConfigInit(source?.GetType());
             log.Debug(message);
-        }
+		}
 
 		/// <summary>
 		/// Error the specified source and message.
@@ -42,10 +41,25 @@ namespace BAT.Core.Common
 		/// <returns>The error.</returns>
 		/// <param name="source">Source.</param>
 		/// <param name="message">Message.</param>
-		public static void Error(string message, Type source = null)
+		public static void Error(string message, object source = null)
 		{
-			checkConfigInit(source);
-            log.Error(message);
+			checkConfigInit(source?.GetType());
+			log.Error(message);
+		}
+
+		/// <summary>
+		/// Error the specified source and message.
+		/// </summary>
+		/// <returns>The error.</returns>
+		/// <param name="source">Source.</param>
+		/// <param name="message">Message.</param>
+		public static void Error(string message, Exception e, object source = null)
+		{
+			checkConfigInit(source?.GetType());
+			log.Error(message);
+			log.Error("EXCEPTION OUTPUT:\n" + e.Message 
+                      + "\n-------------------------------------------\n"
+                      + e.StackTrace + ".....\n\n");
 		}
 
 		/// <summary>
@@ -54,9 +68,9 @@ namespace BAT.Core.Common
 		/// <returns>The info.</returns>
 		/// <param name="source">Source.</param>
 		/// <param name="message">Message.</param>
-		public static void Info(string message, Type source = null)
+		public static void Info(string message, object source = null)
 		{
-			checkConfigInit(source);
+			checkConfigInit(source?.GetType());
 			log.Info(message);
 		}
     }

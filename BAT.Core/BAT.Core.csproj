@@ -34,7 +34,6 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +49,10 @@
     <Compile Include="Filters\Impl\ActivityFilter.cs" />
     <Compile Include="Filters\Impl\CompletionFilter.cs" />
     <Compile Include="Common\LogManager.cs" />
+    <Compile Include="Analyzers\Impl\PauseCountAnalysis.cs" />
+    <Compile Include="Analyzers\Impl\PauseDurationAnalysis.cs" />
+    <Compile Include="Analyzers\Impl\TaskTimeAnalysis.cs" />
+    <Compile Include="Common\CsvFileWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />
@@ -60,6 +63,7 @@
     <Folder Include="Common\" />
     <Folder Include="Transformers\Impl\" />
     <Folder Include="Filters\Impl\" />
+    <Folder Include="Analyzers\Impl\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
