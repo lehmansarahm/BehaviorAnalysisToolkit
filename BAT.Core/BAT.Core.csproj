@@ -53,6 +53,7 @@
     <Compile Include="Analyzers\Impl\PauseDurationAnalysis.cs" />
     <Compile Include="Analyzers\Impl\TaskTimeAnalysis.cs" />
     <Compile Include="Common\CsvFileWriter.cs" />
+    <Compile Include="Common\ICsvWritable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />

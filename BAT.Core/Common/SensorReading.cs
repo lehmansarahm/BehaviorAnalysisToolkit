@@ -1,12 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace BAT.Core.Common
 {
     public class SensorReading : ICsvWritable
     {
+        // General purpose field header
+        public static string[] Header 
+        {
+            get 
+            {
+                return new string[]
+                {
+                    "Time",
+                    "Record Num",
+                    "Azimuth",
+                    "Pitch",
+                    "Roll",
+                    "AccelX",
+                    "AccelY",
+                    "AccelZ",
+                    "AccelMag",
+                    "InstantSpeed"
+                };
+            }
+        }
+        public static string HeaderCsv { get { return string.Join(",", Header); } }
+
         // General info
         public DateTime? Time { get; set; }
         public int? RecordNum { get; set; }

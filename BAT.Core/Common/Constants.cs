@@ -10,11 +10,11 @@ namespace BAT.Core.Common
         public const string NAMESPACE_SUMMARIZER_IMPL = NAMESPACE_CORE + ".Summarizers.Impl.";
 		public const string NAMESPACE_TRANSFORMER_IMPL = NAMESPACE_CORE + ".Transformers.Impl.";
 
-		public const string OUTPUT_DIR_ANALYZERS = "/out-analysis";
-		public const string OUTPUT_DIR_FILTERS = "/out-filters/";
-		public const string OUTPUT_DIR_INPUT = "/out-input/";
-        public const string OUTPUT_DIR_SUMMARIZERS = "/out-summaries/";
-        public const string OUTPUT_DIR_TRANSFORMERS = "/out-transforms/";
+		public const string OUTPUT_DIR_ANALYZERS = "out-analysis";
+		public const string OUTPUT_DIR_FILTERS = "out-filters";
+		public const string OUTPUT_DIR_INPUT = "out-input";
+        public const string OUTPUT_DIR_SUMMARIZERS = "out-summaries";
+        public const string OUTPUT_DIR_TRANSFORMERS = "out-transforms";
 
 		public const double SAMPLING_PERIOD = 34.4827586207; // milliseconds ... approx 29 times per second
         public const string DEFAULT_CONFIG_FILE = "configuration.json";

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using BAT.Core.Analyzers;
 using BAT.Core.Common;
 using BAT.Core.Filters;
 using BAT.Core.Transformers;
@@ -30,7 +32,8 @@ namespace BAT.Core.Config
         /// Loads the inputs.
         /// </summary>
         /// <returns><c>true</c>, if inputs was loaded, <c>false</c> otherwise.</returns>
-        public bool LoadInputs() {
+        public bool LoadInputs() 
+        {
 			try
 			{
 				string currentDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -51,7 +54,9 @@ namespace BAT.Core.Config
 				}
 
 				return true;
-            } catch (Exception e) {
+            } 
+            catch (Exception e) 
+            {
                 LogManager.Error("Fatal error encountered while loading input data.  Exiting program.", e, this);
 				return false;
             }
@@ -62,29 +67,36 @@ namespace BAT.Core.Config
         /// </summary>
         /// <returns><c>true</c>, if transformers was run, <c>false</c> otherwise.</returns>
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
-        public bool RunTransformers(bool writeOutputToFile = false) {
-            if (Transformers?.Count > 0 && InputData?.Keys?.Count >= 1) {
+        public bool RunTransformers(bool writeOutputToFile = false) 
+        {
+            if (Transformers?.Count > 0 && InputData?.Keys?.Count >= 1) 
+            {
                 // iterate through the list of transformers and run on each input data set
                 var transformedData = new Dictionary<string, List<SensorReading>>();
-                foreach (var transformerName in Transformers) {
+                foreach (var transformerName in Transformers) 
+                {
                     Type transformerType = 
                         Type.GetType(Constants.NAMESPACE_TRANSFORMER_IMPL + transformerName);
                     ITransformer transformer = 
                         (ITransformer)Activator.CreateInstance(transformerType);
-                    
-                    foreach (var key in InputData.Keys) {
+
+                    foreach (var key in InputData.Keys) 
+                    {
                         var transformedValues = transformer.Transform(InputData[key]);
 						transformedData.Add(key, transformedValues);
-						if (writeOutputToFile) {
-							string filename = $"{Constants.OUTPUT_DIR_TRANSFORMERS}" 
-                                + $"{transformerName}/{key}.csv";
-						}
+						if (writeOutputToFile)
+                            CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_TRANSFORMERS, 
+                                                      transformerName, key, 
+                                                      SensorReading.HeaderCsv,
+                                                      transformedValues);
                     }
                 }
 
                 InputData = transformedData;
                 return true;
-            } else {
+            } 
+            else 
+            {
                 LogManager.Error("No input data to run transformations on.", this);
                 return false;
             }
@@ -95,28 +107,35 @@ namespace BAT.Core.Config
         /// </summary>
         /// <returns><c>true</c>, if filters was run, <c>false</c> otherwise.</returns>
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
-		public bool RunFilters(bool writeOutputToFile = false) {
-			if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1) {
+		public bool RunFilters(bool writeOutputToFile = false) 
+        {
+			if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1) 
+            {
                 var filteredData = new Dictionary<string, List<SensorReading>>();
-                foreach (var filterName in Filters) {
+                foreach (var filterName in Filters) 
+                {
                     Type filterType =
 						Type.GetType(Constants.NAMESPACE_FILTER_IMPL + filterName);
                     IFilter filter =
 						(IFilter)Activator.CreateInstance(filterType);
                     
-					foreach (var key in InputData.Keys) {
+					foreach (var key in InputData.Keys) 
+                    {
 						var filteredValues = filter.Filter(InputData[key]);
 						filteredData.Add(key, filteredValues);
-						if (writeOutputToFile) {
-							string filename = $"{Constants.OUTPUT_DIR_FILTERS}"
-								+ $"{filterName}/{key}.csv";
-						}
+						if (writeOutputToFile)
+							CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_FILTERS,
+													  filterName, key,
+													  SensorReading.HeaderCsv,
+													  filteredValues);
 					}
 				}
 
 				InputData = filteredData;
 				return true;
-			} else {
+			} 
+            else 
+            {
 				LogManager.Error("No input data to run filters on.", this);
 				return false;
 			}
@@ -129,22 +148,22 @@ namespace BAT.Core.Config
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
 		public bool RunAnalyzers(bool writeOutputToFile = false) {
 			if (Analyzers?.Count > 0 && InputData?.Keys?.Count >= 1) {
-                var analyzedData = new Dictionary<string, List<SensorReading>>();
                 foreach (var analyzerName in Analyzers) {
-					Type filterType =
-						Type.GetType(Constants.NAMESPACE_FILTER_IMPL + analyzerName);
-                    IFilter filter =
-                        (IFilter)Activator.CreateInstance(filterType);
+                    Type analyzerType =
+						Type.GetType(Constants.NAMESPACE_ANALYZER_IMPL + analyzerName);
+                    IAnalyzer analyzer =
+                        (IAnalyzer)Activator.CreateInstance(analyzerType);
+                    
 					foreach (var key in InputData.Keys) {
-						var filteredValues = filter.Filter(InputData[key]);
-						analyzedData.Add(key, filteredValues);
+                        analyzer.Analyze(InputData[key], null);
+                        if (writeOutputToFile) {
+                            // TODO
+                        }
 					}
 				}
-
-				InputData = analyzedData;
 				return true;
 			} else {
-				LogManager.Error("No input data to run filters on.", this);
+				LogManager.Error("No input data to run analyzers on.", this);
 				return false;
 			}
         }
@@ -169,6 +188,6 @@ namespace BAT.Core.Config
 		{
 			var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(filepath));
             return config;
-        }
+		}
     }
 }
