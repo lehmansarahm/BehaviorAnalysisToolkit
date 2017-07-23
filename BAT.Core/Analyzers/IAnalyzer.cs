@@ -6,6 +6,7 @@ namespace BAT.Core.Analyzers
 {
     public interface IAnalyzer
     {
-        void Analyze(List<SensorReading> input, string[] args);
+        IEnumerable<AnalysisResult> Analyze(IEnumerable<SensorReading> input,
+                                            IEnumerable<KeyValuePair<string, string>> parameters);
     }
 }

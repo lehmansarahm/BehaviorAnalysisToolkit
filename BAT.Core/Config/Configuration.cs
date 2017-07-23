@@ -20,10 +20,10 @@ namespace BAT.Core.Config
 		public List<string> Transformers { get; set; }
 
 		[JsonProperty("filters")]
-		public List<string> Filters { get; set; }
+        public List<Command> Filters { get; set; }
 
 		[JsonProperty("analyzers")]
-		public List<string> Analyzers { get; set; }
+		public List<Command> Analyzers { get; set; }
 
 		[JsonProperty("summarizers")]
         public List<string> Summarizers { get; set; } 
@@ -112,8 +112,9 @@ namespace BAT.Core.Config
 			if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1) 
             {
                 var filteredData = new Dictionary<string, List<SensorReading>>();
-                foreach (var filterName in Filters) 
+                foreach (var filterCommand in Filters) 
                 {
+                    string filterName = filterCommand.Name;
                     Type filterType =
 						Type.GetType(Constants.NAMESPACE_FILTER_IMPL + filterName);
                     IFilter filter =
@@ -121,13 +122,17 @@ namespace BAT.Core.Config
                     
 					foreach (var key in InputData.Keys) 
                     {
-						var filteredValues = filter.Filter(InputData[key]);
-						filteredData.Add(key, filteredValues);
-						if (writeOutputToFile)
-							CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_FILTERS,
-													  filterName, key,
-													  SensorReading.HeaderCsv,
-													  filteredValues);
+                        var filteredResultSets = filter.Filter(InputData[key], filterCommand.Parameters);
+                        foreach (var filterResult in filteredResultSets)
+						{
+                            var filteredValues = filterResult.Data;
+							filteredData.Add(key, filteredValues.ToList());
+							if (writeOutputToFile)
+								CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_FILTERS,
+														  filterName, key,
+														  SensorReading.HeaderCsv,
+														  filteredValues);
+                        }
 					}
 				}
 
@@ -148,17 +153,25 @@ namespace BAT.Core.Config
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
 		public bool RunAnalyzers(bool writeOutputToFile = false) {
 			if (Analyzers?.Count > 0 && InputData?.Keys?.Count >= 1) {
-                foreach (var analyzerName in Analyzers) {
+				foreach (var analyzerCommand in Analyzers)
+				{
+					string analyzerName = analyzerCommand.Name;
                     Type analyzerType =
 						Type.GetType(Constants.NAMESPACE_ANALYZER_IMPL + analyzerName);
                     IAnalyzer analyzer =
                         (IAnalyzer)Activator.CreateInstance(analyzerType);
-                    
-					foreach (var key in InputData.Keys) {
-                        analyzer.Analyze(InputData[key], null);
-                        if (writeOutputToFile) {
-                            // TODO
-                        }
+
+					foreach (var key in InputData.Keys)
+					{
+                        var analyzedResultSets = analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
+                        foreach (var analysisResult in analyzedResultSets)
+						{
+							if (writeOutputToFile)
+								CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_FILTERS,
+                                                          analyzerName, key,
+														  SensorReading.HeaderCsv,
+														  analysisResult.Data);
+						}
 					}
 				}
 				return true;

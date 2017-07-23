@@ -54,6 +54,13 @@
     <Compile Include="Analyzers\Impl\TaskTimeAnalysis.cs" />
     <Compile Include="Common\CsvFileWriter.cs" />
     <Compile Include="Common\ICsvWritable.cs" />
+    <Compile Include="Config\Command.cs" />
+    <Compile Include="Filters\FilterResult.cs" />
+    <Compile Include="Analyzers\AnalysisResult.cs" />
+    <Compile Include="Summarizers\Impl\TaskTimeSummarizer.cs" />
+    <Compile Include="Summarizers\Impl\PauseCountSummarizer.cs" />
+    <Compile Include="Summarizers\Impl\UserResultSummarizer.cs" />
+    <Compile Include="Transformers\Impl\NormalizationTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />
@@ -65,6 +72,7 @@
     <Folder Include="Transformers\Impl\" />
     <Folder Include="Filters\Impl\" />
     <Folder Include="Analyzers\Impl\" />
+    <Folder Include="Summarizers\Impl\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

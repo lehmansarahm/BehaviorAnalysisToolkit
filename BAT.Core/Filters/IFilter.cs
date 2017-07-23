@@ -5,6 +5,7 @@ namespace BAT.Core.Filters
 {
 	public interface IFilter
 	{
-		List<SensorReading> Filter(List<SensorReading> input);
+        IEnumerable<FilterResult> Filter(IEnumerable<SensorReading> input, 
+                                         IEnumerable<KeyValuePair<string,string>> parameters);
 	}
 }
