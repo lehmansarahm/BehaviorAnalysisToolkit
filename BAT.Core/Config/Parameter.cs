@@ -46,7 +46,7 @@ namespace BAT.Core.Config
         /// Splits the output.
         /// </summary>
         /// <returns><c>true</c>, if output was split, <c>false</c> otherwise.</returns>
-        public bool SplitOutput()
+        public bool UseOutputSplit()
         {
 			bool splitOutput = Clauses.Where(x => x.Key.Contains(Constants.COMMAND_PARAM_SPLIT))
                                       .FirstOrDefault().Value.Equals("true", StringComparison.InvariantCultureIgnoreCase);

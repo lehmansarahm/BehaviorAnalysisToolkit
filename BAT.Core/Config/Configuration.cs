@@ -53,8 +53,15 @@ namespace BAT.Core.Config
 
 				foreach (var inputFile in Inputs)
 				{
+                    // split out the actual file name from the config input
+                    var inputFileComponents = inputFile.Split('/');
+					var inputFileName = inputFileComponents[inputFileComponents.Length - 1];
+
+                    // read in the sensor data
                     var sensorReadings = SensorReading.ReadSensorFile(currentDir + "/" + inputFile);
-                    InputData.Add(inputFile, sensorReadings);
+
+                    // add data to collection using file name, not file path
+                    InputData.Add(inputFileName, sensorReadings);
 				}
 
 				// confirm that everything worked

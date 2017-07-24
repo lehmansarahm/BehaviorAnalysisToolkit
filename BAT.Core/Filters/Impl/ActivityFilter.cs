@@ -36,7 +36,7 @@ namespace BAT.Core.Filters.Impl
 					if (!isMatch) break;
 
                     // if valid match AND split output, proceed with output split
-					if (param.SplitOutput())
+                    if (param.UseOutputSplit())
 					{
 						if (!results.Select(x => x.Name).Contains(filterValue))
 						{
