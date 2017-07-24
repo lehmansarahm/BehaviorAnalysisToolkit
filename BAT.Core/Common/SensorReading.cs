@@ -82,10 +82,16 @@ namespace BAT.Core.Common
         }
 
         /// <summary>
-        /// Gets or sets the instant speed.
+        /// Gets the instant speed.
         /// </summary>
         /// <value>The instant speed.</value>
-        public double? InstantSpeed { get; set; }
+        public double InstantSpeed
+        { 
+            get
+            {
+				return AccelMag * (Constants.SAMPLING_PERIOD / 1000.0d);
+            }
+        }
 
 		// ---------------------------------------------------------------------
 		// Record keeping (Tania)
@@ -114,7 +120,6 @@ namespace BAT.Core.Common
             AccelX = oldReading.AccelX;
             AccelY = oldReading.AccelY;
             AccelZ = oldReading.AccelZ;
-            InstantSpeed = oldReading.InstantSpeed;
             Start = oldReading.Start;
             End = oldReading.End;
             Label = (string.IsNullOrEmpty(oldReading.Label) 

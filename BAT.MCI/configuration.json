@@ -4,7 +4,7 @@
   "filters": [
     {
       "Name": "ActivityFilter",
-      "Predicates": [
+      "Parameters": [
         {
           "Field": "Label",
           "Clauses": [
@@ -15,6 +15,26 @@
             {
               "Key": "Split",
               "Value": "true"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "analyzers": [
+    {
+      "Name": "PauseCountAnalysis",
+      "Parameters": [
+        {
+          "Field": "InstantSpeed",
+          "Clauses": [
+            {
+              "Key": "Threshold",
+              "Value": "0.01"
+            },
+            {
+              "Key": "Window",
+              "Value": "12"
             }
           ]
         }

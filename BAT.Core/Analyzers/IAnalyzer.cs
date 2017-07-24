@@ -6,7 +6,10 @@ namespace BAT.Core.Analyzers
 {
     public interface IAnalyzer
     {
-        IEnumerable<AnalysisResult> Analyze(IEnumerable<SensorReading> input,
-                                            IEnumerable<Parameter> predicates);
+        string[] GetHeader();
+        string GetHeaderCsv();
+
+        IEnumerable<ICsvWritable> Analyze(IEnumerable<ICsvWritable> input,
+                                          IEnumerable<Parameter> parameters);
     }
 }

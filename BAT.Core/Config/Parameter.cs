@@ -52,5 +52,17 @@ namespace BAT.Core.Config
                                       .FirstOrDefault().Value.Equals("true", StringComparison.InvariantCultureIgnoreCase);
             return splitOutput;
         }
+
+        /// <summary>
+        /// Gets the clause value.
+        /// </summary>
+        /// <returns>The clause value.</returns>
+        /// <param name="clauseKey">Clause key.</param>
+        public string GetClauseValue(string clauseKey)
+        {
+            var clauseValue = Clauses.Where(x => x.Key.Equals(clauseKey, StringComparison.InvariantCultureIgnoreCase))
+                                     .FirstOrDefault().Value;
+            return clauseValue;
+        }
     }
 }

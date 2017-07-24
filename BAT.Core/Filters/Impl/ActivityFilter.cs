@@ -8,17 +8,38 @@ namespace BAT.Core.Filters.Impl
 	public class ActivityFilter : IFilter
 	{
         /// <summary>
+        /// Gets the header.
+        /// </summary>
+        /// <returns>The header.</returns>
+        public string[] GetHeader()
+        {
+            return SensorReading.Header;
+        }
+
+        /// <summary>
+        /// Gets the header csv.
+        /// </summary>
+        /// <returns>The header csv.</returns>
+        public string GetHeaderCsv()
+        {
+            return SensorReading.HeaderCsv;
+        }
+
+        /// <summary>
         /// Filter the specified input and parameters.
         /// </summary>
         /// <returns>The filter.</returns>
         /// <param name="input">Input.</param>
         /// <param name="parameters">Parameters.</param>
-        public IEnumerable<FilterResult> Filter(IEnumerable<SensorReading> input, 
-                                                IEnumerable<Parameter> parameters)
+        public IEnumerable<PhaseResult> Filter(IEnumerable<ICsvWritable> input, 
+                                               IEnumerable<Parameter> parameters)
 		{
-            var results = new List<FilterResult>();
-            foreach (var record in input)
+            var results = new List<PhaseResult>();
+            foreach (var inputItem in input)
 			{
+                if (inputItem.GetType() != typeof(SensorReading)) continue;
+                var record = (SensorReading)inputItem;
+
                 bool isMatch = true;
                 foreach (var param in parameters)
 				{
@@ -40,10 +61,10 @@ namespace BAT.Core.Filters.Impl
 					{
 						if (!results.Select(x => x.Name).Contains(filterValue))
 						{
-							var newResult = new FilterResult()
+							var newResult = new PhaseResult()
 							{
 								Name = filterValue,
-								Data = new List<SensorReading>() { record }
+                                Data = new List<ICsvWritable>() { record }
 							};
 							results.Add(newResult);
 						}

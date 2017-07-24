@@ -14,7 +14,7 @@ namespace BAT.Core.Config
 	{
         [JsonProperty("inputs")]
 		public List<string> Inputs { get; set; }
-        public Dictionary<string, IEnumerable<SensorReading>> InputData { get; set; }
+        public Dictionary<string, IEnumerable<ICsvWritable>> InputData { get; set; }
 
 		[JsonProperty("transformers")]
 		public List<string> Transformers { get; set; }
@@ -24,6 +24,7 @@ namespace BAT.Core.Config
 
 		[JsonProperty("analyzers")]
 		public List<Command> Analyzers { get; set; }
+		public Dictionary<string, IEnumerable<ICsvWritable>> AnalysisData { get; set; }
 
 		[JsonProperty("summarizers")]
         public List<string> Summarizers { get; set; } 
@@ -49,7 +50,7 @@ namespace BAT.Core.Config
 			try
 			{
 				string currentDir = AppDomain.CurrentDomain.BaseDirectory;
-                InputData = new Dictionary<string, IEnumerable<SensorReading>>();
+                InputData = new Dictionary<string, IEnumerable<ICsvWritable>>();
 
 				foreach (var inputFile in Inputs)
 				{
@@ -92,7 +93,7 @@ namespace BAT.Core.Config
             if (Transformers?.Count > 0 && InputData?.Keys?.Count >= 1) 
             {
                 // iterate through the list of transformers and run on each input data set
-                var transformedData = new Dictionary<string, IEnumerable<SensorReading>>();
+                var transformedData = new Dictionary<string, IEnumerable<ICsvWritable>>();
                 foreach (var transformerName in Transformers)
 				{
 					Type transformerType;
@@ -119,9 +120,9 @@ namespace BAT.Core.Config
                         else transformedData.Add(key, transformedValues);
 
 						if (writeOutputToFile)
-                            CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_TRANSFORMERS, 
-                                                      transformerName, key, 
-                                                      SensorReading.HeaderCsv,
+                            CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_TRANSFORMERS,
+                                                      transformerName, key,
+                                                      transformer.GetHeaderCsv(),
                                                       transformedValues);
                     }
                 }
@@ -143,7 +144,7 @@ namespace BAT.Core.Config
             bool success = false;
 			if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1) 
             {
-                var filteredData = new Dictionary<string, IEnumerable<SensorReading>>();
+                var filteredData = new Dictionary<string, IEnumerable<ICsvWritable>>();
                 foreach (var filterCommand in Filters) 
                 {
                     string filterName;
@@ -166,7 +167,7 @@ namespace BAT.Core.Config
                     
 					foreach (var key in InputData.Keys)
 					{
-                        IEnumerable<FilterResult> filteredResultSets = null;
+                        IEnumerable<PhaseResult> filteredResultSets = null;
                         if (filterCommand.Parameters != null)
                             filteredResultSets = filter.Filter(InputData[key], filterCommand.Parameters);
 
@@ -186,8 +187,8 @@ namespace BAT.Core.Config
 
 								if (writeOutputToFile)
 									CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_FILTERS,
-															  filterName, newFilename,
-															  SensorReading.HeaderCsv,
+                                                              filterName, newFilename,
+                                                              filter.GetHeaderCsv(),
 															  filteredValues);
 							}
                         }
@@ -201,39 +202,57 @@ namespace BAT.Core.Config
 			return success;
         }
 
-        /// <summary>
-        /// Runs the analyzers.
-        /// </summary>
-        /// <returns><c>true</c>, if analyzers was run, <c>false</c> otherwise.</returns>
-        /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
-		public bool RunAnalyzers(bool writeOutputToFile = false) {
-			if (Analyzers?.Count > 0 && InputData?.Keys?.Count >= 1) {
+		/// <summary>
+		/// Runs the analyzers.
+		/// </summary>
+		/// <returns><c>true</c>, if analyzers was run, <c>false</c> otherwise.</returns>
+		/// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
+		public bool RunAnalyzers(bool writeOutputToFile = false)
+		{
+			bool success = false;
+			if (Analyzers?.Count > 0 && InputData?.Keys?.Count >= 1)
+			{
+                var analyzedData = new Dictionary<string, IEnumerable<ICsvWritable>>();
 				foreach (var analyzerCommand in Analyzers)
 				{
-					string analyzerName = analyzerCommand.Name;
-                    Type analyzerType =
-						Type.GetType(Constants.NAMESPACE_ANALYZER_IMPL + analyzerName);
-                    IAnalyzer analyzer =
-                        (IAnalyzer)Activator.CreateInstance(analyzerType);
+					string analyzerName;
+					Type analyzerType;
+					IAnalyzer analyzer;
+
+					try
+					{
+						analyzerName = analyzerCommand.Name;
+						analyzerType = Type.GetType(Constants.NAMESPACE_ANALYZER_IMPL + analyzerName);
+						analyzer = (IAnalyzer)Activator.CreateInstance(analyzerType);
+						success = true;
+					}
+					catch (ArgumentNullException ex)
+					{
+						LogManager.Error("Could not create instance of provided analyzer.  "
+										+ "Please double-check configuration file.", ex, this);
+						continue; // proceed to next operation
+					}
 
 					foreach (var key in InputData.Keys)
 					{
-                        var analyzedResultSets = analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
-                        foreach (var analysisResult in analyzedResultSets)
-						{
-							if (writeOutputToFile)
-								CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_FILTERS,
-                                                          analyzerName, key,
-														  SensorReading.HeaderCsv,
-														  analysisResult.Data);
-						}
+						var analysisResult = analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
+						if (analyzedData.ContainsKey(key)) analyzedData[key] = analysisResult;
+						else analyzedData.Add(key, analysisResult);
+
+						if (writeOutputToFile)
+							CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_ANALYZERS,
+													  analyzerName, key,
+													  analyzer.GetHeaderCsv(),
+													  analysisResult);
 					}
 				}
-				return true;
-			} else {
-				LogManager.Error("No input data to run analyzers on.", this);
-				return false;
+
+                // use different collection to maintain integrity of original input data
+                AnalysisData = analyzedData;
 			}
+            else LogManager.Error("No input data to run analyzers on.", this);
+
+			return success;
         }
 
         /// <summary>

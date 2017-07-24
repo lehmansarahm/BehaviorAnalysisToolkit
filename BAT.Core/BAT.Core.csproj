@@ -55,14 +55,14 @@
     <Compile Include="Common\CsvFileWriter.cs" />
     <Compile Include="Common\ICsvWritable.cs" />
     <Compile Include="Config\Command.cs" />
-    <Compile Include="Filters\FilterResult.cs" />
-    <Compile Include="Analyzers\AnalysisResult.cs" />
     <Compile Include="Summarizers\Impl\TaskTimeSummarizer.cs" />
     <Compile Include="Summarizers\Impl\PauseCountSummarizer.cs" />
     <Compile Include="Summarizers\Impl\UserResultSummarizer.cs" />
     <Compile Include="Transformers\Impl\NormalizationTransformer.cs" />
     <Compile Include="Transformers\Impl\LabelCleanupTransformer.cs" />
     <Compile Include="Config\Parameter.cs" />
+    <Compile Include="Analyzers\PauseResult.cs" />
+    <Compile Include="Common\PhaseResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />

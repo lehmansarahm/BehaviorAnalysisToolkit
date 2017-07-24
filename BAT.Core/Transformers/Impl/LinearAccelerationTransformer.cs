@@ -6,15 +6,33 @@ namespace BAT.Core.Transformers.Impl
 {
     public class LinearAccelerationTransformer : ITransformer
 	{
-		private static double[] GRAVITY = new double[] { 0.0d, 0.0d, 0.0d };
-        private const int ACCEL_X = 0, ACCEL_Y = 1, ACCEL_Z = 2;
+		static double[] GRAVITY = new double[] { 0.0d, 0.0d, 0.0d };
+        const int ACCEL_X = 0, ACCEL_Y = 1, ACCEL_Z = 2;
 
-        /// <summary>
-        /// Transform the specified input.
-        /// </summary>
-        /// <returns>The transform.</returns>
-        /// <param name="input">Input.</param>
-        public List<SensorReading> Transform(IEnumerable<SensorReading> input)
+		/// <summary>
+		/// Gets the header.
+		/// </summary>
+		/// <returns>The header.</returns>
+		public string[] GetHeader()
+		{
+			return SensorReading.Header;
+		}
+
+		/// <summary>
+		/// Gets the header csv.
+		/// </summary>
+		/// <returns>The header csv.</returns>
+		public string GetHeaderCsv()
+		{
+			return SensorReading.HeaderCsv;
+		}
+
+		/// <summary>
+		/// Transform the specified input.
+		/// </summary>
+		/// <returns>The transform.</returns>
+		/// <param name="input">Input.</param>
+		public List<SensorReading> Transform(IEnumerable<ICsvWritable> input)
 		{
 			const double alpha = 0.8d;
             List<SensorReading> output = new List<SensorReading>();

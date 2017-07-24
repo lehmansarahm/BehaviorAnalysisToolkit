@@ -6,7 +6,10 @@ namespace BAT.Core.Filters
 {
 	public interface IFilter
 	{
-		IEnumerable<FilterResult> Filter(IEnumerable<SensorReading> input,
+		string[] GetHeader();
+		string GetHeaderCsv();
+
+		IEnumerable<PhaseResult> Filter(IEnumerable<ICsvWritable> input,
 										 IEnumerable<Parameter> predicates);
 	}
 }

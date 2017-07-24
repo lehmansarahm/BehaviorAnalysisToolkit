@@ -6,17 +6,35 @@ using BAT.Core.Config;
 namespace BAT.Core.Filters.Impl
 {
     public class CompletionFilter : IFilter
-    {
-        /// <summary>
-        /// Filter the specified input and parameters.
-        /// </summary>
-        /// <returns>The filter.</returns>
-        /// <param name="input">Input.</param>
-        /// <param name="parameters">Parameters.</param>
-        public IEnumerable<FilterResult> Filter(IEnumerable<SensorReading> input, 
+	{
+		/// <summary>
+		/// Gets the header.
+		/// </summary>
+		/// <returns>The header.</returns>
+		public string[] GetHeader()
+		{
+			return SensorReading.Header;
+		}
+
+		/// <summary>
+		/// Gets the header csv.
+		/// </summary>
+		/// <returns>The header csv.</returns>
+		public string GetHeaderCsv()
+		{
+			return SensorReading.HeaderCsv;
+		}
+
+		/// <summary>
+		/// Filter the specified input and parameters.
+		/// </summary>
+		/// <returns>The filter.</returns>
+		/// <param name="input">Input.</param>
+		/// <param name="parameters">Parameters.</param>
+		public IEnumerable<PhaseResult> Filter(IEnumerable<ICsvWritable> input, 
                                                 IEnumerable<Parameter> parameters)
 		{
-			var results = new List<FilterResult>();
+			var results = new List<PhaseResult>();
 			/*foreach (var record in input)
 			{
 				bool isMatch = true;
