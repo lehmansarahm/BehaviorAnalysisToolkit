@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using BAT.Core.Config;
+using NUnit.Framework;
 
 namespace BAT.Core.Test
 {
@@ -28,6 +30,36 @@ namespace BAT.Core.Test
 		protected static string GetInputFilePath(string filename)
 		{
 			return Path.Combine(GetTestDataFolder(TEST_DATA_FOLDER_INPUTS), filename);
+        }
+
+        /// <summary>
+        /// Verifies the config phase counts.
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="inputs">Inputs.</param>
+        /// <param name="transforms">Transforms.</param>
+        /// <param name="filters">Filters.</param>
+        /// <param name="analyses">Analyses.</param>
+        /// <param name="summaries">Summaries.</param>
+        protected static void VerifyConfigPhaseCounts(Configuration config, int inputs, 
+                                                      int transforms, int filters, 
+                                                      int analyses, int summaries)
+		{
+			Assert.AreEqual(inputs, config.Inputs.Count);
+            Assert.AreEqual(transforms, config.Transformers.Count);
+			Assert.AreEqual(filters, config.Filters.Count);
+            Assert.AreEqual(analyses, config.Analyzers.Count);
+            Assert.AreEqual(summaries, config.Summarizers.Count);
+        }
+
+        /// <summary>
+        /// Verifies the phase result data set count.
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="count">Count.</param>
+        protected static void VerifyPhaseResultDataSetCount(Configuration config, int count)
+		{
+			Assert.AreEqual(count, config.InputData.Keys.Count);
         }
 
         /// <summary>

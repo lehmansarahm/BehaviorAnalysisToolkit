@@ -25,20 +25,25 @@ namespace BAT.Core.Filters.Impl
 
                 foreach (var param in parameters)
 				{
-					var filterField = record.GetType().GetProperty(param.Field)
-                                            .GetValue(record, null).ToString();
+                    // check to see if desired field exists for this object
+                    // if not, proceed to next parameter
+                    var filterField = record.GetType().GetProperty(param.Field);
+                    if (filterField == null) continue;
+
+                    // if it does exist, continue with processing ...
+                    var filterValue = filterField.GetValue(record, null).ToString();
                     foreach (var clause in param.Clauses)
                     {
                         switch (clause.Key)
 						{
 							case Constants.COMMAND_PARAM_CONTAINS:
-								isMatch = (filterField.Contains(clause.Value));
+								isMatch = (filterValue.Contains(clause.Value));
 								break;
 							case Constants.COMMAND_PARAM_EQUAL_TO:
-								isMatch = (filterField.Equals(clause.Value));
+								isMatch = (filterValue.Equals(clause.Value));
 								break;
 							case Constants.COMMAND_PARAM_NOT_EQUAL_TO:
-								isMatch = (!filterField.Equals(clause.Value));
+								isMatch = (!filterValue.Equals(clause.Value));
 								break;
 							case Constants.COMMAND_PARAM_SPLIT:
 								if (!splitOutput) // only set once
@@ -57,18 +62,18 @@ namespace BAT.Core.Filters.Impl
 					// if valid match AND split output, proceed with output split
 					if (splitOutput)
 					{
-						if (!results.Select(x => x.Name).Contains(filterField))
+						if (!results.Select(x => x.Name).Contains(filterValue))
 						{
 							var newResult = new FilterResult()
 							{
-								Name = filterField,
+								Name = filterValue,
 								Data = new List<SensorReading>() { record }
 							};
 							results.Add(newResult);
 						}
 						else
 						{
-							var existingResult = results.Where(x => x.Name.Equals(filterField)).FirstOrDefault();
+							var existingResult = results.Where(x => x.Name.Equals(filterValue)).FirstOrDefault();
 							existingResult.Data.Add(record);
 						}
                     }

@@ -30,7 +30,7 @@
     <Compile Include="InputDataTests.cs" />
     <Compile Include="ConfigFileTests.cs" />
     <Compile Include="BATTest.cs" />
-    <Compile Include="TransformerTests.cs" />
+    <Compile Include="TransformTests.cs" />
     <Compile Include="FilterTests.cs" />
     <Compile Include="AnalysisTests.cs" />
     <Compile Include="SummaryTests.cs" />
@@ -55,6 +55,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SupportFiles\ConfigFiles\basicTransform.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\invalidFilterName.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\invalidFilterCommands.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\invalidTransform.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

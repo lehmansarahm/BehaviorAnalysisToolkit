@@ -81,16 +81,28 @@ namespace BAT.Core.Config
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
         public bool RunTransformers(bool writeOutputToFile = false) 
         {
+            bool success = false;
             if (Transformers?.Count > 0 && InputData?.Keys?.Count >= 1) 
             {
                 // iterate through the list of transformers and run on each input data set
                 var transformedData = new Dictionary<string, IEnumerable<SensorReading>>();
-                foreach (var transformerName in Transformers) 
-                {
-                    Type transformerType = 
-                        Type.GetType(Constants.NAMESPACE_TRANSFORMER_IMPL + transformerName);
-                    ITransformer transformer = 
-                        (ITransformer)Activator.CreateInstance(transformerType);
+                foreach (var transformerName in Transformers)
+				{
+					Type transformerType;
+					ITransformer transformer;
+
+					try
+					{
+						transformerType = Type.GetType(Constants.NAMESPACE_TRANSFORMER_IMPL + transformerName);
+						transformer = (ITransformer)Activator.CreateInstance(transformerType);
+                        success = true;
+					}
+					catch (ArgumentNullException ex)
+					{
+						LogManager.Error("Could not create instance of provided transformer.  "
+										+ "Please double-check configuration file.", ex, this);
+                        continue; // proceed to next operation
+					}
 
                     foreach (var key in InputData.Keys) 
                     {
@@ -108,13 +120,10 @@ namespace BAT.Core.Config
                 }
 
                 InputData = transformedData;
-                return true;
             } 
-            else 
-            {
-                LogManager.Error("No input data to run transformations on.", this);
-                return false;
-            }
+            else LogManager.Error("No input data to run transformations on.", this);
+
+            return success;
         }
 
         /// <summary>
@@ -124,16 +133,29 @@ namespace BAT.Core.Config
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
 		public bool RunFilters(bool writeOutputToFile = false) 
         {
+            bool success = false;
 			if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1) 
             {
                 var filteredData = new Dictionary<string, IEnumerable<SensorReading>>();
                 foreach (var filterCommand in Filters) 
                 {
-                    string filterName = filterCommand.Name;
-                    Type filterType =
-						Type.GetType(Constants.NAMESPACE_FILTER_IMPL + filterName);
-                    IFilter filter =
-						(IFilter)Activator.CreateInstance(filterType);
+                    string filterName;
+                    Type filterType;
+                    IFilter filter;
+
+                    try
+					{
+						filterName = filterCommand.Name;
+						filterType = Type.GetType(Constants.NAMESPACE_FILTER_IMPL + filterName);
+						filter = (IFilter)Activator.CreateInstance(filterType);
+						success = true;
+                    }
+                    catch (ArgumentNullException ex)
+                    {
+                        LogManager.Error("Could not create instance of provided filter.  "
+										+ "Please double-check configuration file.", ex, this);
+						continue; // proceed to next operation
+					}
                     
 					foreach (var key in InputData.Keys) 
                     {
@@ -160,13 +182,10 @@ namespace BAT.Core.Config
 				}
 
 				InputData = filteredData;
-				return true;
 			} 
-            else 
-            {
-				LogManager.Error("No input data to run filters on.", this);
-				return false;
-			}
+            else LogManager.Error("No input data to run filters on.", this);
+
+			return success;
         }
 
         /// <summary>

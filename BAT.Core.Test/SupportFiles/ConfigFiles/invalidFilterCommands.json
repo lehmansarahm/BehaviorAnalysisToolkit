@@ -1,0 +1,27 @@
+﻿{
+	"inputs": [ "/SupportFiles/InputFiles/OA5-Breakfast.csv" ],
+  "filters": [
+    {
+      "Name": "ActivityFilter",
+      "Parameters": [
+        {
+          "Field": "Invalid",
+          "Clauses": [
+            {
+              "Invalid": "",
+              "Value": "Select"
+            },
+            {
+              "Key": "Invalid",
+              "Value": "Select"
+            },
+            {
+              "Something Else": "",
+              "Value": "Select"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
