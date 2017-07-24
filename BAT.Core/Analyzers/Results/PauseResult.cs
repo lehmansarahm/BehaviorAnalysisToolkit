@@ -1,7 +1,7 @@
 ﻿using System;
 using BAT.Core.Common;
 
-namespace BAT.Core.Analyzers
+namespace BAT.Core.Analyzers.Results
 {
     public class PauseResult : ICsvWritable
 	{

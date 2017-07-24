@@ -37,6 +37,18 @@ namespace BAT.Core.Common
 		public int? RecordNum { get; set; }
 		// ---------------------------------------------------------------------
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="T:BAT.Core.Common.SensorReading"/> has valid time data.
+        /// </summary>
+        /// <value><c>true</c> if has valid time data; otherwise, <c>false</c>.</value>
+        public bool HasValidTimeData
+        {
+            get
+            {
+                return (Time.HasValue && RecordNum.HasValue);
+            }
+        }
+
 		// ---------------------------------------------------------------------
 		// Gyroscope
 		// ---------------------------------------------------------------------

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 using BAT.Core.Config;
 

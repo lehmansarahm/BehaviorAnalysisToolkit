@@ -81,6 +81,9 @@
     <None Include="SupportFiles\ConfigFiles\pauseDurationAnalysis.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="SupportFiles\ConfigFiles\taskTimeAnalysis.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SupportFiles\" />

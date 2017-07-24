@@ -1,0 +1,30 @@
+﻿{
+  "inputs": [ "SupportFiles/InputFiles/OA5-Breakfast.csv" ],
+  "transformers": [ "LinearAccelerationTransformer", "LabelCleanupTransformer" ],
+  "filters": [
+    {
+      "Name": "ActivityFilter",
+      "Parameters": [
+        {
+          "Field": "Label",
+          "Clauses": [
+            {
+              "Key": "Contains",
+              "Value": "Select"
+            },
+            {
+              "Key": "Split",
+              "Value": "true"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "analyzers": [
+    {
+      "Name": "TaskTimeAnalysis",
+      "Parameters": []
+    }
+  ]
+}
