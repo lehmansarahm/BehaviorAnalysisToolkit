@@ -31,10 +31,10 @@ namespace BAT.Core.Filters.Impl
 		/// <returns>The filter.</returns>
 		/// <param name="input">Input.</param>
 		/// <param name="parameters">Parameters.</param>
-		public IEnumerable<PhaseResult> Filter(IEnumerable<ICsvWritable> input, 
-                                                IEnumerable<Parameter> parameters)
+        public IEnumerable<PhaseResult<SensorReading>> Filter(IEnumerable<SensorReading> input, 
+                                                              IEnumerable<Parameter> parameters)
 		{
-			var results = new List<PhaseResult>();
+			var results = new List<PhaseResult<SensorReading>>();
 			/*foreach (var record in input)
 			{
 				bool isMatch = true;

@@ -14,7 +14,7 @@ namespace BAT.Core.Config
 	{
         [JsonProperty("inputs")]
 		public List<string> Inputs { get; set; }
-        public Dictionary<string, IEnumerable<ICsvWritable>> InputData { get; set; }
+        public Dictionary<string, IEnumerable<SensorReading>> InputData { get; set; }
 
 		[JsonProperty("transformers")]
 		public List<string> Transformers { get; set; }
@@ -50,7 +50,7 @@ namespace BAT.Core.Config
 			try
 			{
 				string currentDir = AppDomain.CurrentDomain.BaseDirectory;
-                InputData = new Dictionary<string, IEnumerable<ICsvWritable>>();
+                InputData = new Dictionary<string, IEnumerable<SensorReading>>();
 
 				foreach (var inputFile in Inputs)
 				{
@@ -93,7 +93,7 @@ namespace BAT.Core.Config
             if (Transformers?.Count > 0 && InputData?.Keys?.Count >= 1) 
             {
                 // iterate through the list of transformers and run on each input data set
-                var transformedData = new Dictionary<string, IEnumerable<ICsvWritable>>();
+                var transformedData = new Dictionary<string, IEnumerable<SensorReading>>();
                 foreach (var transformerName in Transformers)
 				{
 					Type transformerType;
@@ -144,7 +144,7 @@ namespace BAT.Core.Config
             bool success = false;
 			if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1) 
             {
-                var filteredData = new Dictionary<string, IEnumerable<ICsvWritable>>();
+                var filteredData = new Dictionary<string, IEnumerable<SensorReading>>();
                 foreach (var filterCommand in Filters) 
                 {
                     string filterName;
@@ -167,7 +167,7 @@ namespace BAT.Core.Config
                     
 					foreach (var key in InputData.Keys)
 					{
-                        IEnumerable<PhaseResult> filteredResultSets = null;
+                        IEnumerable<PhaseResult<SensorReading>> filteredResultSets = null;
                         if (filterCommand.Parameters != null)
                             filteredResultSets = filter.Filter(InputData[key], filterCommand.Parameters);
 

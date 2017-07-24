@@ -31,10 +31,10 @@ namespace BAT.Core.Filters.Impl
         /// <returns>The filter.</returns>
         /// <param name="input">Input.</param>
         /// <param name="parameters">Parameters.</param>
-        public IEnumerable<PhaseResult> Filter(IEnumerable<ICsvWritable> input, 
-                                               IEnumerable<Parameter> parameters)
+        public IEnumerable<PhaseResult<SensorReading>> Filter(IEnumerable<SensorReading> input, 
+                                                              IEnumerable<Parameter> parameters)
 		{
-            var results = new List<PhaseResult>();
+            var results = new List<PhaseResult<SensorReading>>();
             foreach (var inputItem in input)
 			{
                 if (inputItem.GetType() != typeof(SensorReading)) continue;
@@ -61,10 +61,10 @@ namespace BAT.Core.Filters.Impl
 					{
 						if (!results.Select(x => x.Name).Contains(filterValue))
 						{
-							var newResult = new PhaseResult()
+							var newResult = new PhaseResult<SensorReading>
 							{
 								Name = filterValue,
-                                Data = new List<ICsvWritable>() { record }
+                                Data = new List<SensorReading> { record }
 							};
 							results.Add(newResult);
 						}

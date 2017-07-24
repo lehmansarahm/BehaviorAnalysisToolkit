@@ -2,9 +2,9 @@
 
 namespace BAT.Core.Common
 {
-    public class PhaseResult
+    public class PhaseResult<T> where T : ICsvWritable
     {
         public string Name { get; set; }
-        public List<ICsvWritable> Data { get; set; }
+        public List<T> Data { get; set; }
     }
 }

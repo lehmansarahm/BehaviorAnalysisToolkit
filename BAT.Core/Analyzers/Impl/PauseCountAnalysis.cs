@@ -31,28 +31,22 @@ namespace BAT.Core.Analyzers.Impl
 		/// <returns>The analyze.</returns>
 		/// <param name="input">Input.</param>
 		/// <param name="parameters">Parameters.</param>
-		public IEnumerable<ICsvWritable> Analyze(IEnumerable<ICsvWritable> input,
+		public IEnumerable<ICsvWritable> Analyze(IEnumerable<SensorReading> input,
                                                 IEnumerable<Parameter> parameters)
 		{
             var results = new List<PauseResult>();
 			foreach (var param in parameters)
 			{
-                var rawThreshold = param.GetClauseValue(Constants.COMMAND_PARAM_THRESHOLD);
-                var threshold = Double.Parse(rawThreshold);
-
-                var rawWindowSize = param.GetClauseValue(Constants.COMMAND_PARAM_WINDOW);
-                var windowSize = Int32.Parse(rawWindowSize);
+				var threshold = Double.Parse(param.GetClauseValue(Constants.COMMAND_PARAM_THRESHOLD));
+				var windowSize = Int32.Parse(param.GetClauseValue(Constants.COMMAND_PARAM_WINDOW));
 
                 DateTime startTime = DateTime.Now, endTime;
                 bool currentlyPaused = false;
                 int startNo = 0, endNo, windowCount = 0, pauseCount = 0;
                 double currentDuration = 0.0d, totalDuration = 0.0d;
 
-				foreach (var inputItem in input)
+				foreach (var record in input)
 				{
-                    if (inputItem.GetType() != typeof(SensorReading)) continue;
-                    var record = (SensorReading)inputItem;
-
 					var filterField = record.GetType().GetProperty(param.Field);
 					if (filterField == null) continue;
 

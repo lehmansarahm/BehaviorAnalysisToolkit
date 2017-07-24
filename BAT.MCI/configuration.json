@@ -30,7 +30,25 @@
           "Clauses": [
             {
               "Key": "Threshold",
-              "Value": "0.01"
+              "Value": "1"
+            },
+            {
+              "Key": "Window",
+              "Value": "12"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "PauseDurationAnalysis",
+      "Parameters": [
+        {
+          "Field": "InstantSpeed",
+          "Clauses": [
+            {
+              "Key": "Threshold",
+              "Value": "1"
             },
             {
               "Key": "Window",

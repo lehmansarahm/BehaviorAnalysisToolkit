@@ -30,7 +30,7 @@ namespace BAT.Core.Analyzers.Impl
         /// <returns>The analyze.</returns>
         /// <param name="input">Input.</param>
         /// <param name="parameters">Parameters.</param>
-		public IEnumerable<ICsvWritable> Analyze(IEnumerable<ICsvWritable> input,
+        public IEnumerable<ICsvWritable> Analyze(IEnumerable<SensorReading> input,
                                                  IEnumerable<Parameter> parameters)
 		{
 			return null;

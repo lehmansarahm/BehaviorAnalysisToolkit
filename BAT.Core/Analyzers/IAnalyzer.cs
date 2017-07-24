@@ -9,7 +9,7 @@ namespace BAT.Core.Analyzers
         string[] GetHeader();
         string GetHeaderCsv();
 
-        IEnumerable<ICsvWritable> Analyze(IEnumerable<ICsvWritable> input,
+        IEnumerable<ICsvWritable> Analyze(IEnumerable<SensorReading> input,
                                           IEnumerable<Parameter> parameters);
     }
 }
