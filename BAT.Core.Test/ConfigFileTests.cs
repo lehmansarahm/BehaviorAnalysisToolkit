@@ -33,15 +33,9 @@ namespace BAT.Core.Test
 		{
 			Configuration config =
 				Configuration.LoadFromFile(GetConfigFilePath("basicConfigLoad.json"));
-			
-            Assert.AreEqual(1, config.Inputs.Count);
-			Assert.AreEqual(1, config.Transformers.Count);
-
-			Assert.AreEqual(1, config.Filters.Count);
+            
+			VerifyConfigPhaseCounts(config, 1, 1, 1, 0, 0);
             Assert.AreEqual(0, config.Filters.FirstOrDefault().Parameters.Count);
-
-            Assert.AreEqual(0, config.Analyzers.Count);
-            Assert.AreEqual(0, config.Summarizers.Count);
 
 			config.LoadInputs();
 			Assert.AreEqual(1, config.InputData.Keys.Count);

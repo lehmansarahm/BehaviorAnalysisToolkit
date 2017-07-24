@@ -89,15 +89,14 @@ namespace BAT.Core.Analyzers.Impl
                         totalDuration += currentDuration;
 
                         // output pause details to file
-                        var pauseResult = new PauseResult
-                        {
-                            Start = startTime,
-                            StartNum = startNo,
-                            End = endTime,
-                            EndNum = endNo,
-                            Duration = currentDuration
-                        };
-                        results.Add(pauseResult);
+						results.Add(new PauseResult
+						{
+							Start = startTime,
+							StartNum = startNo,
+							End = endTime,
+							EndNum = endNo,
+							Duration = currentDuration
+						});
                         pauseCount++;
 
 						// reset pause details
