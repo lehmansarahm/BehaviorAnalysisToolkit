@@ -25,15 +25,29 @@ namespace BAT.Core.Test
 			Configuration config =
 				Configuration.LoadFromFile(GetConfigFilePath("simpleConfig.json"));
 			
-            Assert.AreEqual(config.Inputs.Count, 1);
-			Assert.AreEqual(config.Transformers.Count, 1);
-			Assert.AreEqual(config.Filters.Count, 1);
+            Assert.AreEqual(1, config.Inputs.Count);
+			Assert.AreEqual(2, config.Transformers.Count);
+			Assert.AreEqual(1, config.Filters.Count);
+
+            var commandParams = config.Filters.FirstOrDefault().Parameters;
+            Assert.AreEqual(2, commandParams.Count);
 
 			config.LoadInputs();
-			Assert.AreEqual(config.InputData.Keys.Count, 1);
+			Assert.AreEqual(1, config.InputData.Keys.Count);
 
 			string key = config.InputData.Keys.First();
-            Assert.AreEqual(config.InputData[key].Count, 2729);
+            Assert.AreEqual(2729, config.InputData[key].Count());
 		}
+
+        [Test]
+        public void TestBasicTransformAndFilter()
+		{
+			Configuration config =
+				Configuration.LoadFromFile(GetConfigFilePath("simpleConfig.json"));
+			config.LoadInputs();
+
+            config.RunTransformers(false);
+            config.RunFilters(false);
+        }
     }
 }

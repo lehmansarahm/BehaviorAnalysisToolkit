@@ -22,31 +22,42 @@ namespace BAT.Core.Common
                     "AccelY",
                     "AccelZ",
                     "AccelMag",
-                    "InstantSpeed"
+                    "InstantSpeed",
+                    "StartQuit",
+                    "Label"
                 };
             }
         }
         public static string HeaderCsv { get { return string.Join(",", Header); } }
 
-        // General info
-        public DateTime? Time { get; set; }
-        public int? RecordNum { get; set; }
+        // ---------------------------------------------------------------------
+		// General info
+		// ---------------------------------------------------------------------
+		public DateTime? Time { get; set; }
+		public int? RecordNum { get; set; }
+		// ---------------------------------------------------------------------
 
-        // Gyroscope
-        public double? Azimuth { get; set; }
+		// ---------------------------------------------------------------------
+		// Gyroscope
+		// ---------------------------------------------------------------------
+		public double? Azimuth { get; set; }
         public double? Pitch { get; set; }
-        public double? Roll { get; set; }
+		public double? Roll { get; set; }
+		// ---------------------------------------------------------------------
 
-        // Accelerometer
-        public double? AccelX { get; set; }
+		// ---------------------------------------------------------------------
+		// Accelerometer
+		// ---------------------------------------------------------------------
+		public double? AccelX { get; set; }
         public double? AccelY { get; set; }
-        public double? AccelZ { get; set; }
+		public double? AccelZ { get; set; }
+		// ---------------------------------------------------------------------
 
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="T:BAT.Core.Common.SensorReading"/> has valid accel vector.
-        /// </summary>
-        /// <value><c>true</c> if has valid accel vector; otherwise, <c>false</c>.</value>
-        public Boolean HasValidAccelVector
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:BAT.Core.Common.SensorReading"/> has valid accel vector.
+		/// </summary>
+		/// <value><c>true</c> if has valid accel vector; otherwise, <c>false</c>.</value>
+		public Boolean HasValidAccelVector
         {
             get
             {
@@ -76,10 +87,18 @@ namespace BAT.Core.Common
         /// <value>The instant speed.</value>
         public double? InstantSpeed { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:BAT.Core.Common.SensorReading"/> class.
-        /// </summary>
-        public SensorReading() {}
+		// ---------------------------------------------------------------------
+		// Record keeping (Tania)
+		// ---------------------------------------------------------------------
+		public bool Start { get; set; }
+        public bool End { get; set; }
+		public string Label { get; set; }
+		// ---------------------------------------------------------------------
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:BAT.Core.Common.SensorReading"/> class.
+		/// </summary>
+		public SensorReading() {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:BAT.Core.Common.SensorReading"/> class.
@@ -87,15 +106,18 @@ namespace BAT.Core.Common
         /// <param name="oldReading">Old reading.</param>
         public SensorReading(SensorReading oldReading)
 		{
-            this.Time = oldReading.Time;
-            this.RecordNum = oldReading.RecordNum;
-            this.Azimuth = oldReading.Azimuth;
-            this.Pitch = oldReading.Pitch;
-            this.Roll = oldReading.Roll;
-            this.AccelX = oldReading.AccelX;
-            this.AccelY = oldReading.AccelY;
-            this.AccelZ = oldReading.AccelZ;
-            this.InstantSpeed = oldReading.InstantSpeed;
+            Time = oldReading.Time;
+            RecordNum = oldReading.RecordNum;
+            Azimuth = oldReading.Azimuth;
+            Pitch = oldReading.Pitch;
+            Roll = oldReading.Roll;
+            AccelX = oldReading.AccelX;
+            AccelY = oldReading.AccelY;
+            AccelZ = oldReading.AccelZ;
+            InstantSpeed = oldReading.InstantSpeed;
+            Start = oldReading.Start;
+            End = oldReading.End;
+            Label = oldReading.Label;
 		}
 
         /// <summary>
@@ -105,28 +127,34 @@ namespace BAT.Core.Common
         public SensorReading(string[] inputFields)
         {
             string rawTime = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.TIME];
-            if (!String.IsNullOrEmpty(rawTime)) this.Time = DateTime.Parse(rawTime);
+            if (!String.IsNullOrEmpty(rawTime)) Time = DateTime.Parse(rawTime);
 
             string rawRecordNum = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.RECORD_NUM];
-			if (!String.IsNullOrEmpty(rawRecordNum)) this.RecordNum = Int32.Parse(rawRecordNum);
+			if (!String.IsNullOrEmpty(rawRecordNum)) RecordNum = Int32.Parse(rawRecordNum);
 
 			string rawAzimuth = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.AZIMUTH];
-			if (!String.IsNullOrEmpty(rawAzimuth)) this.Azimuth = Double.Parse(rawAzimuth);
+			if (!String.IsNullOrEmpty(rawAzimuth)) Azimuth = Double.Parse(rawAzimuth);
 
             string rawPitch = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.PITCH];
-            if (!String.IsNullOrEmpty(rawPitch)) this.Pitch = Double.Parse(rawPitch);
+            if (!String.IsNullOrEmpty(rawPitch)) Pitch = Double.Parse(rawPitch);
 
             string rawRoll = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ROLL];
-			if (!String.IsNullOrEmpty(rawRoll)) this.Roll = Double.Parse(rawRoll);
+			if (!String.IsNullOrEmpty(rawRoll)) Roll = Double.Parse(rawRoll);
 
             string rawAccelX = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_X];
-			if (!String.IsNullOrEmpty(rawAccelX)) this.AccelX = Double.Parse(rawAccelX);
+			if (!String.IsNullOrEmpty(rawAccelX)) AccelX = Double.Parse(rawAccelX);
 
             string rawAccelY = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_Y];
-			if (!String.IsNullOrEmpty(rawAccelY)) this.AccelY = Double.Parse(rawAccelY);
+			if (!String.IsNullOrEmpty(rawAccelY)) AccelY = Double.Parse(rawAccelY);
 
             string rawAccelZ = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_Z];
-			if (!String.IsNullOrEmpty(rawAccelZ)) this.AccelZ = Double.Parse(rawAccelZ);
+			if (!String.IsNullOrEmpty(rawAccelZ)) AccelZ = Double.Parse(rawAccelZ);
+
+            string rawStartQuit = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.START_QUIT];
+            Start = rawStartQuit.Equals(Constants.INPUT_FILE_START_TRIAL_FLAG);
+            End = rawStartQuit.Equals(Constants.INPUT_FILE_END_TRIAL_FLAG);
+
+            Label = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.LABEL];
         }
 
         /// <summary>
@@ -148,10 +176,18 @@ namespace BAT.Core.Common
         /// <returns>The csv.</returns>
         public String ToCsv() {
 			string[] props = new [] {
-				Time.ToString(), RecordNum.ToString(),
-				Azimuth.ToString(), Pitch.ToString(), Roll.ToString(),
-				AccelX.ToString(), AccelY.ToString(), AccelZ.ToString(),
-				AccelMag.ToString(), InstantSpeed.ToString()
+				Time.ToString(), 
+                RecordNum.ToString(),
+				Azimuth.ToString(), 
+                Pitch.ToString(), 
+                Roll.ToString(),
+				AccelX.ToString(), 
+                AccelY.ToString(), 
+                AccelZ.ToString(),
+				AccelMag.ToString(), 
+                InstantSpeed.ToString(),
+                (Start ? "Start" : (End ? "Quit" : "")),
+                Label
 			};
             return string.Join(",", props);
         }

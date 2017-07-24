@@ -14,7 +14,7 @@ namespace BAT.Core.Config
 	{
         [JsonProperty("inputs")]
 		public List<string> Inputs { get; set; }
-        public Dictionary<string, List<SensorReading>> InputData { get; set; }
+        public Dictionary<string, IEnumerable<SensorReading>> InputData { get; set; }
 
 		[JsonProperty("transformers")]
 		public List<string> Transformers { get; set; }
@@ -37,7 +37,7 @@ namespace BAT.Core.Config
 			try
 			{
 				string currentDir = AppDomain.CurrentDomain.BaseDirectory;
-				InputData = new Dictionary<string, List<SensorReading>>();
+                InputData = new Dictionary<string, IEnumerable<SensorReading>>();
 
 				foreach (var inputFile in Inputs)
 				{
@@ -50,7 +50,7 @@ namespace BAT.Core.Config
 				foreach (var key in InputData.Keys)
 				{
 					LogManager.Debug($"Input file: {key} \n\t... contains "
-									+ $"{InputData[key].Count} records.");
+                                     + $"{InputData[key].Count()} records.");
 				}
 
 				return true;
@@ -72,7 +72,7 @@ namespace BAT.Core.Config
             if (Transformers?.Count > 0 && InputData?.Keys?.Count >= 1) 
             {
                 // iterate through the list of transformers and run on each input data set
-                var transformedData = new Dictionary<string, List<SensorReading>>();
+                var transformedData = new Dictionary<string, IEnumerable<SensorReading>>();
                 foreach (var transformerName in Transformers) 
                 {
                     Type transformerType = 
@@ -83,7 +83,10 @@ namespace BAT.Core.Config
                     foreach (var key in InputData.Keys) 
                     {
                         var transformedValues = transformer.Transform(InputData[key]);
-						transformedData.Add(key, transformedValues);
+                        if (transformedData.ContainsKey(key))
+                            transformedData[key] = transformedValues;
+                        else transformedData.Add(key, transformedValues);
+
 						if (writeOutputToFile)
                             CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_TRANSFORMERS, 
                                                       transformerName, key, 
@@ -111,7 +114,7 @@ namespace BAT.Core.Config
         {
 			if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1) 
             {
-                var filteredData = new Dictionary<string, List<SensorReading>>();
+                var filteredData = new Dictionary<string, IEnumerable<SensorReading>>();
                 foreach (var filterCommand in Filters) 
                 {
                     string filterName = filterCommand.Name;
@@ -125,11 +128,19 @@ namespace BAT.Core.Config
                         var filteredResultSets = filter.Filter(InputData[key], filterCommand.Parameters);
                         foreach (var filterResult in filteredResultSets)
 						{
+                            var filenameComponents = key.Split('.');
+                            var fileName = filenameComponents[filenameComponents.Length - 2];
+                            var fileExtension = filenameComponents[filenameComponents.Length - 1];
+                            var newFilename = $"{fileName}_{filterResult.Name}.{fileExtension}";
+
                             var filteredValues = filterResult.Data;
-							filteredData.Add(key, filteredValues.ToList());
+							if (filteredData.ContainsKey(newFilename))
+								filteredData[newFilename] = filteredValues;
+							else filteredData.Add(newFilename, filteredValues);
+
 							if (writeOutputToFile)
 								CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_FILTERS,
-														  filterName, key,
+														  filterName, newFilename,
 														  SensorReading.HeaderCsv,
 														  filteredValues);
                         }

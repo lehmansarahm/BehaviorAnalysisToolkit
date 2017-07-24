@@ -5,6 +5,6 @@ namespace BAT.Core.Transformers
 {
     public interface ITransformer
     {
-        List<SensorReading> Transform(List<SensorReading> input);
+        List<SensorReading> Transform(IEnumerable<SensorReading> input);
     }
 }

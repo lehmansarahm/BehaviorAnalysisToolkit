@@ -14,7 +14,7 @@ namespace BAT.Core.Transformers.Impl
         /// </summary>
         /// <returns>The transform.</returns>
         /// <param name="input">Input.</param>
-		public List<SensorReading> Transform(List<SensorReading> input)
+        public List<SensorReading> Transform(IEnumerable<SensorReading> input)
 		{
 			const double alpha = 0.8d;
             List<SensorReading> output = new List<SensorReading>();

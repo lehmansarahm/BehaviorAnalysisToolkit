@@ -15,14 +15,18 @@ namespace BAT.Core.Common
         /// <param name="filename">Filename.</param>
         /// <param name="header">Header.</param>
         /// <param name="input">Input.</param>
-		public static void WriteToFile(string phaseOutputDir, string operationOutputDir,
+		public static void WriteToFile(string phaseOutputDir, string operationOutputDir, 
                                        string filename, string header, IEnumerable<ICsvWritable> input)
-        {
-            string outputDir = $"{phaseOutputDir}/{operationOutputDir}";
-            if (!Directory.Exists(phaseOutputDir)) Directory.CreateDirectory(phaseOutputDir);
-            if (!Directory.Exists(outputDir)) Directory.CreateDirectory(outputDir);
+		{
+			string phaseDir = $"{Constants.OUTPUT_DIR_BY_TIME}/{phaseOutputDir}";
+			string operationDir = $"{phaseDir}/{operationOutputDir}";
 
-            string outputFilePath = $"{outputDir}/{filename}";
+			if (!Directory.Exists(Constants.OUTPUT_DIR_BY_TIME)) 
+                Directory.CreateDirectory(Constants.OUTPUT_DIR_BY_TIME);
+			if (!Directory.Exists(phaseDir)) Directory.CreateDirectory(phaseDir);
+            if (!Directory.Exists(operationDir)) Directory.CreateDirectory(operationDir);
+
+            string outputFilePath = $"{operationDir}/{filename}";
             string output = (header + "\n") +
                 (input != null ? string.Join("\n", input.Select(x => x.ToCsv())) : "");
             WriteToFile(outputFilePath, output);

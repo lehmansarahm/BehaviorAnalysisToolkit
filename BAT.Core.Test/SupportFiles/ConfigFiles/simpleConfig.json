@@ -1,5 +1,19 @@
 ﻿{
 	"inputs": [ "/SupportFiles/InputFiles/OA5-Breakfast.csv" ],
-	"transformers": [ "LinearAccelerationTransformer" ],
-	"filters": [ "ActivityFilter" ]
+	"transformers": [ "LinearAccelerationTransformer", "LabelCleanupTransformer" ],
+  "filters": [
+    {
+      "Name": "ActivityFilter",
+      "Parameters": [
+        {
+          "Key": "Where",
+          "Value": "x => x.Label.Contains(\"Select\")"
+        },
+        {
+          "Key": "GroupBy",
+          "Value": "Label"
+        }
+      ]
+    }
+  ]
 }

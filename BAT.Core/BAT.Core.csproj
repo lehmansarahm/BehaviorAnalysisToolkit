@@ -61,6 +61,7 @@
     <Compile Include="Summarizers\Impl\PauseCountSummarizer.cs" />
     <Compile Include="Summarizers\Impl\UserResultSummarizer.cs" />
     <Compile Include="Transformers\Impl\NormalizationTransformer.cs" />
+    <Compile Include="Transformers\Impl\LabelCleanupTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />
