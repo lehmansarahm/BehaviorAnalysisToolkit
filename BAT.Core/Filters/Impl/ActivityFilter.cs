@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using BAT.Core.Common;
 using BAT.Core.Config;
@@ -20,8 +21,7 @@ namespace BAT.Core.Filters.Impl
             var results = new List<FilterResult>();
             foreach (var record in input)
 			{
-                bool isMatch = true, splitOutput = false;
-                string splitField;
+                bool isMatch = true;
 
                 foreach (var param in parameters)
 				{
@@ -37,21 +37,17 @@ namespace BAT.Core.Filters.Impl
                         switch (clause.Key)
 						{
 							case Constants.COMMAND_PARAM_CONTAINS:
-								isMatch = (filterValue.Contains(clause.Value));
+                                isMatch = (Constants.CULTURE.CompareInfo.IndexOf(filterValue, 
+                                                                                 clause.Value, CompareOptions.IgnoreCase) >= 0);
 								break;
 							case Constants.COMMAND_PARAM_EQUAL_TO:
-								isMatch = (filterValue.Equals(clause.Value));
+								isMatch = (filterValue.Equals(clause.Value, 
+                                                              StringComparison.InvariantCultureIgnoreCase));
 								break;
 							case Constants.COMMAND_PARAM_NOT_EQUAL_TO:
-								isMatch = (!filterValue.Equals(clause.Value));
+								isMatch = (!filterValue.Equals(clause.Value, 
+                                                               StringComparison.InvariantCultureIgnoreCase));
 								break;
-							case Constants.COMMAND_PARAM_SPLIT:
-								if (!splitOutput) // only set once
-								{
-									splitOutput = true;
-									splitField = param.Field;
-                                }
-                                break;
                         }
 					}
 
@@ -60,6 +56,8 @@ namespace BAT.Core.Filters.Impl
 					if (!isMatch) break;
 
 					// if valid match AND split output, proceed with output split
+					bool splitOutput = param.Clauses.Where(x => x.Key.Contains(Constants.COMMAND_PARAM_SPLIT))
+											.FirstOrDefault().Value.Equals("true", StringComparison.InvariantCultureIgnoreCase);
 					if (splitOutput)
 					{
 						if (!results.Select(x => x.Name).Contains(filterValue))

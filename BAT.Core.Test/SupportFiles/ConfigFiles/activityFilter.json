@@ -8,6 +8,10 @@
           "Field": "Label",
           "Clauses": [
             {
+              "Key": "Contains",
+              "Value": "Select"
+            },
+            {
               "Key": "Split",
               "Value": "true"
             }

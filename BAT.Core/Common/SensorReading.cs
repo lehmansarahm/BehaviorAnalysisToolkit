@@ -74,10 +74,10 @@ namespace BAT.Core.Common
             get
             {
                 if (HasValidAccelVector)
-                {
-                    return Math.Sqrt(Math.Pow(AccelX.Value, 2) + Math.Pow(AccelY.Value, 2) + Math.Pow(AccelZ.Value, 2));
-                }
-                else return 0.0d;
+                    return Math.Sqrt(Math.Pow(AccelX.Value, 2) 
+                                     + Math.Pow(AccelY.Value, 2) 
+                                     + Math.Pow(AccelZ.Value, 2));
+                return 0.0d;
             }
         }
 
@@ -117,7 +117,9 @@ namespace BAT.Core.Common
             InstantSpeed = oldReading.InstantSpeed;
             Start = oldReading.Start;
             End = oldReading.End;
-            Label = oldReading.Label;
+            Label = (string.IsNullOrEmpty(oldReading.Label) 
+                     ? Constants.INPUT_FILE_NO_LABEL_PROVIDED 
+                     : oldReading.Label);
 		}
 
         /// <summary>
@@ -154,7 +156,8 @@ namespace BAT.Core.Common
             Start = rawStartQuit.Equals(Constants.INPUT_FILE_START_TRIAL_FLAG);
             End = rawStartQuit.Equals(Constants.INPUT_FILE_END_TRIAL_FLAG);
 
-            Label = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.LABEL];
+			string rawLabel = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.LABEL];
+			Label = (string.IsNullOrEmpty(rawLabel) ? Constants.INPUT_FILE_NO_LABEL_PROVIDED : rawLabel);
         }
 
         /// <summary>
@@ -165,9 +168,9 @@ namespace BAT.Core.Common
         /// <param name="accelZ">Accel z.</param>
         public void SetAccelVector(double? accelX, double? accelY, double? accelZ)
 		{
-			this.AccelX = accelX;
-			this.AccelY = accelY;
-			this.AccelZ = accelZ;
+			AccelX = accelX;
+			AccelY = accelY;
+			AccelZ = accelZ;
 		}
 
         /// <summary>
@@ -175,7 +178,7 @@ namespace BAT.Core.Common
         /// </summary>
         /// <returns>The csv.</returns>
         public String ToCsv() {
-			string[] props = new [] {
+			string[] props = {
 				Time.ToString(), 
                 RecordNum.ToString(),
 				Azimuth.ToString(), 

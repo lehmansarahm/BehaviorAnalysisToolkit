@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Globalization;
 
 namespace BAT.Core.Common
 {
     public class Constants
     {
+        public static CultureInfo CULTURE = CultureInfo.CurrentCulture;
+
         public const string NAMESPACE_CORE = "BAT.Core";
         public const string NAMESPACE_ANALYZER_IMPL = NAMESPACE_CORE + ".Analyzers.Impl.";
 		public const string NAMESPACE_FILTER_IMPL = NAMESPACE_CORE + ".Filters.Impl.";
@@ -32,6 +35,7 @@ namespace BAT.Core.Common
 
 		public const string INPUT_FILE_START_TRIAL_FLAG = "Start";
 		public const string INPUT_FILE_END_TRIAL_FLAG = "Quit";
+        public const string INPUT_FILE_NO_LABEL_PROVIDED = "no label provided";
 
 	    public enum INPUT_FILE_COLUMN_ORDER
         { 

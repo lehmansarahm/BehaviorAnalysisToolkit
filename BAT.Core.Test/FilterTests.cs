@@ -42,20 +42,19 @@ namespace BAT.Core.Test
 
 			var labelCommand = commandParams.FirstOrDefault();
 			Assert.AreEqual("Label", labelCommand.Field);
-			Assert.AreEqual(2, labelCommand.Clauses.Count);
+			Assert.AreEqual(1, labelCommand.Clauses.Count);
 
 			var containsClause = labelCommand.Clauses.FirstOrDefault();
-			Assert.AreEqual("Contains", containsClause.Key);
-			Assert.AreEqual("Select", containsClause.Value);
+			Assert.AreEqual("Split", containsClause.Key);
+			Assert.AreEqual("true", containsClause.Value);
 
 			var result = config.LoadInputs();
 			Assert.AreEqual(true, result);
 			VerifyPhaseResultDataSetCount(config, 1);
 
-			// TODO - FIX THIS TEST
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
-			VerifyPhaseResultDataSetCount(config, 33);
+			VerifyPhaseResultDataSetCount(config, 35);
 		}
 
         /// <summary>
@@ -126,8 +125,28 @@ namespace BAT.Core.Test
 		[Test]
 		public void TestOperationActivityFilter()
 		{
-            // run the gamut of this particular operation
-			Assert.AreEqual(true, false);
+			Configuration config =
+				Configuration.LoadFromFile(GetConfigFilePath("activityFilter.json"));
+			VerifyConfigPhaseCounts(config, 1, 0, 1, 0, 0);
+
+			var commandParams = config.Filters.FirstOrDefault().Parameters;
+			Assert.AreEqual(1, commandParams.Count);
+
+			var labelCommand = commandParams.FirstOrDefault();
+			Assert.AreEqual("Label", labelCommand.Field);
+			Assert.AreEqual(2, labelCommand.Clauses.Count);
+
+			var containsClause = labelCommand.Clauses.FirstOrDefault();
+			Assert.AreEqual("Contains", containsClause.Key);
+			Assert.AreEqual("Select", containsClause.Value);
+
+			var result = config.LoadInputs();
+			Assert.AreEqual(true, result);
+			VerifyPhaseResultDataSetCount(config, 1);
+
+			result = config.RunFilters(WRITE_TO_FILE);
+			Assert.AreEqual(true, result);
+			VerifyPhaseResultDataSetCount(config, 11);  // returning only tasks with "select" in label
 		}
 
 		[Test]
