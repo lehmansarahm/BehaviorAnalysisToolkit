@@ -32,14 +32,16 @@ namespace BAT.Core.Test
 		public void TestBasicConfigLoad()
 		{
 			Configuration config =
-				Configuration.LoadFromFile(GetConfigFilePath("simpleConfig.json"));
+				Configuration.LoadFromFile(GetConfigFilePath("basicConfigLoad.json"));
 			
             Assert.AreEqual(1, config.Inputs.Count);
-			Assert.AreEqual(2, config.Transformers.Count);
-			Assert.AreEqual(1, config.Filters.Count);
+			Assert.AreEqual(1, config.Transformers.Count);
 
-            var commandParams = config.Filters.FirstOrDefault().Parameters;
-            Assert.AreEqual(2, commandParams.Count);
+			Assert.AreEqual(1, config.Filters.Count);
+            Assert.AreEqual(0, config.Filters.FirstOrDefault().Parameters.Count);
+
+            Assert.AreEqual(0, config.Analyzers.Count);
+            Assert.AreEqual(0, config.Summarizers.Count);
 
 			config.LoadInputs();
 			Assert.AreEqual(1, config.InputData.Keys.Count);
@@ -48,22 +50,20 @@ namespace BAT.Core.Test
             Assert.AreEqual(2729, config.InputData[key].Count());
 		}
 
-        /// <summary>
-        /// Tests the basic transform and filter.
-        /// </summary>
-        [Test]
-        public void TestBasicTransformAndFilter()
+		[Test]
+		public void TestIncompleteConfigLoad()
 		{
-			Configuration config =
-				Configuration.LoadFromFile(GetConfigFilePath("simpleConfig.json"));
-			config.LoadInputs();
-			Assert.AreEqual(1, config.InputData.Keys.Count);
+            // file content improperly formatted...
+            // content stops halfway through...
+            // basically, anything that results in an inability to serialize into a Configuration object
+			Assert.AreEqual(true, false);
+		}
 
-			config.RunTransformers(false);
-			Assert.AreEqual(1, config.InputData.Keys.Count);
-
-			config.RunFilters(false);
-			Assert.AreEqual(33, config.InputData.Keys.Count);
-        }
+		[Test]
+		public void TestInvalidConfigLoad()
+		{
+            // wrong file type, wrong file content (XML), etc.
+			Assert.AreEqual(true, false);
+		}
     }
 }

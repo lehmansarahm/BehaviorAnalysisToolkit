@@ -1,0 +1,23 @@
+﻿{
+	"inputs": [ "/SupportFiles/InputFiles/OA5-Breakfast.csv" ],
+  "filters": [
+    {
+      "Name": "ActivityFilter",
+      "Parameters": [
+        {
+          "Field": "Label",
+          "Clauses": [
+            {
+              "Key": "Contains",
+              "Value": "Select"
+            },
+            {
+              "Key": "Split",
+              "Value": "true"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

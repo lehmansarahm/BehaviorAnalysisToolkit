@@ -29,6 +29,18 @@ namespace BAT.Core.Config
         public List<string> Summarizers { get; set; } 
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:BAT.Core.Config.Configuration"/> class.
+        /// </summary>
+        public Configuration()
+        {
+            Inputs = new List<string>();
+            Transformers = new List<string>();
+            Filters = new List<Command>();
+            Analyzers = new List<Command>();
+            Summarizers = new List<string>();
+        }
+
+        /// <summary>
         /// Loads the inputs.
         /// </summary>
         /// <returns><c>true</c>, if inputs was loaded, <c>false</c> otherwise.</returns>

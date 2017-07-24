@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BAT.Core.Common;
+using BAT.Core.Config;
 
 namespace BAT.Core.Filters.Impl
 {
@@ -13,33 +15,62 @@ namespace BAT.Core.Filters.Impl
         /// <param name="input">Input.</param>
         /// <param name="parameters">Parameters.</param>
         public IEnumerable<FilterResult> Filter(IEnumerable<SensorReading> input, 
-                                                IEnumerable<KeyValuePair<string,string>> parameters)
+                                                IEnumerable<Parameter> parameters)
 		{
             var results = new List<FilterResult>();
-            var whereParam = parameters.Where(x => x.Key.Equals(Constants.COMMAND_PARAMETER_WHERE)).FirstOrDefault();
-            var groupParam = parameters.Where(x => x.Key.Equals(Constants.COMMAND_PARAMETER_GROUP_BY)).FirstOrDefault();
+            foreach (var record in input)
+			{
+                bool isMatch = true, splitOutput = false;
+                string splitField;
 
-            // TODO - split input by lambda expression
-            // input = input.Where(whereParam.Value);
+                foreach (var param in parameters)
+				{
+					var filterField = record.GetType().GetProperty(param.Field)
+                                            .GetValue(record, null).ToString();
+                    foreach (var clause in param.Clauses)
+                    {
+                        switch (clause.Key)
+						{
+							case Constants.COMMAND_PARAM_CONTAINS:
+								isMatch = (filterField.Contains(clause.Value));
+								break;
+							case Constants.COMMAND_PARAM_EQUAL_TO:
+								isMatch = (filterField.Equals(clause.Value));
+								break;
+							case Constants.COMMAND_PARAM_NOT_EQUAL_TO:
+								isMatch = (!filterField.Equals(clause.Value));
+								break;
+							case Constants.COMMAND_PARAM_SPLIT:
+								if (!splitOutput) // only set once
+								{
+									splitOutput = true;
+									splitField = param.Field;
+                                }
+                                break;
+                        }
+					}
 
-            foreach (var reading in input) 
-            {
-                var groupVal = reading.GetType().GetProperty(groupParam.Value).GetValue(reading, null).ToString();
-                if (!string.IsNullOrEmpty(groupVal)) 
-                {
-                    if (!results.Select(x => x.Name).Contains(groupVal))
-                    {
-                        var newResult = new FilterResult()
-                        {
-                            Name = groupVal,
-                            Data = new List<SensorReading>() { reading }
-                        };
-                        results.Add(newResult);
-                    }
-                    else
-                    {
-                        var existingResult = results.Where(x => x.Name.Equals(groupVal)).FirstOrDefault();
-                        existingResult.Data.Add(reading);
+                    // if we still don't have a match, start over with next record
+                    // (ends parameter for-each)
+					if (!isMatch) break;
+
+					// if valid match AND split output, proceed with output split
+					if (splitOutput)
+					{
+						if (!results.Select(x => x.Name).Contains(filterField))
+						{
+							var newResult = new FilterResult()
+							{
+								Name = filterField,
+								Data = new List<SensorReading>() { record }
+							};
+							results.Add(newResult);
+						}
+						else
+						{
+							var existingResult = results.Where(x => x.Name.Equals(filterField)).FirstOrDefault();
+							existingResult.Data.Add(record);
+						}
                     }
                 }
             }

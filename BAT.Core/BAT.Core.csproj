@@ -62,6 +62,7 @@
     <Compile Include="Summarizers\Impl\UserResultSummarizer.cs" />
     <Compile Include="Transformers\Impl\NormalizationTransformer.cs" />
     <Compile Include="Transformers\Impl\LabelCleanupTransformer.cs" />
+    <Compile Include="Config\Parameter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />

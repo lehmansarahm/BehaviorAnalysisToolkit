@@ -22,8 +22,13 @@ namespace BAT.Core.Common
 		public const double SAMPLING_PERIOD = 34.4827586207; // milliseconds ... approx 29 times per second
         public const string DEFAULT_CONFIG_FILE = "configuration.json";
 
-		public const string COMMAND_PARAMETER_GROUP_BY = "GroupBy";
-		public const string COMMAND_PARAMETER_WHERE = "Where";
+		public const string COMMAND_PARAM_CONTAINS = "Contains";
+		public const string COMMAND_PARAM_EQUAL_TO = "EqualTo";
+		public const string COMMAND_PARAM_GREATER_THAN = "GreaterThan";
+		public const string COMMAND_PARAM_LESS_THAN = "LessThan";
+        public const string COMMAND_PARAM_MATCHES = "Matches";
+        public const string COMMAND_PARAM_NOT_EQUAL_TO = "NotEqualTo";
+		public const string COMMAND_PARAM_SPLIT = "Split";
 
 		public const string INPUT_FILE_START_TRIAL_FLAG = "Start";
 		public const string INPUT_FILE_END_TRIAL_FLAG = "Quit";

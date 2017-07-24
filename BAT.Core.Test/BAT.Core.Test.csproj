@@ -30,6 +30,10 @@
     <Compile Include="InputDataTests.cs" />
     <Compile Include="ConfigFileTests.cs" />
     <Compile Include="BATTest.cs" />
+    <Compile Include="TransformerTests.cs" />
+    <Compile Include="FilterTests.cs" />
+    <Compile Include="AnalysisTests.cs" />
+    <Compile Include="SummaryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
@@ -38,13 +42,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="SupportFiles\ConfigFiles\simpleConfig.json">
+    <None Include="SupportFiles\ConfigFiles\basicFilter.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SupportFiles\InputFiles\OA5-Breakfast.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SupportFiles\InputFiles\OA5-Lunch.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\basicConfigLoad.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\basicTransform.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
