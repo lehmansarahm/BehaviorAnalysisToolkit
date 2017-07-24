@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using BAT.Core.Common;
 using BAT.Core.Config;
 using NUnit.Framework;
 
@@ -37,7 +38,7 @@ namespace BAT.Core.Test
 				Configuration.LoadFromFile(GetConfigFilePath("basicFilter.json"));
             VerifyConfigPhaseCounts(config, 1, 0, 1, 0, 0);
 
-			var commandParams = config.Filters.FirstOrDefault().Parameters;
+            var commandParams = config.Filters.FirstOrDefault().Parameters;
 			Assert.AreEqual(1, commandParams.Count);
 
 			var labelCommand = commandParams.FirstOrDefault();
@@ -137,7 +138,7 @@ namespace BAT.Core.Test
 			Assert.AreEqual(2, labelCommand.Clauses.Count);
 
 			var containsClause = labelCommand.Clauses.FirstOrDefault();
-			Assert.AreEqual("Contains", containsClause.Key);
+            Assert.AreEqual(Constants.COMMAND_PARAM_CONTAINS, containsClause.Key);
 			Assert.AreEqual("Select", containsClause.Value);
 
 			var result = config.LoadInputs();
@@ -152,8 +153,24 @@ namespace BAT.Core.Test
 		[Test]
 		public void TestOperationCompletionFilter()
 		{
-			// run the gamut of this particular operation
-			Assert.AreEqual(true, false);
+			Configuration config =
+				Configuration.LoadFromFile(GetConfigFilePath("completionFilter.json"));
+			VerifyConfigPhaseCounts(config, 1, 0, 1, 0, 0);
+
+            var commandParams = config.Filters.FirstOrDefault().Parameters;
+			Assert.AreEqual(1, commandParams.Count);
+
+            var thresholdParam = commandParams.FirstOrDefault().Clauses.FirstOrDefault();
+			Assert.AreEqual(Constants.COMMAND_PARAM_THRESHOLD, thresholdParam.Key);
+			Assert.AreEqual("94", thresholdParam.Value);
+
+			var result = config.LoadInputs();
+			Assert.AreEqual(true, result);
+			VerifyPhaseResultDataSetCount(config, 1);
+
+			result = config.RunFilters(WRITE_TO_FILE);
+			Assert.AreEqual(true, result);
+			VerifyPhaseResultDataSetCount(config, 11);
 		}
     }
 }

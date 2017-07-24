@@ -32,6 +32,7 @@ namespace BAT.Core.Common
         public const string COMMAND_PARAM_MATCHES = "Matches";
         public const string COMMAND_PARAM_NOT_EQUAL_TO = "NotEqualTo";
 		public const string COMMAND_PARAM_SPLIT = "Split";
+        public const string COMMAND_PARAM_THRESHOLD = "Threshold";
 
 		public const string INPUT_FILE_START_TRIAL_FLAG = "Start";
 		public const string INPUT_FILE_END_TRIAL_FLAG = "Quit";

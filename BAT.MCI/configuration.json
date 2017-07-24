@@ -4,7 +4,7 @@
   "filters": [
     {
       "Name": "ActivityFilter",
-      "Parameters": [
+      "Predicates": [
         {
           "Field": "Label",
           "Clauses": [

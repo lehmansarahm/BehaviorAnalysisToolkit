@@ -164,26 +164,32 @@ namespace BAT.Core.Config
 						continue; // proceed to next operation
 					}
                     
-					foreach (var key in InputData.Keys) 
-                    {
-                        var filteredResultSets = filter.Filter(InputData[key], filterCommand.Parameters);
-                        foreach (var filterResult in filteredResultSets)
+					foreach (var key in InputData.Keys)
+					{
+                        IEnumerable<FilterResult> filteredResultSets = null;
+                        if (filterCommand.Parameters != null)
+                            filteredResultSets = filter.Filter(InputData[key], filterCommand.Parameters);
+
+                        if (filteredResultSets != null)
 						{
-                            var filenameComponents = key.Split('.');
-                            var fileName = filenameComponents[filenameComponents.Length - 2];
-                            var fileExtension = filenameComponents[filenameComponents.Length - 1];
-                            var newFilename = $"{fileName}_{filterResult.Name}.{fileExtension}";
+							foreach (var filterResult in filteredResultSets)
+							{
+								var filenameComponents = key.Split('.');
+								var fileName = filenameComponents[filenameComponents.Length - 2];
+								var fileExtension = filenameComponents[filenameComponents.Length - 1];
+								var newFilename = $"{fileName}_{filterResult.Name}.{fileExtension}";
 
-                            var filteredValues = filterResult.Data;
-							if (filteredData.ContainsKey(newFilename))
-								filteredData[newFilename] = filteredValues;
-							else filteredData.Add(newFilename, filteredValues);
+								var filteredValues = filterResult.Data;
+								if (filteredData.ContainsKey(newFilename))
+									filteredData[newFilename] = filteredValues;
+								else filteredData.Add(newFilename, filteredValues);
 
-							if (writeOutputToFile)
-								CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_FILTERS,
-														  filterName, newFilename,
-														  SensorReading.HeaderCsv,
-														  filteredValues);
+								if (writeOutputToFile)
+									CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_FILTERS,
+															  filterName, newFilename,
+															  SensorReading.HeaderCsv,
+															  filteredValues);
+							}
                         }
 					}
 				}
