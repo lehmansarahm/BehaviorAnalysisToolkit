@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BAT.Core.Common;
 using BAT.Core.Config;
@@ -22,7 +20,6 @@ namespace BAT.Core.Filters.Impl
             foreach (var record in input)
 			{
                 bool isMatch = true;
-
                 foreach (var param in parameters)
 				{
                     // check to see if desired field exists for this object
@@ -37,16 +34,13 @@ namespace BAT.Core.Filters.Impl
                         switch (clause.Key)
 						{
 							case Constants.COMMAND_PARAM_CONTAINS:
-                                isMatch = (Constants.CULTURE.CompareInfo.IndexOf(filterValue, 
-                                                                                 clause.Value, CompareOptions.IgnoreCase) >= 0);
+                                isMatch = Command.Contains(filterValue, clause.Value);
 								break;
 							case Constants.COMMAND_PARAM_EQUAL_TO:
-								isMatch = (filterValue.Equals(clause.Value, 
-                                                              StringComparison.InvariantCultureIgnoreCase));
+                                isMatch = Command.EqualTo(filterValue, clause.Value);
 								break;
 							case Constants.COMMAND_PARAM_NOT_EQUAL_TO:
-								isMatch = (!filterValue.Equals(clause.Value, 
-                                                               StringComparison.InvariantCultureIgnoreCase));
+								isMatch = Command.NotEqualTo(filterValue, clause.Value);
 								break;
                         }
 					}
@@ -55,10 +49,8 @@ namespace BAT.Core.Filters.Impl
                     // (ends parameter for-each)
 					if (!isMatch) break;
 
-					// if valid match AND split output, proceed with output split
-					bool splitOutput = param.Clauses.Where(x => x.Key.Contains(Constants.COMMAND_PARAM_SPLIT))
-											.FirstOrDefault().Value.Equals("true", StringComparison.InvariantCultureIgnoreCase);
-					if (splitOutput)
+                    // if valid match AND split output, proceed with output split
+					if (param.SplitOutput())
 					{
 						if (!results.Select(x => x.Name).Contains(filterValue))
 						{
