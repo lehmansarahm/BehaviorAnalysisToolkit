@@ -29,21 +29,7 @@ namespace BAT.Core.Filters.Impl
 
                     // if it does exist, continue with processing ...
                     var filterValue = filterField.GetValue(record, null).ToString();
-                    foreach (var clause in param.Clauses)
-                    {
-                        switch (clause.Key)
-						{
-							case Constants.COMMAND_PARAM_CONTAINS:
-                                isMatch = Command.Contains(filterValue, clause.Value);
-								break;
-							case Constants.COMMAND_PARAM_EQUAL_TO:
-                                isMatch = Command.EqualTo(filterValue, clause.Value);
-								break;
-							case Constants.COMMAND_PARAM_NOT_EQUAL_TO:
-								isMatch = Command.NotEqualTo(filterValue, clause.Value);
-								break;
-                        }
-					}
+                    isMatch = param.MatchesClause(filterValue);
 
                     // if we still don't have a match, start over with next record
                     // (ends parameter for-each)

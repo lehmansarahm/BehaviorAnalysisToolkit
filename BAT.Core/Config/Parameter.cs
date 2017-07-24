@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using BAT.Core.Common;
 
@@ -10,6 +11,41 @@ namespace BAT.Core.Config
         public string Field { get; set; }
         public List<KeyValuePair<string, string>> Clauses { get; set; }
 
+        /// <summary>
+        /// Matcheses the clause.
+        /// </summary>
+        /// <returns><c>true</c>, if clause was matchesed, <c>false</c> otherwise.</returns>
+        /// <param name="source">Input value.</param>
+        public bool MatchesClause(string source)
+        {
+            bool isMatch = true;
+			foreach (var clause in Clauses)
+			{
+				switch (clause.Key)
+				{
+					case Constants.COMMAND_PARAM_CONTAINS:
+						isMatch = (Constants.CULTURE
+                                   .CompareInfo.IndexOf(source, clause.Value,
+                                                        CompareOptions.IgnoreCase) >= 0);
+						break;
+					case Constants.COMMAND_PARAM_EQUAL_TO:
+						isMatch = (source.Equals(clause.Key, 
+                                                 StringComparison.InvariantCultureIgnoreCase));
+						break;
+					case Constants.COMMAND_PARAM_NOT_EQUAL_TO:
+						isMatch = !(source.Equals(clause.Key, 
+                                                  StringComparison.InvariantCultureIgnoreCase));
+						break;
+				}
+			}
+
+            return isMatch;
+        }
+
+        /// <summary>
+        /// Splits the output.
+        /// </summary>
+        /// <returns><c>true</c>, if output was split, <c>false</c> otherwise.</returns>
         public bool SplitOutput()
         {
 			bool splitOutput = Clauses.Where(x => x.Key.Contains(Constants.COMMAND_PARAM_SPLIT))
