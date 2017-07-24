@@ -7,18 +7,27 @@ namespace BAT.Core.Test
     [TestFixture]
     public class ConfigFileTests : BATTest
 	{
+        /// <summary>
+        /// Setup this instance.
+        /// </summary>
 		[SetUp]
 		public void Setup()
 		{
 			// do something
 		}
 
+        /// <summary>
+        /// Tears down.
+        /// </summary>
 		[TearDown]
 		public void TearDown()
 		{
 			// do something
 		}
 
+        /// <summary>
+        /// Tests the basic config load.
+        /// </summary>
 		[Test]
 		public void TestBasicConfigLoad()
 		{
@@ -39,15 +48,22 @@ namespace BAT.Core.Test
             Assert.AreEqual(2729, config.InputData[key].Count());
 		}
 
+        /// <summary>
+        /// Tests the basic transform and filter.
+        /// </summary>
         [Test]
         public void TestBasicTransformAndFilter()
 		{
 			Configuration config =
 				Configuration.LoadFromFile(GetConfigFilePath("simpleConfig.json"));
 			config.LoadInputs();
+			Assert.AreEqual(1, config.InputData.Keys.Count);
 
-            config.RunTransformers(false);
-            config.RunFilters(false);
+			config.RunTransformers(false);
+			Assert.AreEqual(1, config.InputData.Keys.Count);
+
+			config.RunFilters(false);
+			Assert.AreEqual(33, config.InputData.Keys.Count);
         }
     }
 }
