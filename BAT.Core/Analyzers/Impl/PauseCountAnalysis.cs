@@ -12,19 +12,13 @@ namespace BAT.Core.Analyzers.Impl
 		/// Gets the header.
 		/// </summary>
 		/// <returns>The header.</returns>
-		public string[] GetHeader()
-		{
-            return PauseResult.Header;
-		}
+        public string[] GetHeader() { return Constants.PAUSE_RESULT_HEADER; }
 
 		/// <summary>
 		/// Gets the header csv.
 		/// </summary>
 		/// <returns>The header csv.</returns>
-		public string GetHeaderCsv()
-		{
-			return PauseResult.HeaderCsv;
-		}
+		public string GetHeaderCsv() { return Constants.PAUSE_RESULT_HEADER_CSV; }
 
 		/// <summary>
 		/// Analyze the specified input and parameters.

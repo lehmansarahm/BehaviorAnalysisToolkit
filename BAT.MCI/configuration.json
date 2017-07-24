@@ -62,5 +62,6 @@
       "Name": "TaskTimeAnalysis",
       "Parameters": []
     }
-  ]
+  ],
+  "summarizers": [ "TaskTimeSummarizer" ]
 }

@@ -50,17 +50,27 @@ namespace BAT.Core.Test
 			Assert.AreEqual(filters, config.Filters.Count);
             Assert.AreEqual(analyses, config.Analyzers.Count);
             Assert.AreEqual(summaries, config.Summarizers.Count);
-        }
+		}
 
         /// <summary>
-        /// Verifies the phase result data set count.
+        /// Verifies the input data set count.
         /// </summary>
         /// <param name="config">Config.</param>
         /// <param name="count">Count.</param>
-        protected static void VerifyPhaseResultDataSetCount(Configuration config, int count)
+		protected static void VerifyInputDataSetCount(Configuration config, int count)
 		{
 			Assert.AreEqual(count, config.InputData.Keys.Count);
-        }
+		}
+
+        /// <summary>
+        /// Verifies the analysis data set count.
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="count">Count.</param>
+		protected static void VerifyAnalysisDataSetCount(Configuration config, int count)
+		{
+            Assert.AreEqual(count, config.AnalysisData.Keys.Count);
+		}
 
         /// <summary>
         /// Gets the test data folder.

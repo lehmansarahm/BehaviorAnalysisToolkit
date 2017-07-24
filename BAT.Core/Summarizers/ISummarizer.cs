@@ -6,6 +6,11 @@ namespace BAT.Core.Summarizers
 {
     public interface ISummarizer
 	{
-		void Summarize(List<SensorReading> input);
+		string[] GetHeader();
+		string GetHeaderCsv();
+
+		Type PhaseResultType { get; }
+        IEnumerable<KeyValuePair<string, string>> 
+            Summarize<T>(Dictionary<string, IEnumerable<T>> input) where T : ICsvWritable;
     }
 }

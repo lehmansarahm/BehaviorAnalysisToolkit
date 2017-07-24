@@ -5,6 +5,7 @@ using System.Linq;
 using BAT.Core.Analyzers;
 using BAT.Core.Common;
 using BAT.Core.Filters;
+using BAT.Core.Summarizers;
 using BAT.Core.Transformers;
 using Newtonsoft.Json;
 
@@ -120,9 +121,8 @@ namespace BAT.Core.Config
                         else transformedData.Add(key, transformedValues);
 
 						if (writeOutputToFile)
-                            CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_TRANSFORMERS,
-                                                      transformerName, key,
-                                                      transformer.GetHeaderCsv(),
+                            CsvFileWriter.WriteToFile(new string[] { Constants.OUTPUT_DIR_TRANSFORMERS, transformerName },
+                                                      key, transformer.GetHeaderCsv(),
                                                       transformedValues);
                     }
                 }
@@ -186,9 +186,8 @@ namespace BAT.Core.Config
 								else filteredData.Add(newFilename, filteredValues);
 
 								if (writeOutputToFile)
-									CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_FILTERS,
-                                                              filterName, newFilename,
-                                                              filter.GetHeaderCsv(),
+									CsvFileWriter.WriteToFile(new string[] { Constants.OUTPUT_DIR_FILTERS, filterName }, 
+                                                              newFilename, filter.GetHeaderCsv(),
 															  filteredValues);
 							}
                         }
@@ -240,9 +239,8 @@ namespace BAT.Core.Config
 						else analyzedData.Add(key, analysisResult);
 
 						if (writeOutputToFile)
-							CsvFileWriter.WriteToFile(Constants.OUTPUT_DIR_ANALYZERS,
-													  analyzerName, key,
-													  analyzer.GetHeaderCsv(),
+							CsvFileWriter.WriteToFile(new string[] { Constants.OUTPUT_DIR_ANALYZERS, analyzerName }, 
+                                                      key, analyzer.GetHeaderCsv(),
 													  analysisResult);
 					}
 				}
@@ -262,8 +260,38 @@ namespace BAT.Core.Config
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
 		public bool RunSummarizers(bool writeOutputToFile = false)
 		{
-			// TODO
-			return false;
+			bool success = false;
+            if (Summarizers?.Count > 0 && AnalysisData?.Keys?.Count >= 1)
+			{
+                foreach (var summarizerName in Summarizers)
+				{
+                    Type summarizerType;
+                    ISummarizer summarizer;
+
+					try
+					{
+						summarizerType = Type.GetType(Constants.NAMESPACE_SUMMARIZER_IMPL + summarizerName);
+                        summarizer = (ISummarizer)Activator.CreateInstance(summarizerType);
+						success = true;
+					}
+					catch (ArgumentNullException ex)
+					{
+						LogManager.Error("Could not create instance of provided summarizer.  "
+										+ "Please double-check configuration file.", ex, this);
+						continue; // proceed to next operation
+					}
+
+                    var summarizedValues = summarizer.Summarize(AnalysisData);
+					if (writeOutputToFile)
+                        CsvFileWriter.WriteToFile(new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
+                                                  $"{summarizerName}.csv",
+												  summarizer.GetHeaderCsv(),
+												  summarizedValues);
+				}
+			}
+			else LogManager.Error("No input data to run summaries on.", this);
+
+			return success;
         }
 
 		/// <summary>

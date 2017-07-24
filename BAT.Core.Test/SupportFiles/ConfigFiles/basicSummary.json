@@ -1,0 +1,21 @@
+﻿{
+  "inputs": [ "SupportFiles/InputFiles/OA5-Breakfast.csv" ],
+  "filters": [
+    {
+      "Name": "ActivityFilter",
+      "Parameters": [
+        {
+          "Field": "Label",
+          "Clauses": [
+            {
+              "Key": "Split",
+              "Value": "true"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "analyzers": [ { "Name": "TaskTimeAnalysis" } ],
+  "summarizers": [ "TaskTimeSummarizer" ]
+}

@@ -12,19 +12,13 @@ namespace BAT.Core.Analyzers.Impl
 		/// Gets the header.
 		/// </summary>
 		/// <returns>The header.</returns>
-		public string[] GetHeader()
-		{
-            return TaskTimeResult.Header;
-		}
+        public string[] GetHeader() { return Constants.TASK_TIME_RESULT_HEADER; }
 
 		/// <summary>
 		/// Gets the header csv.
 		/// </summary>
 		/// <returns>The header csv.</returns>
-		public string GetHeaderCsv()
-		{
-			return TaskTimeResult.HeaderCsv;
-		}
+        public string GetHeaderCsv() { return Constants.TASK_TIME_RESULT_HEADER_CSV; }
 
         /// <summary>
         /// Analyze the specified input and parameters.
@@ -44,7 +38,6 @@ namespace BAT.Core.Analyzers.Impl
             var execTimeInSec = execTimeInMs / 1000.0d;
 
             var last = input.LastOrDefault();
-
             var results = new List<TaskTimeResult>
             {
                 new TaskTimeResult {
@@ -55,6 +48,7 @@ namespace BAT.Core.Analyzers.Impl
                     Duration = execTimeInSec
                 }
             };
+                
 			return results;
 		}
 	}

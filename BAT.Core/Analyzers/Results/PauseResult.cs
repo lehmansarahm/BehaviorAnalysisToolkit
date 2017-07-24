@@ -5,25 +5,6 @@ namespace BAT.Core.Analyzers.Results
 {
     public class PauseResult : ICsvWritable
 	{
-		public static string[] Header
-		{
-			get
-			{
-				return new string[]
-				{
-					"Start Time",
-					"Start Num",
-					"End Time",
-					"End Num",
-					"Pause Duration"
-				};
-			}
-		}
-		public static string HeaderCsv { get { return string.Join(",", Header); } }
-
-		//----------------------------------------------------------------------
-		//----------------------------------------------------------------------
-
 		public DateTime Start { get; set; }
         public int StartNum { get; set; }
         public DateTime End { get; set; }

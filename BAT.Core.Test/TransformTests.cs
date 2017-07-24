@@ -37,10 +37,10 @@ namespace BAT.Core.Test
 			VerifyConfigPhaseCounts(config, 1, 2, 0, 0, 0);
 
 			config.LoadInputs();
-			VerifyPhaseResultDataSetCount(config, 1);
+			VerifyInputDataSetCount(config, 1);
 
 			config.RunTransformers(WRITE_TO_FILE);
-			VerifyPhaseResultDataSetCount(config, 1);
+			VerifyInputDataSetCount(config, 1);
 		}
 
         /// <summary>
@@ -54,12 +54,12 @@ namespace BAT.Core.Test
 			VerifyConfigPhaseCounts(config, 1, 1, 0, 0, 0);
 
 			config.LoadInputs();
-            VerifyPhaseResultDataSetCount(config, 1);
+            VerifyInputDataSetCount(config, 1);
 
 			// user provided a transformer name that doesn't match anything we have
 			var result = config.RunTransformers(WRITE_TO_FILE);
 			Assert.AreEqual(false, result);
-			VerifyPhaseResultDataSetCount(config, 0);
+			VerifyInputDataSetCount(config, 0);
 		}
 
 		[Test]

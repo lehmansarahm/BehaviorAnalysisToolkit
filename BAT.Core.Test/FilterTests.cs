@@ -51,11 +51,11 @@ namespace BAT.Core.Test
 
 			var result = config.LoadInputs();
 			Assert.AreEqual(true, result);
-			VerifyPhaseResultDataSetCount(config, 1);
+			VerifyInputDataSetCount(config, 1);
 
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
-			VerifyPhaseResultDataSetCount(config, 35);
+			VerifyInputDataSetCount(config, 35);
 		}
 
         /// <summary>
@@ -81,12 +81,12 @@ namespace BAT.Core.Test
 
 			var result = config.LoadInputs();
 			Assert.AreEqual(true, result);
-			VerifyPhaseResultDataSetCount(config, 1);
+			VerifyInputDataSetCount(config, 1);
 
 			// user provided filter name that doesn't match anything we have
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(false, result);
-			VerifyPhaseResultDataSetCount(config, 0);
+			VerifyInputDataSetCount(config, 0);
 		}
 
         /// <summary>
@@ -114,13 +114,13 @@ namespace BAT.Core.Test
 
 			var result = config.LoadInputs();
 			Assert.AreEqual(true, result);
-			VerifyPhaseResultDataSetCount(config, 1);
+			VerifyInputDataSetCount(config, 1);
 
             // assuming everything else is well formed in config, operation should 
             // still complete successfully ... phase output will just be empty
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
-			VerifyPhaseResultDataSetCount(config, 0);
+			VerifyInputDataSetCount(config, 0);
 		}
 
 		[Test]
@@ -143,11 +143,11 @@ namespace BAT.Core.Test
 
 			var result = config.LoadInputs();
 			Assert.AreEqual(true, result);
-			VerifyPhaseResultDataSetCount(config, 1);
+			VerifyInputDataSetCount(config, 1);
 
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
-			VerifyPhaseResultDataSetCount(config, 11);  // returning only tasks with "select" in label
+			VerifyInputDataSetCount(config, 11);  // returning only tasks with "select" in label
 		}
 
 		[Test]
@@ -166,11 +166,11 @@ namespace BAT.Core.Test
 
 			var result = config.LoadInputs();
 			Assert.AreEqual(true, result);
-			VerifyPhaseResultDataSetCount(config, 1);
+			VerifyInputDataSetCount(config, 1);
 
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
-			VerifyPhaseResultDataSetCount(config, 11);
+			VerifyInputDataSetCount(config, 11);
 		}
     }
 }
