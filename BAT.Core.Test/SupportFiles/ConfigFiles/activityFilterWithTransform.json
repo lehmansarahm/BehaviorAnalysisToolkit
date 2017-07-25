@@ -1,0 +1,24 @@
+﻿{
+  "inputs": [ "/SupportFiles/InputFiles/OA5-Breakfast.csv" ],
+  "transformers": [ "LinearAcceleration", "LabelCleanup" ],
+  "filters": [
+    {
+      "Name": "Activity",
+      "Parameters": [
+        {
+          "Field": "Label",
+          "Clauses": [
+            {
+              "Key": "Contains",
+              "Value": "Select"
+            },
+            {
+              "Key": "Split",
+              "Value": "true"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

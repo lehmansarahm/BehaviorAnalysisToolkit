@@ -35,7 +35,8 @@ namespace BAT.Core.Common
 		{
             string output = $"{header}\n" +
                 (input != null ? string.Join("\n", input.Select(x => string.Join(",", x))) : "") +
-                $"\n\n{footer}\n{string.Join(",", footerVals)}";
+                $"\n{string.Join(",", GetEmptyLine(footerVals.Length))}" +
+                $"\n{footer}\n{string.Join(",", footerVals)}";
             WriteToFile(outputDirs, filename, output);
 		}
 
@@ -76,6 +77,18 @@ namespace BAT.Core.Common
         static void InitDir(string path)
         {
 			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+        }
+
+        /// <summary>
+        /// Gets the empty line.
+        /// </summary>
+        /// <returns>The empty line.</returns>
+        /// <param name="count">Count.</param>
+        static List<string> GetEmptyLine(int count)
+        {
+            var output = new List<string>();
+            for (int i = 0; i < count; i++) output.Add("");
+            return output;
         }
     }
 }

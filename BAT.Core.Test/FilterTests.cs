@@ -123,6 +123,9 @@ namespace BAT.Core.Test
 			VerifyInputDataSetCount(config, 0);
 		}
 
+        /// <summary>
+        /// Tests the operation activity filter.
+        /// </summary>
 		[Test]
 		public void TestOperationActivityFilter()
 		{
@@ -141,6 +144,10 @@ namespace BAT.Core.Test
             Assert.AreEqual(Constants.COMMAND_PARAM_CONTAINS, containsClause.Key);
 			Assert.AreEqual("Select", containsClause.Value);
 
+			var splitClause = labelCommand.Clauses.LastOrDefault();
+			Assert.AreEqual(Constants.COMMAND_PARAM_SPLIT, splitClause.Key);
+			Assert.AreEqual("true", splitClause.Value);
+
 			var result = config.LoadInputs();
 			Assert.AreEqual(true, result);
 			VerifyInputDataSetCount(config, 1);
@@ -150,6 +157,61 @@ namespace BAT.Core.Test
 			VerifyInputDataSetCount(config, 11);  // returning only tasks with "select" in label
 		}
 
+		/// <summary>
+		/// Tests the filter with transform.
+		/// </summary>
+		[Test]
+		public void TestOperationActivityFilterWithTransform()
+		{
+			// need to make sure that the data being generated from the 
+			// "transform" phase is being properly utilized for the "filter" phase
+			Configuration config =
+				Configuration.LoadFromFile(GetConfigFilePath("activityFilterWithTransform.json"));
+			VerifyConfigPhaseCounts(config, 1, 2, 1, 0, 0);
+
+			var commandParams = config.Filters.FirstOrDefault().Parameters;
+			Assert.AreEqual(1, commandParams.Count);
+
+			var labelCommand = commandParams.FirstOrDefault();
+			Assert.AreEqual("Label", labelCommand.Field);
+			Assert.AreEqual(2, labelCommand.Clauses.Count);
+
+			var containsClause = labelCommand.Clauses.FirstOrDefault();
+			Assert.AreEqual(Constants.COMMAND_PARAM_CONTAINS, containsClause.Key);
+			Assert.AreEqual("Select", containsClause.Value);
+
+            var splitClause = labelCommand.Clauses.LastOrDefault();
+            Assert.AreEqual(Constants.COMMAND_PARAM_SPLIT, splitClause.Key);
+			Assert.AreEqual("true", splitClause.Value);
+
+			var result = config.LoadInputs();
+			Assert.AreEqual(true, result);
+			VerifyInputDataSetCount(config, 1);
+
+            result = config.RunTransformers(WRITE_TO_FILE);
+			Assert.AreEqual(true, result);
+			VerifyInputDataSetCount(config, 1);
+
+			result = config.RunFilters(WRITE_TO_FILE);
+			Assert.AreEqual(true, result);
+
+			// returning only tasks with "select" in label
+			// THERE ARE ONLY TEN!!  (no "select quit")
+			VerifyInputDataSetCount(config, 10);
+
+            var selectBreadDataSet = config.InputData.Where(x => x.Key.Contains("select-bread")).FirstOrDefault().Value;
+			Assert.AreNotEqual(null, selectBreadDataSet);
+
+            var firstReading = selectBreadDataSet.FirstOrDefault();
+			Assert.AreNotEqual(null, firstReading);
+
+			// make sure that the first record of "select bread" is what we expect
+			VerifySensorReading(FIRST_SELECT_BREAD_READING, firstReading);
+		}
+
+        /// <summary>
+        /// Tests the operation completion filter.
+        /// </summary>
 		[Test]
 		public void TestOperationCompletionFilter()
 		{
@@ -168,6 +230,7 @@ namespace BAT.Core.Test
 			Assert.AreEqual(true, result);
 			VerifyInputDataSetCount(config, 1);
 
+            // TODO - actually implement "completion" filter
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
 			VerifyInputDataSetCount(config, 11);

@@ -87,6 +87,15 @@
     <None Include="SupportFiles\ConfigFiles\basicSummary.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="SupportFiles\ConfigFiles\activityFilterWithTransform.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\linearAccelerationTransform.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\labelCleanupTransform.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SupportFiles\" />

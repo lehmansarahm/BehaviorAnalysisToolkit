@@ -116,19 +116,21 @@ namespace BAT.Core.Config
 
                     foreach (var key in InputData.Keys) 
                     {
-                        var transformedValues = transformer.Transform(InputData[key]);
-                        if (transformedData.ContainsKey(key))
-                            transformedData[key] = transformedValues;
+                        bool dataAlreadyProcessedForKey = transformedData.ContainsKey(key);
+                        var inputData = (dataAlreadyProcessedForKey ? transformedData[key] : InputData[key]);
+                        var transformedValues = transformer.Transform(inputData);
+
+                        if (dataAlreadyProcessedForKey) transformedData[key] = transformedValues;
                         else transformedData.Add(key, transformedValues);
 
 						if (writeOutputToFile)
                             CsvFileWriter.WriteResultsToFile(new string[] { Constants.OUTPUT_DIR_TRANSFORMERS, transformerName },
                                                       key, transformer.GetHeaderCsv(),
                                                       transformedValues);
-                    }
-                }
+					}
+				}
 
-                InputData = transformedData;
+				InputData = transformedData;
             } 
             else LogManager.Error("No input data to run transformations on.", this);
 

@@ -1,4 +1,6 @@
-﻿using BAT.Core.Config;
+﻿using System.Linq;
+using BAT.Core.Common;
+using BAT.Core.Config;
 using NUnit.Framework;
 
 namespace BAT.Core.Test
@@ -62,18 +64,64 @@ namespace BAT.Core.Test
 			VerifyInputDataSetCount(config, 0);
 		}
 
+        /// <summary>
+        /// Tests the operation linear acceleration transform.
+        /// </summary>
 		[Test]
 		public void TestOperationLinearAccelerationTransform()
 		{
-			// run the gamut of this particular operation
-			Assert.AreEqual(true, false);
+			// need to make sure that the data being generated from the 
+			// "transform" phase is being properly utilized for the "filter" phase
+			Configuration config =
+				Configuration.LoadFromFile(GetConfigFilePath("linearAccelerationTransform.json"));
+			VerifyConfigPhaseCounts(config, 1, 1, 0, 0, 0);
+
+			var result = config.LoadInputs();
+			Assert.AreEqual(true, result);
+			VerifyInputDataSetCount(config, 1);
+
+			result = config.RunTransformers(WRITE_TO_FILE);
+			Assert.AreEqual(true, result);
+			VerifyInputDataSetCount(config, 1);
+
+			var firstDataSet = config.InputData.FirstOrDefault().Value;
+			Assert.AreNotEqual(null, firstDataSet);
+
+			var firstSelectReading = firstDataSet.Where(x => x.Label.Contains("select")).FirstOrDefault();
+			Assert.AreNotEqual(null, firstSelectReading);
+
+            // make sure that the first record of "select bread" is what we expect
+            VerifySensorReading(FIRST_SELECT_BREAD_READING, firstSelectReading);
 		}
 
+        /// <summary>
+        /// Tests the operation label cleanup transform.
+        /// </summary>
 		[Test]
 		public void TestOperationLabelCleanupTransform()
 		{
-			// run the gamut of this particular operation
-			Assert.AreEqual(true, false);
+			// need to make sure that the data being generated from the 
+			// "transform" phase is being properly utilized for the "filter" phase
+			Configuration config =
+				Configuration.LoadFromFile(GetConfigFilePath("labelCleanupTransform.json"));
+			VerifyConfigPhaseCounts(config, 1, 1, 0, 0, 0);
+
+			var result = config.LoadInputs();
+			Assert.AreEqual(true, result);
+			VerifyInputDataSetCount(config, 1);
+
+			result = config.RunTransformers(WRITE_TO_FILE);
+			Assert.AreEqual(true, result);
+			VerifyInputDataSetCount(config, 1);
+
+			var firstDataSet = config.InputData.FirstOrDefault().Value;
+			Assert.AreNotEqual(null, firstDataSet);
+
+			var firstSelectReading = firstDataSet.Where(x => x.Label.Contains("select")).FirstOrDefault();
+			Assert.AreNotEqual(null, firstSelectReading);
+
+            // make sure that the first record of "select bread" is what we expect
+            Assert.AreEqual("select-bread", firstSelectReading.Label);
 		}
     }
 }

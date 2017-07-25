@@ -62,15 +62,17 @@ namespace BAT.Core.Test
 			Assert.AreEqual(true, success);
 			Assert.AreEqual(null, config.AnalysisData);
 
-			// 11 results (with activity split)
-			Assert.AreEqual(11, config.InputData.Keys.Count);
+			// returning only tasks with "select" in label
+			// THERE ARE ONLY TEN!!  (no "select quit")
+			VerifyInputDataSetCount(config, 10);
 
 			success = config.RunAnalyzers();
 			Assert.AreEqual(true, success);
 
-			// 11 results (with activity split) ... analysis data no longer null
-			Assert.AreEqual(11, config.InputData.Keys.Count);
-			Assert.AreEqual(11, config.AnalysisData.Keys.Count);
+			// returning only tasks with "select" in label ... analysis data no longer null
+			// THERE ARE ONLY TEN!!  (no "select quit")
+			VerifyInputDataSetCount(config, 10);
+            VerifyAnalysisDataSetCount(config, 10);
 		}
 
 		/// <summary>
@@ -109,15 +111,17 @@ namespace BAT.Core.Test
 			Assert.AreEqual(true, success);
 			Assert.AreEqual(null, config.AnalysisData);
 
-			// 11 results (with activity split)
-			Assert.AreEqual(11, config.InputData.Keys.Count);
+			// returning only tasks with "select" in label
+			// THERE ARE ONLY TEN!!  (no "select quit")
+			VerifyInputDataSetCount(config, 10);
 
 			success = config.RunAnalyzers();
 			Assert.AreEqual(true, success);
 
-			// 11 results (with activity split) ... analysis data no longer null
-			Assert.AreEqual(11, config.InputData.Keys.Count);
-			Assert.AreEqual(11, config.AnalysisData.Keys.Count);
+			// returning only tasks with "select" in label ... analysis data no longer null
+			// THERE ARE ONLY TEN!!  (no "select quit")
+			VerifyInputDataSetCount(config, 10);
+			VerifyAnalysisDataSetCount(config, 10);
 		}
 
 		/// <summary>
@@ -148,15 +152,17 @@ namespace BAT.Core.Test
 			Assert.AreEqual(true, success);
 			Assert.AreEqual(null, config.AnalysisData);
 
-			// 11 results (with activity split)
-			Assert.AreEqual(11, config.InputData.Keys.Count);
+			// returning only tasks with "select" in label
+			// THERE ARE ONLY TEN!!  (no "select quit")
+			VerifyInputDataSetCount(config, 10);
 
 			success = config.RunAnalyzers();
 			Assert.AreEqual(true, success);
 
-			// 11 results (with activity split) ... analysis data no longer null
-			Assert.AreEqual(11, config.InputData.Keys.Count);
-			Assert.AreEqual(11, config.AnalysisData.Keys.Count);
+			// returning only tasks with "select" in label ... analysis data no longer null
+			// THERE ARE ONLY TEN!!  (no "select quit")
+			VerifyInputDataSetCount(config, 10);
+			VerifyAnalysisDataSetCount(config, 10);
 		}
 	}
 }

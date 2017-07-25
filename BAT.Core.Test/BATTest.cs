@@ -1,16 +1,33 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using BAT.Core.Common;
 using BAT.Core.Config;
 using NUnit.Framework;
 
 namespace BAT.Core.Test
 {
-    public partial class BATTest
+    public class BATTest
     {
-        private const string TEST_DATA_FOLDER = "SupportFiles";
-        private const string TEST_DATA_FOLDER_CONFIGS = "ConfigFiles";
-        private const string TEST_DATA_FOLDER_INPUTS = "InputFiles";
+        const string TEST_DATA_FOLDER = "SupportFiles";
+        const string TEST_DATA_FOLDER_CONFIGS = "ConfigFiles";
+		const string TEST_DATA_FOLDER_INPUTS = "InputFiles";
+        const int PRECISION = 5;
+
+        protected static SensorReading FIRST_SELECT_BREAD_READING = new SensorReading
+        {
+            Time = DateTime.Parse("10:15:50"),
+            RecordNum = 219,
+            Azimuth = 0.64039737,
+            Pitch = 0.42048505,
+            Roll = 2.950423,
+            AccelX = -0.11136818,
+            AccelY = 0.1675272,
+            AccelZ = -0.29715037,
+            Start = false,
+            End = false,
+            Label = "select-bread"
+        };
 
         /// <summary>
         /// Gets the config file path.
@@ -73,11 +90,51 @@ namespace BAT.Core.Test
 		}
 
         /// <summary>
+        /// Verifies the sensor reading.
+        /// </summary>
+        /// <param name="expected">Expected.</param>
+        /// <param name="actual">Actual.</param>
+        /// <param name="includeSupportingFields">If set to <c>true</c> include supporting fields.</param>
+        protected static void VerifySensorReading(SensorReading expected, 
+                                                  SensorReading actual, 
+                                                  bool includeSupportingFields = false)
+		{
+			Assert.AreEqual(expected.Time, actual.Time);
+            Assert.AreEqual(expected.RecordNum, actual.RecordNum);
+
+            Assert.AreEqual(Math.Round(expected.Azimuth.Value, PRECISION),
+							Math.Round(actual.Azimuth.Value, PRECISION));
+			Assert.AreEqual(Math.Round(expected.Pitch.Value, PRECISION),
+							Math.Round(actual.Pitch.Value, PRECISION));
+			Assert.AreEqual(Math.Round(expected.Roll.Value, PRECISION),
+							Math.Round(actual.Roll.Value, PRECISION));
+
+			Assert.AreEqual(Math.Round(expected.AccelX.Value, PRECISION),
+							Math.Round(actual.AccelX.Value, PRECISION));
+			Assert.AreEqual(Math.Round(expected.AccelY.Value, PRECISION),
+							Math.Round(actual.AccelY.Value, PRECISION));
+			Assert.AreEqual(Math.Round(expected.AccelZ.Value, PRECISION),
+							Math.Round(actual.AccelZ.Value, PRECISION));
+
+            if (includeSupportingFields)
+			{
+				Assert.AreEqual(Math.Round(expected.AccelMag, PRECISION),
+								Math.Round(actual.AccelMag, PRECISION));
+				Assert.AreEqual(Math.Round(expected.InstantSpeed, PRECISION),
+								Math.Round(actual.InstantSpeed, PRECISION));
+
+				Assert.AreEqual(expected.Start, actual.Start);
+				Assert.AreEqual(expected.End, actual.End);
+				Assert.AreEqual(expected.Label, actual.Label); 
+            }
+        }
+
+        /// <summary>
         /// Gets the test data folder.
         /// </summary>
         /// <returns>The test data folder.</returns>
         /// <param name="testDataFolder">Test data folder.</param>
-		private static string GetTestDataFolder(string testDataFolder)
+		static string GetTestDataFolder(string testDataFolder)
 		{
 			string startupPath = AppDomain.CurrentDomain.BaseDirectory;
 			var pathItems = startupPath.Split(Path.DirectorySeparatorChar);

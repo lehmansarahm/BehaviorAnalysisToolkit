@@ -30,7 +30,7 @@
           "Clauses": [
             {
               "Key": "Threshold",
-              "Value": "1"
+              "Value": "0.1"
             },
             {
               "Key": "Window",
@@ -48,7 +48,7 @@
           "Clauses": [
             {
               "Key": "Threshold",
-              "Value": "1"
+              "Value": "0.1"
             },
             {
               "Key": "Window",
