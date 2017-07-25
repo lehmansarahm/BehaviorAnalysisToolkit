@@ -103,8 +103,8 @@ namespace BAT.Core.Analyzers.Impl
         private PauseResult verifyPause(bool currentlyPaused, bool validWindow, DateTime startTime, 
                                  int startNo, DateTime endTime, int endNo, int windowCount) {
 	        if (currentlyPaused && validWindow) {
-	            // determine the current duration and add to our running total
-	            Double currentDuration = windowCount * Constants.SAMPLING_PERIOD;
+				// determine the current duration and add to our running total
+				double currentDuration = (windowCount * Constants.SAMPLING_PERIOD) / 1000.0d;
                 totalDuration += currentDuration;
 
 				// output pause details to file

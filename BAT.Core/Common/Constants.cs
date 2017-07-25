@@ -189,8 +189,8 @@ namespace BAT.Core.Common
 			{
 				return new string[]
 				{
-					"Total Task Time",
-                    "Average Task Time",
+                    "Total Task Time (sec)",
+                    "Average Task Time (sec)",
                     "Standard Deviation"
 				};
 			}

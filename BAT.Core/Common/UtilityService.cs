@@ -23,7 +23,9 @@ namespace BAT.Core.Common
         /// <param name="valueList">Value list.</param>
         public static double Average(List<double> valueList)
         {
-            return (valueList.Sum(x => x) / valueList.Count);
+            return (valueList != null && valueList.Any()) 
+                ? (valueList.Sum(x => x) / valueList.Count)
+                : 0;
         }
 
 		/// <summary>

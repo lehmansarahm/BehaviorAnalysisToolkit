@@ -74,7 +74,7 @@ namespace BAT.Core.Analyzers.Impl
 						endNo = record.RecordNum.Value;
 
 						// determine the current duration and add to our running total
-						currentDuration = windowCount * Constants.SAMPLING_PERIOD;
+                        currentDuration = (windowCount * Constants.SAMPLING_PERIOD) / 1000.0d;
                         totalDuration += currentDuration;
 
                         // output pause details to file
