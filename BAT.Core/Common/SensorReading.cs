@@ -87,8 +87,8 @@ namespace BAT.Core.Common
             get
             {
                 if (HasValidAccelVector)
-                    return (decimal)Math.Sqrt(Math.Pow((double)AccelX.Value, 2) 
-                                              + Math.Pow((double)AccelY.Value, 2) 
+                    return (decimal)Math.Sqrt(Math.Pow((double)AccelX.Value, 2)
+                                              + Math.Pow((double)AccelY.Value, 2)
                                               + Math.Pow((double)AccelZ.Value, 2));
                 return 0.0M;
             }
@@ -99,7 +99,7 @@ namespace BAT.Core.Common
         /// </summary>
         /// <value>The instant speed.</value>
         public decimal InstantSpeed
-        { 
+        {
             get
             {
 				return AccelMag * (Constants.SAMPLING_PERIOD_IN_MS / 1000.0M);
@@ -160,21 +160,27 @@ namespace BAT.Core.Common
             Start = rawStartQuit.Equals(Constants.INPUT_FILE_START_TRIAL_FLAG);
             End = rawStartQuit.Equals(Constants.INPUT_FILE_END_TRIAL_FLAG);
 
-            string rawLabel = inputFields[(int)InputFileColumnOrder.Label];
+            string rawLabel = GetString(inputFields, InputFileColumnOrder.Label);
             Label = string.IsNullOrEmpty(rawLabel) ? Constants.INPUT_FILE_NO_LABEL_PROVIDED : rawLabel;
+        }
+
+        private string GetString(string[] inputFields, InputFileColumnOrder field)
+        {
+            var index = (int)field;
+            return inputFields.Length < index + 1 ? null : inputFields[index];
         }
 
         private DateTime? GetDate(string[] inputFields, InputFileColumnOrder field)
         {
-            var ret = inputFields[(int)field];
+            var ret = GetString(inputFields, field);
             if (!string.IsNullOrWhiteSpace(ret))
-                DateTime.Parse(ret);
+                return DateTime.Parse(ret);
             return null;
         }
 
         private int? GetInt(string[] inputFields, InputFileColumnOrder field)
         {
-            var ret = inputFields[(int)field];
+            var ret = GetString(inputFields, field);
             if (!string.IsNullOrWhiteSpace(ret))
                 if (int.TryParse(ret, out int i))
                     return i;
@@ -183,7 +189,7 @@ namespace BAT.Core.Common
 
         private decimal? GetDecimal(string[] inputFields, InputFileColumnOrder field)
         {
-            var ret = inputFields[(int)field];
+            var ret = GetString(inputFields, field);
             if (!string.IsNullOrWhiteSpace(ret))
                 if (decimal.TryParse(ret, out decimal i))
                     return i;
@@ -234,7 +240,7 @@ namespace BAT.Core.Common
         public static List<SensorReading> ReadSensorFile(string filepath)
         {
             List<SensorReading> sensorReadings = new List<SensorReading>();
-            if (File.Exists(filepath))
+            if (!File.Exists(filepath))
             {
                 LogManager.Error($"Unable to locate input file: {filepath}.  Exiting program.");
                 return sensorReadings;
