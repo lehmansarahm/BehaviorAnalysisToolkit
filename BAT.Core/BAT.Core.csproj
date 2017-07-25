@@ -64,6 +64,7 @@
     <Compile Include="Common\PhaseResult.cs" />
     <Compile Include="Analyzers\Results\PauseResult.cs" />
     <Compile Include="Analyzers\Results\TaskTimeResult.cs" />
+    <Compile Include="Common\UtilityService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\" />

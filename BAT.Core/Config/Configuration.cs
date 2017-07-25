@@ -121,7 +121,7 @@ namespace BAT.Core.Config
                         else transformedData.Add(key, transformedValues);
 
 						if (writeOutputToFile)
-                            CsvFileWriter.WriteToFile(new string[] { Constants.OUTPUT_DIR_TRANSFORMERS, transformerName },
+                            CsvFileWriter.WriteResultsToFile(new string[] { Constants.OUTPUT_DIR_TRANSFORMERS, transformerName },
                                                       key, transformer.GetHeaderCsv(),
                                                       transformedValues);
                     }
@@ -186,7 +186,7 @@ namespace BAT.Core.Config
 								else filteredData.Add(newFilename, filteredValues);
 
 								if (writeOutputToFile)
-									CsvFileWriter.WriteToFile(new string[] { Constants.OUTPUT_DIR_FILTERS, filterName }, 
+									CsvFileWriter.WriteResultsToFile(new string[] { Constants.OUTPUT_DIR_FILTERS, filterName }, 
                                                               newFilename, filter.GetHeaderCsv(),
 															  filteredValues);
 							}
@@ -239,7 +239,7 @@ namespace BAT.Core.Config
 						else analyzedData.Add(key, analysisResult);
 
 						if (writeOutputToFile)
-							CsvFileWriter.WriteToFile(new string[] { Constants.OUTPUT_DIR_ANALYZERS, analyzerName }, 
+							CsvFileWriter.WriteResultsToFile(new string[] { Constants.OUTPUT_DIR_ANALYZERS, analyzerName }, 
                                                       key, analyzer.GetHeaderCsv(),
 													  analysisResult);
 					}
@@ -282,11 +282,13 @@ namespace BAT.Core.Config
 					}
 
                     var summarizedValues = summarizer.Summarize(AnalysisData);
-					if (writeOutputToFile)
-                        CsvFileWriter.WriteToFile(new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
-                                                  $"{summarizerName}.csv",
-												  summarizer.GetHeaderCsv(),
-												  summarizedValues);
+                    if (writeOutputToFile)
+                        CsvFileWriter.WriteSummaryToFile(new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
+                                                         $"{summarizerName}.csv",
+                                                         summarizer.GetHeaderCsv(),
+                                                         summarizedValues, 
+                                                         summarizer.GetFooterCsv(), 
+                                                         summarizer.GetFooterValues());
 				}
 			}
 			else LogManager.Error("No input data to run summaries on.", this);

@@ -14,7 +14,7 @@ namespace BAT.Core.Common
 		/// <param name="filename">Filename.</param>
 		/// <param name="header">Header.</param>
 		/// <param name="input">Input.</param>
-		public static void WriteToFile(string[] outputDirs, string filename,
+		public static void WriteResultsToFile(string[] outputDirs, string filename,
 									   string header, IEnumerable<ICsvWritable> input)
 		{
 			string output = (header + "\n") +
@@ -29,11 +29,13 @@ namespace BAT.Core.Common
         /// <param name="filename">Filename.</param>
         /// <param name="header">Header.</param>
         /// <param name="input">Input.</param>
-		public static void WriteToFile(string[] outputDirs, string filename,
-                                       string header, IEnumerable<KeyValuePair<string, string>> input)
+		public static void WriteSummaryToFile(string[] outputDirs, string filename,
+                                              string header, IEnumerable<KeyValuePair<string, string>> input,
+                                              string footer, string[] footerVals)
 		{
-			string output = (header + "\n") +
-                (input != null ? string.Join("\n", input.Select(x => x.Key + "," + x.Value)) : "");
+            string output = $"{header}\n" +
+                (input != null ? string.Join("\n", input.Select(x => x.Key + "," + x.Value)) : "") +
+                $"\n{footer}\n{string.Join(",", footerVals)}";
             WriteToFile(outputDirs, filename, output);
 		}
 

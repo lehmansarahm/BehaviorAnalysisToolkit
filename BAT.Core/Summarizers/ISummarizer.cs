@@ -9,6 +9,10 @@ namespace BAT.Core.Summarizers
 		string[] GetHeader();
 		string GetHeaderCsv();
 
+		string[] GetFooterLabels();
+		string[] GetFooterValues();
+		string GetFooterCsv();
+
 		Type PhaseResultType { get; }
         IEnumerable<KeyValuePair<string, string>> 
             Summarize<T>(Dictionary<string, IEnumerable<T>> input) where T : ICsvWritable;

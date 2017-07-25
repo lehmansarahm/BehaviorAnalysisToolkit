@@ -8,6 +8,8 @@ namespace BAT.Core.Summarizers.Impl
 {
     public class TaskTimeSummarizer : ISummarizer
 	{
+        List<double> durations;
+
 		/// <summary>
 		/// Gets the header.
 		/// </summary>
@@ -21,10 +23,35 @@ namespace BAT.Core.Summarizers.Impl
 		public string GetHeaderCsv() { return Constants.TASK_TIME_SUMMARY_HEADER_CSV; }
 
         /// <summary>
-        /// Gets the type of the phase result.
+        /// Gets the footer labels.
         /// </summary>
-        /// <value>The type of the phase result.</value>
-        public Type PhaseResultType 
+        /// <returns>The footer labels.</returns>
+		public string[] GetFooterLabels() { return Constants.TASK_TIME_SUMMARY_FOOTER; }
+
+        /// <summary>
+        /// Gets the footer values.
+        /// </summary>
+        /// <returns>The footer values.</returns>
+        public string[] GetFooterValues()
+        {
+            return new string[] { 
+                $"{UtilityService.Total(durations)}", 
+                $"{UtilityService.Average(durations)}", 
+                $"{UtilityService.StandardDeviation(durations)}" 
+            };
+        }
+
+        /// <summary>
+        /// Gets the footer csv.
+        /// </summary>
+        /// <returns>The footer csv.</returns>
+		public string GetFooterCsv() { return Constants.TASK_TIME_SUMMARY_FOOTER_CSV; }
+
+		/// <summary>
+		/// Gets the type of the phase result.
+		/// </summary>
+		/// <value>The type of the phase result.</value>
+		public Type PhaseResultType 
         {
             get { return typeof(TaskTimeResult); }
         }
@@ -38,14 +65,15 @@ namespace BAT.Core.Summarizers.Impl
         public IEnumerable<KeyValuePair<string, string>> Summarize<T>(Dictionary<string, 
                                                                       IEnumerable<T>> input) where T : ICsvWritable
         {
-            // if so, consolidate the task times by source
             var results = new List<KeyValuePair<string, string>>();
+            durations = new List<double>();
+
             foreach (var key in input.Keys)
             {
                 List<TaskTimeResult> analysisResults = (List<TaskTimeResult>)input[key];
-                var taskTimeResult = analysisResults.FirstOrDefault();
-                if (taskTimeResult != null)
-                    results.Add(new KeyValuePair<string, string>(key, taskTimeResult.Duration.ToString()));
+                durations.AddRange(analysisResults.Select(x => x.Duration).ToList());
+                results.AddRange(analysisResults.Select(x => new KeyValuePair<string,string> (
+                    key, x.Duration.ToString())).ToList());
             }
 
             return results;
