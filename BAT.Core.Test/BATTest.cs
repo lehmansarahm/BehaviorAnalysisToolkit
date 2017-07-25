@@ -23,7 +23,7 @@ namespace BAT.Core.Test
             Azimuth = 2.9787378M,
             Pitch = 0.8177647M,
             Roll = 2.534702M,
-            AccelX = -0.037580M,
+            AccelX = -0.037580M, // -0.03299761 -0.004323006    0.05408764
 			AccelY = -0.0016299M,
             AccelZ = 0.04918999M,
             Start = true,
@@ -185,7 +185,8 @@ namespace BAT.Core.Test
 			string startupPath = AppDomain.CurrentDomain.BaseDirectory;
 			var pathItems = startupPath.Split(Path.DirectorySeparatorChar);
 			var pos = pathItems.Reverse().ToList().FindIndex(x => string.Equals("bin", x));
-			string projectPath = String.Join(Path.DirectorySeparatorChar.ToString(), pathItems.Take(pathItems.Length - pos - 1));
+			string projectPath = String.Join(Path.DirectorySeparatorChar.ToString(), 
+                                             pathItems.Take(pathItems.Length - pos - 1));
 			return Path.Combine(projectPath, TEST_DATA_FOLDER, testDataFolder);
 		}
     }

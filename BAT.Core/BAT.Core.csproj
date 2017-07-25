@@ -67,6 +67,11 @@
     <Compile Include="Common\UtilityService.cs" />
     <Compile Include="Summarizers\PauseCountSummarizer.cs" />
     <Compile Include="Summarizers\PauseDurationSummarizer.cs" />
+    <Compile Include="Config\TransformerManager.cs" />
+    <Compile Include="Config\TypeManager.cs" />
+    <Compile Include="Config\FilterManager.cs" />
+    <Compile Include="Config\AnalyzerManager.cs" />
+    <Compile Include="Config\SummarizerManager.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

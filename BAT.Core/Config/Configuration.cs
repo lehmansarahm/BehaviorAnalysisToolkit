@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using BAT.Core.Analyzers;
 using BAT.Core.Common;
-using BAT.Core.Filters;
 using BAT.Core.Summarizers;
-using BAT.Core.Transformers;
 using Newtonsoft.Json;
 
 namespace BAT.Core.Config
@@ -86,27 +82,6 @@ namespace BAT.Core.Config
             return success;
         }
 
-        private IEnumerable<Type> GetInheritingTypes<T>()
-        {
-            var type = typeof(T);
-            return Assembly.GetAssembly(type).GetTypes().Where(x => type.IsAssignableFrom(x) && !x.IsInterface);
-            //you could later expand this to check for different assemblies and concat the types here
-        }
-
-        public IEnumerable<ITransformer> GetTransformers()
-        {
-            //this finds all ITransfomers
-            var transformers = GetInheritingTypes<ITransformer>();
-            foreach (var name in Transformers)
-            {
-                var type = transformers.FirstOrDefault(x => x.Name == name + "Transformer" || x.Name == name);
-                if (type != null)
-                    yield return (ITransformer)Activator.CreateInstance(type);
-                else
-                    LogManager.Error($"Could not find transformer named {name}");
-            }
-        }
-
         /// <summary>
         /// Runs the transformers.
         /// </summary>
@@ -116,7 +91,7 @@ namespace BAT.Core.Config
         {
             bool success = false;
 
-            var transformers = GetTransformers();
+            var transformers = TransformerManager.GetTransformers(Transformers);
             if (transformers?.Any() ?? false && InputData?.Keys?.Count >= 1)
             {
                 // iterate through the list of transformers and run on each input data set
@@ -133,9 +108,9 @@ namespace BAT.Core.Config
                         else transformedData.Add(key, transformedValues);
 
                         if (writeOutputToFile)
-                            CsvFileWriter.WriteResultsToFile(new[] { Constants.OUTPUT_DIR_TRANSFORMERS, transformer.GetType().Name },
-                                                      key, transformer.GetHeaderCsv(),
-                                                      transformedValues);
+                            CsvFileWriter.WriteResultsToFile
+                                (new[] { Constants.OUTPUT_DIR_TRANSFORMERS, transformer.GetType().Name },
+                                key, transformer.GetHeaderCsv(), transformedValues);
                     }
                 }
 
@@ -145,18 +120,6 @@ namespace BAT.Core.Config
             else LogManager.Error("No input data to run transformations on.", this);
 
             return success;
-        }
-
-
-        public IFilter GetFilter(string name)
-        {
-            var filters = GetInheritingTypes<IFilter>();
-            var type = filters.FirstOrDefault(x => x.Name == name + "Filter" || x.Name == name);
-            if (type != null)
-                return (IFilter)Activator.CreateInstance(type);
-            else
-                LogManager.Error($"Could not find filter named {name}");
-            return null;
         }
 
         /// <summary>
@@ -172,9 +135,8 @@ namespace BAT.Core.Config
                 var filteredData = new Dictionary<string, IEnumerable<SensorReading>>();
                 foreach (var filterCommand in Filters)
                 {
-                    var filter = GetFilter(filterCommand.Name);
-                    if (filter == null)
-                        continue;
+                    var filter = FilterManager.GetFilter(filterCommand.Name);
+                    if (filter == null) continue;
 
                     foreach (var key in InputData.Keys)
                     {
@@ -186,20 +148,17 @@ namespace BAT.Core.Config
                         {
                             foreach (var filterResult in filteredResultSets)
                             {
-                                var filenameComponents = key.Split('.');
-                                var fileName = filenameComponents[filenameComponents.Length - 2];
-                                var fileExtension = filenameComponents[filenameComponents.Length - 1];
-                                var newFilename = $"{fileName}_{filterResult.Name}.{fileExtension}";
+								var filteredValues = filterResult.Data;
+								var newFilename = FilterManager.GetFilename(key, filterResult.Name);
 
-                                var filteredValues = filterResult.Data;
                                 if (filteredData.ContainsKey(newFilename))
                                     filteredData[newFilename] = filteredValues;
                                 else filteredData.Add(newFilename, filteredValues);
 
                                 if (writeOutputToFile)
-                                    CsvFileWriter.WriteResultsToFile(new string[] { Constants.OUTPUT_DIR_FILTERS, filterCommand.Name },
-                                                              newFilename, filter.GetHeaderCsv(),
-                                                              filteredValues);
+                                    CsvFileWriter.WriteResultsToFile
+                                                 (new string[] { Constants.OUTPUT_DIR_FILTERS, filterCommand.Name },
+                                                  newFilename, filter.GetHeaderCsv(), filteredValues);
                             }
                         }
                     }
@@ -210,20 +169,6 @@ namespace BAT.Core.Config
             else LogManager.Error("No input data to run filters on.", this);
 
             return success;
-        }
-
-
-
-        public IAnalyzer GetAnalyzer(string name)
-        {
-            //this finds all ITransfomers
-            var analyzers = GetInheritingTypes<IAnalyzer>();
-            var type = analyzers.FirstOrDefault(x => x.Name == name + "Analyzer" || x.Name == name);
-            if (type != null)
-                return (IAnalyzer)Activator.CreateInstance(type);
-            else
-                LogManager.Error($"Could not find filter named {name}");
-            return null;
         }
 
         /// <summary>
@@ -240,7 +185,7 @@ namespace BAT.Core.Config
                 foreach (var analyzerCommand in Analyzers)
                 {
                     var analyzerName = analyzerCommand.Name;
-                    var analyzer = GetAnalyzer(analyzerName);
+                    var analyzer = AnalyzerManager.GetAnalyzer(analyzerName);
 
                     foreach (var key in InputData.Keys)
                     {
@@ -249,39 +194,21 @@ namespace BAT.Core.Config
                         else analyzedData.Add(key, analysisResult);
 
                         if (writeOutputToFile)
-                            CsvFileWriter.WriteResultsToFile(new string[] { Constants.OUTPUT_DIR_ANALYZERS, analyzerName },
-                                                      key, analyzer.GetHeaderCsv(),
-                                                      analysisResult);
+                            CsvFileWriter.WriteResultsToFile
+                                         (new string[] { Constants.OUTPUT_DIR_ANALYZERS, analyzerName },
+                                          key, analyzer.GetHeaderCsv(), analysisResult);
 
-                    // now, check to see if there is an associated summary
-                    if (Summarizers.Contains(analyzerName))
-                    {
-                        Type summarizerType;
-                        ISummarizer summarizer;
-
-                        try
-                        {
-                            var analyzerFullName = analyzerName.EndsWith("Summarizer") ? analyzerName : analyzerName + "Summarizer";
-                            var type = typeof(ISummarizer).Namespace + "." + analyzerFullName;
-                            summarizerType = Type.GetType(analyzerFullName);
-                            summarizer = (ISummarizer)Activator.CreateInstance(summarizerType);
-                            success = true;
-                        }
-                        catch (ArgumentNullException ex)
-                        {
-                            LogManager.Error("Could not create instance of provided summarizer.  "
-                                            + "Please double-check configuration file.", ex, this);
-                            continue; // proceed to next operation
-                        }
-
+	                    // now, check to see if there is an associated summary
+	                    if (Summarizers.Contains(analyzerName))
+						{
+                            ISummarizer summarizer = SummarizerManager.GetSummarizer(analyzerName);
 	                        var summarizedValues = summarizer.Summarize(analyzedData);
 	                        if (writeOutputToFile)
-	                            CsvFileWriter.WriteSummaryToFile(new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
-	                                                             $"{analyzerName}.csv",
-	                                                             summarizer.GetHeaderCsv(),
-	                                                             summarizedValues,
-	                                                             summarizer.GetFooterCsv(),
-	                                                             summarizer.GetFooterValues());
+	                            CsvFileWriter.WriteSummaryToFile
+                                             (new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
+                                              $"{analyzerName}.csv", summarizer.GetHeaderCsv(),
+                                              summarizedValues, summarizer.GetFooterCsv(),
+                                              summarizer.GetFooterValues());
 	                    }
                     }
                 }

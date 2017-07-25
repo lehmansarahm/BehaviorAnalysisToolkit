@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using BAT.Core.Config;
 using BAT.Core.Transformers;
 using NUnit.Framework;
@@ -23,7 +19,7 @@ namespace BAT.Core.Test
 
             config.Transformers = types.Select(x => x.Name).ToList();
 
-            var transformers = config.GetTransformers();
+            var transformers = TransformerManager.GetTransformers(config.Transformers);
 
             Assert.AreEqual(transformers.Count(), types.Count());
         }
