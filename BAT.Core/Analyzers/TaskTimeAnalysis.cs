@@ -4,7 +4,7 @@ using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 using BAT.Core.Config;
 
-namespace BAT.Core.Analyzers.Impl
+namespace BAT.Core.Analyzers
 {
 	public class TaskTimeAnalysis : IAnalyzer
 	{
@@ -48,7 +48,7 @@ namespace BAT.Core.Analyzers.Impl
                     Duration = execTimeInSec
                 }
             };
-                
+
 			return results;
 		}
 	}

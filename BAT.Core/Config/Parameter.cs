@@ -23,16 +23,16 @@ namespace BAT.Core.Config
 			{
 				switch (clause.Key)
 				{
-					case Constants.COMMAND_PARAM_CONTAINS:
+					case CommandParameters.Contains:
 						isMatch = (Constants.CULTURE
                                    .CompareInfo.IndexOf(source, clause.Value,
                                                         CompareOptions.IgnoreCase) >= 0);
 						break;
-					case Constants.COMMAND_PARAM_EQUAL_TO:
+					case CommandParameters.EqualTo:
 						isMatch = (source.Equals(clause.Key, 
                                                  StringComparison.InvariantCultureIgnoreCase));
 						break;
-					case Constants.COMMAND_PARAM_NOT_EQUAL_TO:
+					case CommandParameters.NotEqualTo:
 						isMatch = !(source.Equals(clause.Key, 
                                                   StringComparison.InvariantCultureIgnoreCase));
 						break;
@@ -48,7 +48,7 @@ namespace BAT.Core.Config
         /// <returns><c>true</c>, if output was split, <c>false</c> otherwise.</returns>
         public bool UseOutputSplit()
         {
-			bool splitOutput = Clauses.Where(x => x.Key.Contains(Constants.COMMAND_PARAM_SPLIT))
+			bool splitOutput = Clauses.Where(x => x.Key.Contains(CommandParameters.Split))
                                       .FirstOrDefault().Value.Equals("true", StringComparison.InvariantCultureIgnoreCase);
             return splitOutput;
         }

@@ -3,7 +3,7 @@ using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 
-namespace BAT.Core.Summarizers.Impl
+namespace BAT.Core.Summarizers
 {
     public class TaskTimeSummarizer : ISummarizer
 	{
@@ -33,10 +33,10 @@ namespace BAT.Core.Summarizers.Impl
         /// <returns>The footer values.</returns>
         public string[] GetFooterValues()
         {
-            return new string[] { 
-                $"{UtilityService.Total(durations)}", 
-                $"{UtilityService.Average(durations)}", 
-                $"{UtilityService.StandardDeviation(durations)}" 
+            return new string[] {
+                $"{UtilityService.Total(durations)}",
+                $"{UtilityService.Average(durations)}",
+                $"{UtilityService.StandardDeviation(durations)}"
             };
         }
 
