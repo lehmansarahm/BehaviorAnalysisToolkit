@@ -25,7 +25,7 @@ namespace BAT.Core.Test
 		[Test]
 		public void TestBasicDataLoad()
 		{
-            List<SensorReading> inputRecords = 
+            List<SensorReading> inputRecords =
                 SensorReading.ReadSensorFile(GetInputFilePath("OA5-Breakfast.csv"));
             Assert.AreEqual(3060, inputRecords.Count);
 		}

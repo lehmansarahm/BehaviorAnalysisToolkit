@@ -39,6 +39,9 @@ namespace BAT.Core.Config
             Summarizers = new List<string>();
         }
 
+        public bool WriteOutputFile = false;
+
+
         /// <summary>
         /// Loads the inputs.
         /// </summary>
@@ -87,7 +90,7 @@ namespace BAT.Core.Config
         /// </summary>
         /// <returns><c>true</c>, if transformers was run, <c>false</c> otherwise.</returns>
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
-        public bool RunTransformers(bool writeOutputToFile = false)
+        public bool RunTransformers()
         {
             bool success = false;
 
@@ -107,7 +110,7 @@ namespace BAT.Core.Config
                         if (dataAlreadyProcessedForKey) transformedData[key] = transformedValues;
                         else transformedData.Add(key, transformedValues);
 
-                        if (writeOutputToFile)
+                        if (WriteOutputFile)
                             CsvFileWriter.WriteResultsToFile
                                 (new[] { Constants.OUTPUT_DIR_TRANSFORMERS, transformer.GetType().Name },
                                 key, transformer.GetHeaderCsv(), transformedValues);
@@ -127,7 +130,7 @@ namespace BAT.Core.Config
         /// </summary>
         /// <returns><c>true</c>, if filters was run, <c>false</c> otherwise.</returns>
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
-        public bool RunFilters(bool writeOutputToFile = false)
+        public bool RunFilters()
         {
             bool success = false;
             if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1)
@@ -155,7 +158,7 @@ namespace BAT.Core.Config
                                     filteredData[newFilename] = filteredValues;
                                 else filteredData.Add(newFilename, filteredValues);
 
-                                if (writeOutputToFile)
+                                if (WriteOutputFile)
                                     CsvFileWriter.WriteResultsToFile
                                                  (new string[] { Constants.OUTPUT_DIR_FILTERS, filterCommand.Name },
                                                   newFilename, filter.GetHeaderCsv(), filteredValues);
@@ -176,7 +179,7 @@ namespace BAT.Core.Config
         /// </summary>
         /// <returns><c>true</c>, if analyzers was run, <c>false</c> otherwise.</returns>
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
-        public bool RunAnalyzers(bool writeOutputToFile = false)
+        public bool RunAnalyzers()
         {
             bool success = false;
             if (Analyzers?.Count > 0 && InputData?.Keys?.Count >= 1)
@@ -186,14 +189,17 @@ namespace BAT.Core.Config
                 {
                     var analyzerName = analyzerCommand.Name;
                     var analyzer = AnalyzerManager.GetAnalyzer(analyzerName);
+                    if (analyzer == null)
+                        continue;
 
                     foreach (var key in InputData.Keys)
                     {
                         var analysisResult = analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
-                        if (analyzedData.ContainsKey(key)) analyzedData[key] = analysisResult;
+                        if (analyzedData.ContainsKey(key))
+                            analyzedData[key] = analysisResult;
                         else analyzedData.Add(key, analysisResult);
 
-                        if (writeOutputToFile)
+                        if (WriteOutputFile)
                             CsvFileWriter.WriteResultsToFile
                                          (new string[] { Constants.OUTPUT_DIR_ANALYZERS, analyzerName },
                                           key, analyzer.GetHeaderCsv(), analysisResult);
@@ -203,7 +209,7 @@ namespace BAT.Core.Config
 						{
                             ISummarizer summarizer = SummarizerManager.GetSummarizer(analyzerName);
 	                        var summarizedValues = summarizer.Summarize(analyzedData);
-	                        if (writeOutputToFile)
+	                        if (WriteOutputFile)
 	                            CsvFileWriter.WriteSummaryToFile
                                              (new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
                                               $"{analyzerName}.csv", summarizer.GetHeaderCsv(),

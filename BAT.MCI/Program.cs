@@ -6,8 +6,6 @@ namespace BAT.MCI
 {
     class Program
     {
-        static bool writePhaseOutputToFiles = true;
-
         /// <summary>
         /// The entry point of the program, where the program control starts and ends.
         /// </summary>
@@ -21,9 +19,10 @@ namespace BAT.MCI
 				else LogManager.Info("No configuration file provided.  Using default.");
 
 				config = Configuration.LoadFromFile(configFilepath);
+                config.WriteOutputFile = true;
 				LogManager.Info($"Configuration file loaded from {configFilepath}");
             } catch (Exception e) {
-                LogManager.Error("ERROR:  Could not load configuration file.  " 
+                LogManager.Error("ERROR:  Could not load configuration file.  "
                                  + "Exiting program.", e, typeof(Program));
                 return;
 			}
@@ -35,21 +34,21 @@ namespace BAT.MCI
 				return;
 			}
 
-			success = config.RunTransformers(writePhaseOutputToFiles);
+			success = config.RunTransformers();
 			if (success) LogManager.Info("Selected transformations successfully run on input data.");
 			else {
 				LogManager.Error("Something went wrong while running transformations.  Exiting program.");
 				return;
 			}
 
-			success = config.RunFilters(writePhaseOutputToFiles);
+			success = config.RunFilters();
 			if (success) LogManager.Info("Selected filters successfully run on input data.");
 			else {
 				LogManager.Error("Something went wrong while running filters.  Exiting program.");
 				return;
 			}
 
-			success = config.RunAnalyzers(writePhaseOutputToFiles);
+			success = config.RunAnalyzers();
 			if (success) LogManager.Info("Selected analysis operations successfully run on input data.");
 			else {
 				LogManager.Error("Something went wrong while running analysis operations.  Exiting program.");

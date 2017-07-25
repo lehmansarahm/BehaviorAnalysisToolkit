@@ -8,8 +8,6 @@ namespace BAT.Core.Test
 	[TestFixture]
 	public class TransformTests : BATTest
 	{
-        const bool WRITE_TO_FILE = false;
-
 		/// <summary>
 		/// Setup this instance.
 		/// </summary>
@@ -41,7 +39,7 @@ namespace BAT.Core.Test
 			config.LoadInputs();
 			VerifyInputDataSetCount(config, 1);
 
-			config.RunTransformers(WRITE_TO_FILE);
+			config.RunTransformers();
 			VerifyInputDataSetCount(config, 1);
 		}
 
@@ -59,7 +57,7 @@ namespace BAT.Core.Test
             VerifyInputDataSetCount(config, 1);
 
 			// user provided a transformer name that doesn't match anything we have
-			var result = config.RunTransformers(WRITE_TO_FILE);
+			var result = config.RunTransformers();
 			Assert.AreEqual(false, result);
 			VerifyInputDataSetCount(config, 0);
 		}
@@ -70,7 +68,7 @@ namespace BAT.Core.Test
 		[Test]
 		public void TestOperationLinearAccelerationTransform()
 		{
-			// need to make sure that the data being generated from the 
+			// need to make sure that the data being generated from the
 			// "transform" phase is being properly utilized for the "filter" phase
 			Configuration config =
 				Configuration.LoadFromFile(GetConfigFilePath("linearAccelerationTransform.json"));
@@ -80,7 +78,7 @@ namespace BAT.Core.Test
 			Assert.AreEqual(true, result);
 			VerifyInputDataSetCount(config, 1);
 
-			result = config.RunTransformers(WRITE_TO_FILE);
+			result = config.RunTransformers();
 			Assert.AreEqual(true, result);
 			VerifyInputDataSetCount(config, 1);
 
@@ -100,7 +98,7 @@ namespace BAT.Core.Test
 		[Test]
 		public void TestOperationLabelCleanupTransform()
 		{
-			// need to make sure that the data being generated from the 
+			// need to make sure that the data being generated from the
 			// "transform" phase is being properly utilized for the "filter" phase
 			Configuration config =
 				Configuration.LoadFromFile(GetConfigFilePath("labelCleanupTransform.json"));
@@ -110,7 +108,7 @@ namespace BAT.Core.Test
 			Assert.AreEqual(true, result);
 			VerifyInputDataSetCount(config, 1);
 
-			result = config.RunTransformers(WRITE_TO_FILE);
+			result = config.RunTransformers();
 			Assert.AreEqual(true, result);
 			VerifyInputDataSetCount(config, 1);
 
