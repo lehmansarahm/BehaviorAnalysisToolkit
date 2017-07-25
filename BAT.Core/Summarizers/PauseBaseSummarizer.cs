@@ -3,7 +3,7 @@ using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 
-namespace BAT.Core.Summarizers.Impl
+namespace BAT.Core.Summarizers
 {
 	public class PauseBaseSummarizer : ISummarizer
 	{

@@ -4,7 +4,7 @@ using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 using BAT.Core.Config;
 
-namespace BAT.Core.Analyzers.Impl
+namespace BAT.Core.Analyzers
 {
 	public class PauseDurationAnalysis : IAnalyzer
 	{
@@ -35,8 +35,8 @@ namespace BAT.Core.Analyzers.Impl
 			var results = new List<PauseResult>();
 			foreach (var param in parameters)
 			{
-				var threshold = Double.Parse(param.GetClauseValue(Constants.COMMAND_PARAM_THRESHOLD));
-				var windowSize = Int32.Parse(param.GetClauseValue(Constants.COMMAND_PARAM_WINDOW));
+				var threshold = Double.Parse(param.GetClauseValue(CommandParameters.Threshold));
+				var windowSize = Int32.Parse(param.GetClauseValue(CommandParameters.Window));
 
                 DateTime startTime = DateTime.Now, endTime = DateTime.Now;
                 bool currentlyPaused = false, isValidWindow = false;
@@ -60,7 +60,7 @@ namespace BAT.Core.Analyzers.Impl
                             currentlyPaused = true;
                         }
 
-                        // whether starting a new pause or continuing an old, 
+                        // whether starting a new pause or continuing an old,
                         // log the last sub-threshold values and bump the pause counter
                         endTime = record.Time.Value;
                         endNo = record.RecordNum.Value;
@@ -70,7 +70,7 @@ namespace BAT.Core.Analyzers.Impl
                     {
 						// check to see if we've completed a pause window
 						isValidWindow = (windowCount >= windowSize);
-			            result = verifyPause(currentlyPaused, isValidWindow, startTime, 
+			            result = verifyPause(currentlyPaused, isValidWindow, startTime,
                                                  startNo, endTime, endNo, windowCount);
                         if (result != null) results.Add(result);
 
@@ -100,7 +100,7 @@ namespace BAT.Core.Analyzers.Impl
         /// <param name="endTime">Last time.</param>
         /// <param name="endNo">Last no.</param>
         /// <param name="windowCount">Window count.</param>
-        private PauseResult verifyPause(bool currentlyPaused, bool validWindow, DateTime startTime, 
+        private PauseResult verifyPause(bool currentlyPaused, bool validWindow, DateTime startTime,
                                  int startNo, DateTime endTime, int endNo, int windowCount) {
 	        if (currentlyPaused && validWindow) {
 				// determine the current duration and add to our running total

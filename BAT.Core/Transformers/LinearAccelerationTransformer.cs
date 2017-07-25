@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using BAT.Core.Common;
 
-namespace BAT.Core.Transformers.Impl
+namespace BAT.Core.Transformers
 {
     public class LinearAccelerationTransformer : ITransformer
 	{

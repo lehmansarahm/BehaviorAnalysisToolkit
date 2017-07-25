@@ -45,7 +45,7 @@ namespace BAT.Core.Test
 			Assert.AreEqual(2, labelCommand.Clauses.Count);
 
 			var thresholdClause = labelCommand.Clauses.FirstOrDefault();
-			Assert.AreEqual(Constants.COMMAND_PARAM_THRESHOLD, thresholdClause.Key);
+			Assert.AreEqual(CommandParameters.Threshold, thresholdClause.Key);
 			Assert.AreEqual("0.01", thresholdClause.Value);
 
 			var success = config.LoadInputs();
@@ -94,7 +94,7 @@ namespace BAT.Core.Test
 			Assert.AreEqual(2, labelCommand.Clauses.Count);
 
 			var thresholdClause = labelCommand.Clauses.FirstOrDefault();
-			Assert.AreEqual(Constants.COMMAND_PARAM_THRESHOLD, thresholdClause.Key);
+			Assert.AreEqual(CommandParameters.Threshold, thresholdClause.Key);
 			Assert.AreEqual("0.01", thresholdClause.Value);
 
 			var success = config.LoadInputs();

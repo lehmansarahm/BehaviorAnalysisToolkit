@@ -116,7 +116,7 @@ namespace BAT.Core.Test
 			Assert.AreEqual(true, result);
 			VerifyInputDataSetCount(config, 1);
 
-            // assuming everything else is well formed in config, operation should 
+            // assuming everything else is well formed in config, operation should
             // still complete successfully ... phase output will just be empty
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
@@ -141,11 +141,11 @@ namespace BAT.Core.Test
 			Assert.AreEqual(2, labelCommand.Clauses.Count);
 
 			var containsClause = labelCommand.Clauses.FirstOrDefault();
-            Assert.AreEqual(Constants.COMMAND_PARAM_CONTAINS, containsClause.Key);
+            Assert.AreEqual(CommandParameters.Contains, containsClause.Key);
 			Assert.AreEqual("Select", containsClause.Value);
 
 			var splitClause = labelCommand.Clauses.LastOrDefault();
-			Assert.AreEqual(Constants.COMMAND_PARAM_SPLIT, splitClause.Key);
+			Assert.AreEqual(CommandParameters.Split, splitClause.Key);
 			Assert.AreEqual("true", splitClause.Value);
 
 			var result = config.LoadInputs();
@@ -163,7 +163,7 @@ namespace BAT.Core.Test
 		[Test]
 		public void TestOperationActivityFilterWithTransform()
 		{
-			// need to make sure that the data being generated from the 
+			// need to make sure that the data being generated from the
 			// "transform" phase is being properly utilized for the "filter" phase
 			Configuration config =
 				Configuration.LoadFromFile(GetConfigFilePath("activityFilterWithTransform.json"));
@@ -177,11 +177,11 @@ namespace BAT.Core.Test
 			Assert.AreEqual(2, labelCommand.Clauses.Count);
 
 			var containsClause = labelCommand.Clauses.FirstOrDefault();
-			Assert.AreEqual(Constants.COMMAND_PARAM_CONTAINS, containsClause.Key);
+			Assert.AreEqual(CommandParameters.Contains, containsClause.Key);
 			Assert.AreEqual("Select", containsClause.Value);
 
             var splitClause = labelCommand.Clauses.LastOrDefault();
-            Assert.AreEqual(Constants.COMMAND_PARAM_SPLIT, splitClause.Key);
+            Assert.AreEqual(CommandParameters.Split, splitClause.Key);
 			Assert.AreEqual("true", splitClause.Value);
 
 			var result = config.LoadInputs();
@@ -221,7 +221,7 @@ namespace BAT.Core.Test
 			Assert.AreEqual(1, commandParams.Count);
 
             var thresholdParam = commandParams.FirstOrDefault().Clauses.FirstOrDefault();
-			Assert.AreEqual(Constants.COMMAND_PARAM_THRESHOLD, thresholdParam.Key);
+			Assert.AreEqual(CommandParameters.Threshold, thresholdParam.Key);
 			Assert.AreEqual("94", thresholdParam.Value);
 
 			var result = config.LoadInputs();

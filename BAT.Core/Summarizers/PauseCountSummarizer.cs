@@ -1,4 +1,4 @@
-﻿namespace BAT.Core.Summarizers.Impl
+﻿namespace BAT.Core.Summarizers
 {
     public class PauseCountSummarizer : PauseBaseSummarizer { }
 }

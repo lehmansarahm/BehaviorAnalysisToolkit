@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -45,42 +45,30 @@
     <Compile Include="Transformers\ITransformer.cs" />
     <Compile Include="Common\SensorReading.cs" />
     <Compile Include="Common\Constants.cs" />
-    <Compile Include="Transformers\Impl\LinearAccelerationTransformer.cs" />
-    <Compile Include="Filters\Impl\ActivityFilter.cs" />
-    <Compile Include="Filters\Impl\CompletionFilter.cs" />
+    <Compile Include="Transformers\LinearAccelerationTransformer.cs" />
+    <Compile Include="Filters\ActivityFilter.cs" />
+    <Compile Include="Filters\CompletionFilter.cs" />
     <Compile Include="Common\LogManager.cs" />
-    <Compile Include="Analyzers\Impl\PauseCountAnalysis.cs" />
-    <Compile Include="Analyzers\Impl\PauseDurationAnalysis.cs" />
-    <Compile Include="Analyzers\Impl\TaskTimeAnalysis.cs" />
+    <Compile Include="Analyzers\PauseCountAnalysis.cs" />
+    <Compile Include="Analyzers\PauseDurationAnalysis.cs" />
+    <Compile Include="Analyzers\TaskTimeAnalysis.cs" />
     <Compile Include="Common\CsvFileWriter.cs" />
     <Compile Include="Common\ICsvWritable.cs" />
     <Compile Include="Config\Command.cs" />
-    <Compile Include="Summarizers\Impl\TaskTimeSummarizer.cs" />
-    <Compile Include="Summarizers\Impl\PauseBaseSummarizer.cs" />
-    <Compile Include="Summarizers\Impl\UserResultSummarizer.cs" />
-    <Compile Include="Transformers\Impl\NormalizationTransformer.cs" />
-    <Compile Include="Transformers\Impl\LabelCleanupTransformer.cs" />
+    <Compile Include="Summarizers\TaskTimeSummarizer.cs" />
+    <Compile Include="Summarizers\PauseBaseSummarizer.cs" />
+    <Compile Include="Summarizers\UserResultSummarizer.cs" />
+    <Compile Include="Transformers\NormalizationTransformer.cs" />
+    <Compile Include="Transformers\LabelCleanupTransformer.cs" />
     <Compile Include="Config\Parameter.cs" />
     <Compile Include="Common\PhaseResult.cs" />
     <Compile Include="Analyzers\Results\PauseResult.cs" />
     <Compile Include="Analyzers\Results\TaskTimeResult.cs" />
     <Compile Include="Common\UtilityService.cs" />
-    <Compile Include="Summarizers\Impl\PauseCountSummarizer.cs" />
-    <Compile Include="Summarizers\Impl\PauseDurationSummarizer.cs" />
+    <Compile Include="Summarizers\PauseCountSummarizer.cs" />
+    <Compile Include="Summarizers\PauseDurationSummarizer.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Config\" />
-    <Folder Include="Transformers\" />
-    <Folder Include="Filters\" />
-    <Folder Include="Analyzers\" />
-    <Folder Include="Summarizers\" />
-    <Folder Include="Common\" />
-    <Folder Include="Transformers\Impl\" />
-    <Folder Include="Filters\Impl\" />
-    <Folder Include="Analyzers\Impl\" />
-    <Folder Include="Summarizers\Impl\" />
-    <Folder Include="Analyzers\Results\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

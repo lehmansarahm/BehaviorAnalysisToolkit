@@ -4,7 +4,7 @@ using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 using BAT.Core.Config;
 
-namespace BAT.Core.Analyzers.Impl
+namespace BAT.Core.Analyzers
 {
     public class PauseCountAnalysis : IAnalyzer
 	{
@@ -32,8 +32,8 @@ namespace BAT.Core.Analyzers.Impl
             var results = new List<PauseResult>();
 			foreach (var param in parameters)
 			{
-				var threshold = Double.Parse(param.GetClauseValue(Constants.COMMAND_PARAM_THRESHOLD));
-				var windowSize = Int32.Parse(param.GetClauseValue(Constants.COMMAND_PARAM_WINDOW));
+				var threshold = Double.Parse(param.GetClauseValue(CommandParameters.Threshold));
+				var windowSize = Int32.Parse(param.GetClauseValue(CommandParameters.Window));
 
                 DateTime startTime = DateTime.Now, endTime;
                 bool currentlyPaused = false;

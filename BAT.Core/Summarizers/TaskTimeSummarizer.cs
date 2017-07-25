@@ -3,11 +3,11 @@ using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 
-namespace BAT.Core.Summarizers.Impl
+namespace BAT.Core.Summarizers
 {
     public class TaskTimeSummarizer : ISummarizer
 	{
-        List<double> durations;
+        List<decimal> durations;
 
 		/// <summary>
 		/// Gets the header.
@@ -33,10 +33,10 @@ namespace BAT.Core.Summarizers.Impl
         /// <returns>The footer values.</returns>
         public string[] GetFooterValues()
         {
-            return new string[] { 
-                $"{UtilityService.Total(durations)}", 
-                $"{UtilityService.Average(durations)}", 
-                $"{UtilityService.StandardDeviation(durations)}" 
+            return new string[] {
+                $"{UtilityService.Total(durations)}",
+                $"{UtilityService.Average(durations)}",
+                $"{UtilityService.StandardDeviation(durations)}"
             };
         }
 
@@ -55,7 +55,7 @@ namespace BAT.Core.Summarizers.Impl
         public IEnumerable<string[]> Summarize<T>(Dictionary<string, IEnumerable<T>> input) where T : ICsvWritable
         {
             var results = new List<string[]>();
-            durations = new List<double>();
+            durations = new List<decimal>();
 
             foreach (var key in input.Keys)
 			{

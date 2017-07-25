@@ -20,12 +20,12 @@ namespace BAT.Core.Test
         {
 			Time = DateTime.Parse("14:31:07"),
             RecordNum = 32,
-            Azimuth = 2.9787378,
-            Pitch = 0.8177647,
-            Roll = 2.534702,
-            AccelX = -0.037580,
-			AccelY = -0.0016299,
-            AccelZ = 0.04918999,
+            Azimuth = 2.9787378M,
+            Pitch = 0.8177647M,
+            Roll = 2.534702M,
+            AccelX = -0.037580M,
+			AccelY = -0.0016299M,
+            AccelZ = 0.04918999M,
             Start = true,
             End = false,
             Label = "select-bread"
