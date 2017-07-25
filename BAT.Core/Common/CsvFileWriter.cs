@@ -35,7 +35,7 @@ namespace BAT.Core.Common
 		{
             string output = $"{header}\n" +
                 (input != null ? string.Join("\n", input.Select(x => string.Join(",", x))) : "") +
-                $"\n{footer}\n{string.Join(",", footerVals)}";
+                $"\n\n{footer}\n{string.Join(",", footerVals)}";
             WriteToFile(outputDirs, filename, output);
 		}
 

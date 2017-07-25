@@ -135,24 +135,50 @@ namespace BAT.Core.Common
 		{
 			get
 			{
-                return new string[]
-                {
-                    "Source",
-                    "Number of Pauses",
-                    "Total Time Paused (sec)",
-                    "Average Pause Duration (sec)"
+				return new string[]
+				{
+					"Source",
+					"Number of Pauses",
+					"Time Paused (sec)",
+					"Average Pause Duration (sec)"
 				};
 			}
 		}
 
-        /// <summary>
-        /// Gets the pause summary header csv.
-        /// </summary>
-        /// <value>The pause summary header csv.</value>
-        public static string PAUSE_SUMMARY_HEADER_CSV 
-        { 
-            get { return string.Join(",", PAUSE_SUMMARY_HEADER); } 
-        }
+		/// <summary>
+		/// Gets the pause summary header csv.
+		/// </summary>
+		/// <value>The pause summary header csv.</value>
+		public static string PAUSE_SUMMARY_HEADER_CSV
+		{
+			get { return string.Join(",", PAUSE_SUMMARY_HEADER); }
+		}
+
+		/// <summary>
+		/// Gets the task time summary header.
+		/// </summary>
+		/// <value>The task time summary header.</value>
+		public static string[] PAUSE_SUMMARY_FOOTER
+		{
+			get
+			{
+				return new string[]
+				{
+					"Total Number of Pauses",
+					"Total Time Paused (sec)",
+					"Total Average Pause Duration (sec)"
+				};
+			}
+		}
+
+		/// <summary>
+		/// Gets the pause summary header csv.
+		/// </summary>
+		/// <value>The pause summary header csv.</value>
+		public static string PAUSE_SUMMARY_FOOTER_CSV
+		{
+			get { return string.Join(",", PAUSE_SUMMARY_FOOTER); }
+		}
 
 		/// <summary>
 		/// Gets the task time summary header.

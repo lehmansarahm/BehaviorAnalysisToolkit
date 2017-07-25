@@ -25,10 +25,7 @@ namespace BAT.Core.Summarizers.Impl
 		/// Gets the footer labels.
 		/// </summary>
 		/// <returns>The footer labels.</returns>
-		public string[] GetFooterLabels()
-		{
-			return new string[] { };
-		}
+		public string[] GetFooterLabels() { return Constants.PAUSE_SUMMARY_FOOTER; }
 
 		/// <summary>
 		/// Gets the footer values.
@@ -36,14 +33,18 @@ namespace BAT.Core.Summarizers.Impl
 		/// <returns>The footer values.</returns>
 		public string[] GetFooterValues()
 		{
-			return new string[] { };
+			return new string[] {
+                $"{durations.Count}",
+				$"{UtilityService.Total(durations)}",
+				$"{UtilityService.Average(durations)}"
+            };
 		}
 
 		/// <summary>
 		/// Gets the footer csv.
 		/// </summary>
 		/// <returns>The footer csv.</returns>
-		public string GetFooterCsv() { return ""; }
+		public string GetFooterCsv() { return Constants.PAUSE_SUMMARY_FOOTER_CSV; }
 
 		/// <summary>
 		/// Summarize the specified input.
