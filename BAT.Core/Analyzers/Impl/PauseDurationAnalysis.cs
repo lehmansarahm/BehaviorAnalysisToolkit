@@ -8,7 +8,7 @@ namespace BAT.Core.Analyzers.Impl
 {
 	public class PauseDurationAnalysis : IAnalyzer
 	{
-        double totalDuration = 0.0d;
+        decimal totalDuration = 0.0M;
         int totalPauseCount = 0;
 
 		/// <summary>
@@ -104,7 +104,7 @@ namespace BAT.Core.Analyzers.Impl
                                  int startNo, DateTime endTime, int endNo, int windowCount) {
 	        if (currentlyPaused && validWindow) {
 				// determine the current duration and add to our running total
-				double currentDuration = (windowCount * Constants.SAMPLING_PERIOD) / 1000.0d;
+				decimal currentDuration = (windowCount * Constants.SAMPLING_PERIOD_IN_MS) / 1000.0M;
                 totalDuration += currentDuration;
 
 				// output pause details to file

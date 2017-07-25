@@ -38,7 +38,7 @@ namespace BAT.Core.Analyzers.Impl
                 DateTime startTime = DateTime.Now, endTime;
                 bool currentlyPaused = false;
                 int startNo = 0, endNo, windowCount = 0, pauseCount = 0;
-                double currentDuration = 0.0d, totalDuration = 0.0d;
+                decimal currentDuration = 0.0M, totalDuration = 0.0M;
 
 				foreach (var record in input)
 				{
@@ -74,7 +74,7 @@ namespace BAT.Core.Analyzers.Impl
 						endNo = record.RecordNum.Value;
 
 						// determine the current duration and add to our running total
-                        currentDuration = (windowCount * Constants.SAMPLING_PERIOD) / 1000.0d;
+                        currentDuration = (windowCount * Constants.SAMPLING_PERIOD_IN_MS) / 1000.0M;
                         totalDuration += currentDuration;
 
                         // output pause details to file

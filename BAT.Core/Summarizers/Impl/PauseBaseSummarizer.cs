@@ -7,7 +7,7 @@ namespace BAT.Core.Summarizers.Impl
 {
 	public class PauseBaseSummarizer : ISummarizer
 	{
-		List<double> durations;
+		List<decimal> durations;
 
 		/// <summary>
 		/// Gets the header.
@@ -55,7 +55,7 @@ namespace BAT.Core.Summarizers.Impl
 		public IEnumerable<string[]> Summarize<T>(Dictionary<string, IEnumerable<T>> input) where T : ICsvWritable
 		{
 			var results = new List<string[]>();
-			durations = new List<double>();
+			durations = new List<decimal>();
 
 			foreach (var key in input.Keys)
 			{

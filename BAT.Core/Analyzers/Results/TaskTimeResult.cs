@@ -9,7 +9,7 @@ namespace BAT.Core.Analyzers.Results
 		public int StartNum { get; set; }
 		public DateTime End { get; set; }
 		public int EndNum { get; set; }
-		public double Duration { get; set; }
+		public decimal Duration { get; set; }
 
 		/// <summary>
 		/// Tos the csv.

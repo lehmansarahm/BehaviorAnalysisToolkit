@@ -5,8 +5,13 @@
       "Name": "Completion",
       "Parameters": [
         {
-          "Key": "Threshold",
-          "Value": "94"
+          "Field": "Label",
+          "Clauses": [
+            {
+              "Key": "Threshold",
+              "Value": "94"
+            }
+          ]
         }
       ]
     }

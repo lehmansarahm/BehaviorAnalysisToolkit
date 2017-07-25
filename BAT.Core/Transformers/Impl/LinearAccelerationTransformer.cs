@@ -6,7 +6,7 @@ namespace BAT.Core.Transformers.Impl
 {
     public class LinearAccelerationTransformer : ITransformer
 	{
-		static double[] GRAVITY = new double[] { 0.0d, 0.0d, 0.0d };
+		static decimal[] GRAVITY = new decimal[] { 0.0M, 0.0M, 0.0M };
         const int ACCEL_X = 0, ACCEL_Y = 1, ACCEL_Z = 2;
 
 		/// <summary>
@@ -34,17 +34,17 @@ namespace BAT.Core.Transformers.Impl
 		/// <param name="input">Input.</param>
 		public List<SensorReading> Transform(IEnumerable<ICsvWritable> input)
 		{
-			const double alpha = 0.8d;
+			const decimal alpha = 0.8M;
             List<SensorReading> output = new List<SensorReading>();
 
             foreach(SensorReading reading in input)
             {
-                double newAccelX, newAccelY, newAccelZ;
+                decimal newAccelX, newAccelY, newAccelZ;
                 if (reading.HasValidAccelVector)
 				{
-                    double xAccel = reading.AccelX.Value;
-                    double yAccel = reading.AccelY.Value;
-                    double zAccel = reading.AccelZ.Value;
+                    decimal xAccel = reading.AccelX.Value;
+                    decimal yAccel = reading.AccelY.Value;
+                    decimal zAccel = reading.AccelZ.Value;
 
 					GRAVITY[ACCEL_X] = alpha * GRAVITY[ACCEL_X] + (1 - alpha) * xAccel;
 					GRAVITY[ACCEL_Y] = alpha * GRAVITY[ACCEL_Y] + (1 - alpha) * yAccel;

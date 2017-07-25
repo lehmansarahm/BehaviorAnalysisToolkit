@@ -27,7 +27,7 @@ namespace BAT.Core.Test
 		{
             List<SensorReading> inputRecords = 
                 SensorReading.ReadSensorFile(GetInputFilePath("OA5-Breakfast.csv"));
-            Assert.AreEqual(inputRecords.Count, 2729);
+            Assert.AreEqual(3060, inputRecords.Count);
 		}
 
         /// <summary>
@@ -37,8 +37,7 @@ namespace BAT.Core.Test
 		public void TestInvalidDataLoad()
 		{
 			//------------------------------------------------------------------
-			// can't find file for whatever reason (bad path, typo 
-			// in filename, etc.)
+			// can't find file for whatever reason (bad path, typo in filename, etc.)
 			//------------------------------------------------------------------
 			VerifyBadInputLoad("OA5-Invalid.csv");
 		}

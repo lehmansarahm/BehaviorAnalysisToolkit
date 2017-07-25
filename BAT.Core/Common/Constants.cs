@@ -22,7 +22,7 @@ namespace BAT.Core.Common
         public const string OUTPUT_DIR_SUMMARIZERS = "summaries";
         public const string OUTPUT_DIR_TRANSFORMERS = "transforms";
 
-        public const double SAMPLING_PERIOD = 34.4827586207; // milliseconds ... approx 29 times per second
+        public const decimal SAMPLING_PERIOD_IN_MS = 34.4827586207M; // milliseconds ... approx 29 times per second
         public const string DEFAULT_CONFIG_FILE = "configuration.json";
 
         #region Phase Implementation Suffixes

@@ -250,36 +250,36 @@ namespace BAT.Core.Config
                             CsvFileWriter.WriteResultsToFile(new string[] { Constants.OUTPUT_DIR_ANALYZERS, analyzerName },
                                                       key, analyzer.GetHeaderCsv(),
                                                       analysisResult);
-                    }
 
-                    // now, check to see if there is an associated summary
-                    if (Summarizers.Any() && Summarizers.Contains(analyzerName))
-                    {
-                        Type summarizerType;
-                        ISummarizer summarizer;
+                        // now, check to see if there is an associated summary
+	                    if (Summarizers.Any() && Summarizers.Contains(analyzerName))
+	                    {
+	                        Type summarizerType;
+	                        ISummarizer summarizer;
 
-                        try
-                        {
-                            summarizerType = Type.GetType(Constants.NAMESPACE_SUMMARIZER_IMPL +
-                                                          analyzerName + Constants.PHASE_IMPL_SUMMARIZER);
-                            summarizer = (ISummarizer)Activator.CreateInstance(summarizerType);
-                            success = true;
-                        }
-                        catch (ArgumentNullException ex)
-                        {
-                            LogManager.Error("Could not create instance of provided summarizer.  "
-                                            + "Please double-check configuration file.", ex, this);
-                            continue; // proceed to next operation
-                        }
+	                        try
+	                        {
+	                            summarizerType = Type.GetType(Constants.NAMESPACE_SUMMARIZER_IMPL +
+	                                                          analyzerName + Constants.PHASE_IMPL_SUMMARIZER);
+	                            summarizer = (ISummarizer)Activator.CreateInstance(summarizerType);
+	                            success = true;
+	                        }
+	                        catch (ArgumentNullException ex)
+	                        {
+	                            LogManager.Error("Could not create instance of provided summarizer.  "
+	                                            + "Please double-check configuration file.", ex, this);
+	                            continue; // proceed to next operation
+	                        }
 
-                        var summarizedValues = summarizer.Summarize(analyzedData);
-                        if (writeOutputToFile)
-                            CsvFileWriter.WriteSummaryToFile(new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
-                                                             $"{analyzerName}.csv",
-                                                             summarizer.GetHeaderCsv(),
-                                                             summarizedValues,
-                                                             summarizer.GetFooterCsv(),
-                                                             summarizer.GetFooterValues());
+	                        var summarizedValues = summarizer.Summarize(analyzedData);
+	                        if (writeOutputToFile)
+	                            CsvFileWriter.WriteSummaryToFile(new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
+	                                                             $"{analyzerName}.csv",
+	                                                             summarizer.GetHeaderCsv(),
+	                                                             summarizedValues,
+	                                                             summarizer.GetFooterCsv(),
+	                                                             summarizer.GetFooterValues());
+	                    }
                     }
 				}
 

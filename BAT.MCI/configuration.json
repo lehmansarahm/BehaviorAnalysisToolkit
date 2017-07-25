@@ -1,5 +1,5 @@
 ﻿{
-  "inputs": [ "SupportFiles/OA5-Breakfast.csv" ],
+  "inputs": [ "SupportFiles/OA5-Breakfast.csv", "SupportFiles/OA5-Lunch.csv" ],
   "transformers": [ "LinearAcceleration", "LabelCleanup" ],
   "filters": [
     {
@@ -30,7 +30,7 @@
           "Clauses": [
             {
               "Key": "Threshold",
-              "Value": "0.1"
+              "Value": "0.01"
             },
             {
               "Key": "Window",
@@ -48,7 +48,7 @@
           "Clauses": [
             {
               "Key": "Threshold",
-              "Value": "0.1"
+              "Value": "0.01"
             },
             {
               "Key": "Window",

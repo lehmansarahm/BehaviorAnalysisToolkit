@@ -7,9 +7,11 @@ namespace BAT.Core.Test
     [TestFixture]
     public class ConfigFileTests : BATTest
 	{
-        /// <summary>
-        /// Setup this instance.
-        /// </summary>
+		const bool WRITE_TO_FILE = false;
+
+		/// <summary>
+		/// Setup this instance.
+		/// </summary>
 		[SetUp]
 		public void Setup()
 		{
@@ -42,7 +44,59 @@ namespace BAT.Core.Test
             VerifyInputDataSetCount(config, 1);
 
 			string key = config.InputData.Keys.First();
-            Assert.AreEqual(2729, config.InputData[key].Count());
+            Assert.AreEqual(3060, config.InputData[key].Count());
+		}
+
+        /// <summary>
+        /// Tests the config load with mult inputs.
+        /// </summary>
+        [Test]
+        public void TestConfigLoadWithMultInputs()
+		{
+			Configuration config =
+				Configuration.LoadFromFile(GetConfigFilePath("multInputs.json"));
+			VerifyConfigPhaseCounts(config, 2, 2, 1, 0, 0);
+
+			Assert.IsNull(config.InputData);
+            Assert.IsNull(config.AnalysisData);
+			Assert.AreEqual(1, config.Filters.FirstOrDefault().Parameters.Count);
+			Assert.AreEqual(2, config.Filters.FirstOrDefault().Parameters.FirstOrDefault().Clauses.Count);
+
+            // -----------------------------------------------------------------
+
+			var success = config.LoadInputs();
+			Assert.IsTrue(success);
+
+			VerifyInputDataSetCount(config, 2);
+			Assert.IsNull(config.AnalysisData);
+
+			string firstFile = config.InputData.Keys.FirstOrDefault();
+			Assert.AreEqual(3060, config.InputData[firstFile].Count());
+
+            string secondFile = config.InputData.Keys.LastOrDefault();
+			Assert.AreEqual(4490, config.InputData[secondFile].Count());
+
+			// -----------------------------------------------------------------
+
+			success = config.RunTransformers(WRITE_TO_FILE);
+			Assert.IsTrue(success);
+
+			VerifyInputDataSetCount(config, 2);
+			Assert.IsNull(config.AnalysisData);
+
+			firstFile = config.InputData.Keys.FirstOrDefault();
+			Assert.AreEqual(3059, config.InputData[firstFile].Count());
+
+			secondFile = config.InputData.Keys.LastOrDefault();
+			Assert.AreEqual(4489, config.InputData[secondFile].Count());
+
+			// -----------------------------------------------------------------
+
+            success = config.RunFilters(WRITE_TO_FILE);
+			Assert.IsTrue(success);
+
+			VerifyInputDataSetCount(config, 18);
+			Assert.IsNull(config.AnalysisData);
 		}
 
         /// <summary>

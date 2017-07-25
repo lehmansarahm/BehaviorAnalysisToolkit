@@ -114,6 +114,9 @@
     <None Include="SupportFiles\InputFiles\OA5-Breakfast.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="SupportFiles\ConfigFiles\multInputs.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SupportFiles\" />

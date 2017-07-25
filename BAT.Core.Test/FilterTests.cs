@@ -55,7 +55,7 @@ namespace BAT.Core.Test
 
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
-			VerifyInputDataSetCount(config, 35);
+			VerifyInputDataSetCount(config, 27);
 		}
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace BAT.Core.Test
 
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
-			VerifyInputDataSetCount(config, 11);  // returning only tasks with "select" in label
+            VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);  // returning only tasks with "select" in label
 		}
 
 		/// <summary>
@@ -195,9 +195,7 @@ namespace BAT.Core.Test
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
 
-			// returning only tasks with "select" in label
-			// THERE ARE ONLY TEN!!  (no "select quit")
-			VerifyInputDataSetCount(config, 10);
+			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
 
             var selectBreadDataSet = config.InputData.Where(x => x.Key.Contains("select-bread")).FirstOrDefault().Value;
 			Assert.AreNotEqual(null, selectBreadDataSet);
@@ -233,7 +231,7 @@ namespace BAT.Core.Test
             // TODO - actually implement "completion" filter
 			result = config.RunFilters(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
-			VerifyInputDataSetCount(config, 11);
+			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
 		}
     }
 }

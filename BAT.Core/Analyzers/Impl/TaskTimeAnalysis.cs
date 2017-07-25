@@ -34,8 +34,8 @@ namespace BAT.Core.Analyzers.Impl
                 return new List<TaskTimeResult>();
 
             var numOfRecordings = input.Count() - 1;
-            var execTimeInMs = numOfRecordings * Constants.SAMPLING_PERIOD;
-            var execTimeInSec = execTimeInMs / 1000.0d;
+            var execTimeInMs = numOfRecordings * Constants.SAMPLING_PERIOD_IN_MS;
+            var execTimeInSec = execTimeInMs / 1000.0M;
 
             var last = input.LastOrDefault();
             var results = new List<TaskTimeResult>

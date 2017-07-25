@@ -15,17 +15,18 @@ namespace BAT.Core.Test
 		const string TEST_DATA_FOLDER_INPUTS = "InputFiles";
         const int PRECISION = 5;
 
+        protected const int EXPECTED_SELECT_TASK_COUNT = 11;
         protected static SensorReading FIRST_SELECT_BREAD_READING = new SensorReading
         {
-            Time = DateTime.Parse("10:15:50"),
-            RecordNum = 219,
-            Azimuth = 0.64039737,
-            Pitch = 0.42048505,
-            Roll = 2.950423,
-            AccelX = -0.11136818,
-            AccelY = 0.1675272,
-            AccelZ = -0.29715037,
-            Start = false,
+			Time = DateTime.Parse("14:31:07"),
+            RecordNum = 32,
+            Azimuth = 2.9787378,
+            Pitch = 0.8177647,
+            Roll = 2.534702,
+            AccelX = -0.037580,
+			AccelY = -0.0016299,
+            AccelZ = 0.04918999,
+            Start = true,
             End = false,
             Label = "select-bread"
         };
@@ -77,6 +78,7 @@ namespace BAT.Core.Test
         /// <param name="count">Count.</param>
 		protected static void VerifyInputDataSetCount(Configuration config, int count)
 		{
+            Assert.IsNotNull(config.InputData);
 			Assert.AreEqual(count, config.InputData.Keys.Count);
 		}
 
@@ -87,6 +89,7 @@ namespace BAT.Core.Test
         /// <param name="count">Count.</param>
 		protected static void VerifyAnalysisDataSetCount(Configuration config, int count)
 		{
+			Assert.IsNotNull(config.AnalysisData);
             Assert.AreEqual(count, config.AnalysisData.Keys.Count);
 		}
 

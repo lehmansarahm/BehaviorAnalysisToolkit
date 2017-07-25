@@ -63,16 +63,16 @@ namespace BAT.Core.Test
 			Assert.AreEqual(null, config.AnalysisData);
 
 			// returning only tasks with "select" in label
-			// THERE ARE ONLY TEN!!  (no "select quit")
-			VerifyInputDataSetCount(config, 10);
+            // (should be 11, incl. "select quit")
+			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
 
 			success = config.RunAnalyzers();
 			Assert.AreEqual(true, success);
 
-			// returning only tasks with "select" in label ... analysis data no longer null
-			// THERE ARE ONLY TEN!!  (no "select quit")
-			VerifyInputDataSetCount(config, 10);
-            VerifyAnalysisDataSetCount(config, 10);
+			// returning only tasks with "select" in label
+			// (should be 11, incl. "select quit")
+			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+            VerifyAnalysisDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
 		}
 
 		/// <summary>
@@ -112,16 +112,16 @@ namespace BAT.Core.Test
 			Assert.AreEqual(null, config.AnalysisData);
 
 			// returning only tasks with "select" in label
-			// THERE ARE ONLY TEN!!  (no "select quit")
-			VerifyInputDataSetCount(config, 10);
+			// (should be 11, incl. "select quit")
+			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
 
 			success = config.RunAnalyzers();
 			Assert.AreEqual(true, success);
 
-			// returning only tasks with "select" in label ... analysis data no longer null
-			// THERE ARE ONLY TEN!!  (no "select quit")
-			VerifyInputDataSetCount(config, 10);
-			VerifyAnalysisDataSetCount(config, 10);
+			// returning only tasks with "select" in label
+			// (should be 11, incl. "select quit")
+			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+			VerifyAnalysisDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
 		}
 
 		/// <summary>
@@ -153,16 +153,16 @@ namespace BAT.Core.Test
 			Assert.AreEqual(null, config.AnalysisData);
 
 			// returning only tasks with "select" in label
-			// THERE ARE ONLY TEN!!  (no "select quit")
-			VerifyInputDataSetCount(config, 10);
+			// (should be 11, incl. "select quit")
+			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
 
 			success = config.RunAnalyzers();
 			Assert.AreEqual(true, success);
 
-			// returning only tasks with "select" in label ... analysis data no longer null
-			// THERE ARE ONLY TEN!!  (no "select quit")
-			VerifyInputDataSetCount(config, 10);
-			VerifyAnalysisDataSetCount(config, 10);
+			// returning only tasks with "select" in label
+			// (should be 11, incl. "select quit")
+			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+			VerifyAnalysisDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
 		}
 	}
 }

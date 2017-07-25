@@ -52,17 +52,17 @@ namespace BAT.Core.Common
 		// ---------------------------------------------------------------------
 		// Gyroscope
 		// ---------------------------------------------------------------------
-		public double? Azimuth { get; set; }
-        public double? Pitch { get; set; }
-		public double? Roll { get; set; }
+		public decimal? Azimuth { get; set; }
+        public decimal? Pitch { get; set; }
+		public decimal? Roll { get; set; }
 		// ---------------------------------------------------------------------
 
 		// ---------------------------------------------------------------------
 		// Accelerometer
 		// ---------------------------------------------------------------------
-		public double? AccelX { get; set; }
-        public double? AccelY { get; set; }
-		public double? AccelZ { get; set; }
+		public decimal? AccelX { get; set; }
+        public decimal? AccelY { get; set; }
+		public decimal? AccelZ { get; set; }
 		// ---------------------------------------------------------------------
 
 		/// <summary>
@@ -81,15 +81,15 @@ namespace BAT.Core.Common
         /// Gets the accel mag.
         /// </summary>
         /// <value>The accel mag.</value>
-        public double AccelMag
+        public decimal AccelMag
         {
             get
             {
                 if (HasValidAccelVector)
-                    return Math.Sqrt(Math.Pow(AccelX.Value, 2) 
-                                     + Math.Pow(AccelY.Value, 2) 
-                                     + Math.Pow(AccelZ.Value, 2));
-                return 0.0d;
+                    return (decimal)Math.Sqrt(Math.Pow((double)AccelX.Value, 2) 
+                                              + Math.Pow((double)AccelY.Value, 2) 
+                                              + Math.Pow((double)AccelZ.Value, 2));
+                return 0.0M;
             }
         }
 
@@ -97,11 +97,11 @@ namespace BAT.Core.Common
         /// Gets the instant speed.
         /// </summary>
         /// <value>The instant speed.</value>
-        public double InstantSpeed
+        public decimal InstantSpeed
         { 
             get
             {
-				return AccelMag * (Constants.SAMPLING_PERIOD / 1000.0d);
+				return AccelMag * (Constants.SAMPLING_PERIOD_IN_MS / 1000.0M);
             }
         }
 
@@ -152,22 +152,22 @@ namespace BAT.Core.Common
 			if (!String.IsNullOrEmpty(rawRecordNum)) RecordNum = Int32.Parse(rawRecordNum);
 
 			string rawAzimuth = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.AZIMUTH];
-			if (!String.IsNullOrEmpty(rawAzimuth)) Azimuth = Double.Parse(rawAzimuth);
+			if (!String.IsNullOrEmpty(rawAzimuth)) Azimuth = Decimal.Parse(rawAzimuth);
 
             string rawPitch = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.PITCH];
-            if (!String.IsNullOrEmpty(rawPitch)) Pitch = Double.Parse(rawPitch);
+            if (!String.IsNullOrEmpty(rawPitch)) Pitch = Decimal.Parse(rawPitch);
 
             string rawRoll = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ROLL];
-			if (!String.IsNullOrEmpty(rawRoll)) Roll = Double.Parse(rawRoll);
+			if (!String.IsNullOrEmpty(rawRoll)) Roll = Decimal.Parse(rawRoll);
 
             string rawAccelX = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_X];
-			if (!String.IsNullOrEmpty(rawAccelX)) AccelX = Double.Parse(rawAccelX);
+			if (!String.IsNullOrEmpty(rawAccelX)) AccelX = Decimal.Parse(rawAccelX);
 
             string rawAccelY = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_Y];
-			if (!String.IsNullOrEmpty(rawAccelY)) AccelY = Double.Parse(rawAccelY);
+			if (!String.IsNullOrEmpty(rawAccelY)) AccelY = Decimal.Parse(rawAccelY);
 
             string rawAccelZ = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.ACCEL_Z];
-			if (!String.IsNullOrEmpty(rawAccelZ)) AccelZ = Double.Parse(rawAccelZ);
+			if (!String.IsNullOrEmpty(rawAccelZ)) AccelZ = Decimal.Parse(rawAccelZ);
 
             string rawStartQuit = inputFields[(int)Constants.INPUT_FILE_COLUMN_ORDER.START_QUIT];
             Start = rawStartQuit.Equals(Constants.INPUT_FILE_START_TRIAL_FLAG);
@@ -183,7 +183,7 @@ namespace BAT.Core.Common
         /// <param name="accelX">Accel x.</param>
         /// <param name="accelY">Accel y.</param>
         /// <param name="accelZ">Accel z.</param>
-        public void SetAccelVector(double? accelX, double? accelY, double? accelZ)
+        public void SetAccelVector(decimal? accelX, decimal? accelY, decimal? accelZ)
 		{
 			AccelX = accelX;
 			AccelY = accelY;

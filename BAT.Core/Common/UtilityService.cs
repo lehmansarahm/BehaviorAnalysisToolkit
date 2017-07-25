@@ -11,7 +11,7 @@ namespace BAT.Core.Common
         /// </summary>
         /// <returns>The total.</returns>
         /// <param name="valueList">Value list.</param>
-        public static double Total(List<double> valueList)
+        public static decimal Total(List<decimal> valueList)
         {
             return valueList.Sum(x => x);
         }
@@ -21,7 +21,7 @@ namespace BAT.Core.Common
         /// </summary>
         /// <returns>The average.</returns>
         /// <param name="valueList">Value list.</param>
-        public static double Average(List<double> valueList)
+        public static decimal Average(List<decimal> valueList)
         {
             return (valueList != null && valueList.Any()) 
                 ? (valueList.Sum(x => x) / valueList.Count)
@@ -33,7 +33,7 @@ namespace BAT.Core.Common
 		/// </summary>
 		/// <returns>The deviation.</returns>
 		/// <param name="valueList">Value list.</param>
-		public static double StandardDeviation(List<double> valueList)
+		public static decimal StandardDeviation(List<decimal> valueList)
 		{
 			double M = 0.0;
 			double S = 0.0;
@@ -45,7 +45,7 @@ namespace BAT.Core.Common
 				S += (value - tmpM) * (value - M);
 				k++;
 			}
-			return Math.Sqrt(S / (k - 2));
+			return (decimal)Math.Sqrt(S / (k - 2));
 		}
     }
 }
