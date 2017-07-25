@@ -3,7 +3,7 @@ using System.Linq;
 using BAT.Core.Common;
 using BAT.Core.Config;
 
-namespace BAT.Core.Filters.Impl
+namespace BAT.Core.Filters
 {
 	public class ActivityFilter : IFilter
 	{
@@ -31,7 +31,7 @@ namespace BAT.Core.Filters.Impl
         /// <returns>The filter.</returns>
         /// <param name="input">Input.</param>
         /// <param name="parameters">Parameters.</param>
-        public IEnumerable<PhaseResult<SensorReading>> Filter(IEnumerable<SensorReading> input, 
+        public IEnumerable<PhaseResult<SensorReading>> Filter(IEnumerable<SensorReading> input,
                                                               IEnumerable<Parameter> parameters)
 		{
             var results = new List<PhaseResult<SensorReading>>();

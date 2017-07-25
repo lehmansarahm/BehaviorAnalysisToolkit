@@ -1,5 +1,5 @@
 ﻿using System;
-namespace BAT.Core.Transformers.Impl
+namespace BAT.Core.Transformers
 {
     public class NormalizationTransformer
     {
