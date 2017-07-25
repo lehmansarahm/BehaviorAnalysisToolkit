@@ -104,6 +104,16 @@
     </None>
     <None Include="SupportFiles\ConfigFiles\invalidConfigFileType.txt" />
     <None Include="SupportFiles\ConfigFiles\invalidConfigContentFormat.xml" />
+    <None Include="SupportFiles\ConfigFiles\emptyConfig.json" />
+    <None Include="SupportFiles\InputFiles\OA5-Empty.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\InputFiles\OA5-BadData.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\InputFiles\OA5-Breakfast.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SupportFiles\" />

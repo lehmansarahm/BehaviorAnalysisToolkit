@@ -19,18 +19,28 @@ namespace BAT.Core.Test
 			// do something
 		}
 
+        /// <summary>
+        /// Tests the basic data load.
+        /// </summary>
 		[Test]
 		public void TestBasicDataLoad()
 		{
-            List<SensorReading> inputRecords = SensorReading.ReadSensorFile(GetInputFilePath("OA5-Breakfast.csv"));
+            List<SensorReading> inputRecords = 
+                SensorReading.ReadSensorFile(GetInputFilePath("OA5-Breakfast.csv"));
             Assert.AreEqual(inputRecords.Count, 2729);
 		}
 
+        /// <summary>
+        /// Tests the invalid data load.
+        /// </summary>
 		[Test]
 		public void TestInvalidDataLoad()
 		{
-            // can't find file for whatever reason (bad path, typo in filename, etc.)
-			Assert.AreEqual(true, false);
+			//------------------------------------------------------------------
+			// can't find file for whatever reason (bad path, typo 
+			// in filename, etc.)
+			//------------------------------------------------------------------
+			VerifyBadInputLoad("OA5-Invalid.csv");
 		}
 
 		[Test]
@@ -51,27 +61,43 @@ namespace BAT.Core.Test
 			Assert.AreEqual(true, false);
 		}
 
+        /// <summary>
+        /// Tests the data load with empty file.
+        /// </summary>
 		[Test]
 		public void TestDataLoadWithEmptyFile()
 		{
-            // correct file type but no contents
-			Assert.AreEqual(true, false);
+			//------------------------------------------------------------------
+			// correct file type but no contents...
+			//------------------------------------------------------------------
+			VerifyBadInputLoad("OA5-Empty.csv");
 		}
 
 		[Test]
 		public void TestDataLoadWithIncompleteFile()
 		{
-            // correct file type but data cuts out somewhere in the middle
-            // think:  watch dies in middle of testing trial
+			//------------------------------------------------------------------
+			// correct file type but data cuts out somewhere in the middle...
+			// think:  watch dies in middle of testing trial...
+			//------------------------------------------------------------------
 			Assert.AreEqual(true, false);
 		}
 
+        /// <summary>
+        /// Tests the data load with bad file data.
+        /// </summary>
 		[Test]
 		public void TestDataLoadWithBadFileData()
 		{
-            // individual fields aren't what we expect
-            // wrong file type
-			Assert.AreEqual(true, false);
+            //------------------------------------------------------------------
+            // individual fields aren't what we expect...
+            //------------------------------------------------------------------
+            VerifyBadInputLoad("OA5-BadData.csv");
+
+			//------------------------------------------------------------------
+			// wrong file type...
+			//------------------------------------------------------------------
+			VerifyBadInputLoad("OA5-Breakfast.xlsx");
 		}
     }
 }

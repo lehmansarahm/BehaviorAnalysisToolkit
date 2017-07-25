@@ -48,6 +48,8 @@ namespace BAT.Core.Config
         /// <returns><c>true</c>, if inputs was loaded, <c>false</c> otherwise.</returns>
         public bool LoadInputs() 
         {
+            bool success = false;
+
 			try
 			{
 				string currentDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -74,13 +76,14 @@ namespace BAT.Core.Config
                                      + $"{InputData[key].Count()} records.");
 				}
 
-				return true;
+                success = InputData.Any();
             } 
             catch (Exception e) 
             {
                 LogManager.Error("Fatal error encountered while loading input data.  Exiting program.", e, this);
-				return false;
             }
+
+            return success;
         }
 
         /// <summary>
@@ -343,14 +346,29 @@ namespace BAT.Core.Config
 			{
 				var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(filepath));
 				return config;
-            }
-            catch (JsonException ex)
-            {
-                LogManager.Error("Error encountered while attempting to serialize "
-                                 + $"configuration object from input file: {filepath}.",
-                                 ex, typeof(Configuration));
-                return new Configuration();
-            }
+			}
+			catch (FileNotFoundException ex)
+			{
+				LogManager.Error($"Could not locate input file: {filepath}.  "
+                                 + "Please double check file name / path.",
+								 ex, typeof(Configuration));
+				return new Configuration();
+			}
+            catch (JsonReaderException ex)
+			{
+				LogManager.Error($"Could not parse configuration object from " 
+                                 + "input file: {filepath}.  Is input properly formatted?",
+								 ex, typeof(Configuration));
+				return new Configuration();
+			}
+			catch (JsonSerializationException ex)
+			{
+				LogManager.Error("Error encountered while attempting to serialize "
+								 + $"configuration object from input file: {filepath}.  "
+                                 + "Is input complete?",
+								 ex, typeof(Configuration));
+				return new Configuration();
+			}
 		}
     }
 }

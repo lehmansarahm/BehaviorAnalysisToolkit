@@ -212,15 +212,16 @@ namespace BAT.Core.Common
             return string.Join(",", props);
         }
 
-        /// <summary>
-        /// Reads the sensor file.
-        /// </summary>
-        /// <returns>The sensor file.</returns>
-        /// <param name="filepath">Filepath.</param>
-        public static List<SensorReading> ReadSensorFile(string filepath) {
+		/// <summary>
+		/// Reads the sensor file.
+		/// </summary>
+		/// <returns>The sensor file.</returns>
+		/// <param name="filepath">Filepath.</param>
+		public static List<SensorReading> ReadSensorFile(string filepath)
+		{
+			List<SensorReading> sensorReadings = new List<SensorReading>();
             try
 			{
-				List<SensorReading> sensorReadings = new List<SensorReading>();
 				using (var reader = new StreamReader(@filepath))
 				{
 					while (!reader.EndOfStream)
@@ -230,12 +231,19 @@ namespace BAT.Core.Common
 						sensorReadings.Add(new SensorReading(fields));
 					}
 				}
-				return sensorReadings;
-            } catch (FileNotFoundException ex) {
-                LogManager.Error("Unable to read data from input file.  Exiting program.", 
-                                 ex, typeof(SensorReading));
-                return null;
-            }
+			}
+			catch (FileNotFoundException ex)
+			{
+				LogManager.Error($"Unable to locate input file: {filepath}.  Exiting program.",
+								 ex, typeof(SensorReading));
+			}
+            catch (FormatException ex)
+			{
+				LogManager.Error($"Unable to parse data from input file: {filepath}.  Exiting program.",
+								 ex, typeof(SensorReading));
+			}
+
+			return sensorReadings;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BAT.Core.Common;
@@ -47,7 +48,7 @@ namespace BAT.Core.Test
 		protected static string GetInputFilePath(string filename)
 		{
 			return Path.Combine(GetTestDataFolder(TEST_DATA_FOLDER_INPUTS), filename);
-        }
+		}
 
         /// <summary>
         /// Verifies the config phase counts.
@@ -88,6 +89,48 @@ namespace BAT.Core.Test
 		{
             Assert.AreEqual(count, config.AnalysisData.Keys.Count);
 		}
+
+		/// <summary>
+		/// Verifies the bad config load.
+		/// </summary>
+		/// <param name="filename">Filename.</param>
+		protected static void VerifyBadConfigLoad(string filename)
+		{
+			Configuration config =
+				Configuration.LoadFromFile(GetConfigFilePath(filename));
+			VerifyConfigPhaseCounts(config, 0, 0, 0, 0, 0);
+
+			var success = config.LoadInputs();
+			Assert.IsFalse(success);
+			Assert.IsNull(config.AnalysisData);
+			VerifyInputDataSetCount(config, 0);
+
+			success = config.RunTransformers();
+			Assert.IsFalse(success);
+			Assert.IsNull(config.AnalysisData);
+			VerifyInputDataSetCount(config, 0);
+
+			success = config.RunFilters();
+			Assert.IsFalse(success);
+			Assert.IsNull(config.AnalysisData);
+			VerifyInputDataSetCount(config, 0);
+
+			success = config.RunAnalyzers();
+			Assert.IsFalse(success);
+			Assert.IsNull(config.AnalysisData);
+			VerifyInputDataSetCount(config, 0);
+		}
+
+        /// <summary>
+        /// Verifies the bad input load.
+        /// </summary>
+        /// <param name="filename">Filename.</param>
+        protected static void VerifyBadInputLoad(string filename)
+		{
+            List<SensorReading> inputRecords = 
+                SensorReading.ReadSensorFile(GetInputFilePath(filename));
+			Assert.AreEqual(inputRecords.Count, 0);
+        }
 
         /// <summary>
         /// Verifies the sensor reading.

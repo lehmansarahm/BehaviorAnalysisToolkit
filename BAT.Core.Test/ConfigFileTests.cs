@@ -37,8 +37,9 @@ namespace BAT.Core.Test
 			VerifyConfigPhaseCounts(config, 1, 1, 1, 0, 0);
             Assert.AreEqual(0, config.Filters.FirstOrDefault().Parameters.Count);
 
-			config.LoadInputs();
-			Assert.AreEqual(1, config.InputData.Keys.Count);
+			var success = config.LoadInputs();
+            Assert.IsTrue(success);
+            VerifyInputDataSetCount(config, 1);
 
 			string key = config.InputData.Keys.First();
             Assert.AreEqual(2729, config.InputData[key].Count());
@@ -50,14 +51,20 @@ namespace BAT.Core.Test
 		[Test]
 		public void TestIncompleteConfigLoad()
 		{
+			// -----------------------------------------------------------------
 			// file content improperly formatted...
-			Configuration config =
-				Configuration.LoadFromFile(GetConfigFilePath("invalidConfigFormat.json"));
-			VerifyConfigPhaseCounts(config, 0, 0, 0, 0, 0);
+			// -----------------------------------------------------------------
+			VerifyBadConfigLoad("invalidConfigFormat.json");
 
-			// content stops halfway through...
-			config = Configuration.LoadFromFile(GetConfigFilePath("invalidConfigContent.json"));
-			VerifyConfigPhaseCounts(config, 0, 0, 0, 0, 0);
+            // -----------------------------------------------------------------
+            // content stops halfway through...
+            // -----------------------------------------------------------------
+            VerifyBadConfigLoad("invalidConfigContent.json");
+
+			// -----------------------------------------------------------------
+			// file is empty...
+			// -----------------------------------------------------------------
+			VerifyBadConfigLoad("emptyConfig.json");
             
             // basically, anything that results in an inability to serialize into a Configuration object
 		}
@@ -68,14 +75,20 @@ namespace BAT.Core.Test
 		[Test]
 		public void TestInvalidConfigLoad()
 		{
-			// wrong file type
-			Configuration config =
-				Configuration.LoadFromFile(GetConfigFilePath("invalidConfigFileType.txt"));
-			VerifyConfigPhaseCounts(config, 0, 0, 0, 0, 0);
+			// -----------------------------------------------------------------
+			// wrong file type...
+			// -----------------------------------------------------------------
+			VerifyBadConfigLoad("invalidConfigFileType.txt");
 
-			// wrong file content (XML), etc.
-			config = Configuration.LoadFromFile(GetConfigFilePath("invalidConfigContentFormat.xml"));
-			VerifyConfigPhaseCounts(config, 0, 0, 0, 0, 0);
+			// -----------------------------------------------------------------
+			// wrong file content (XML)...
+			// -----------------------------------------------------------------
+			VerifyBadConfigLoad("invalidConfigContentFormat.xml");
+
+			// -----------------------------------------------------------------
+			// file does not exist...
+			// -----------------------------------------------------------------
+			VerifyBadConfigLoad("asdfsdsdf.xml");
 		}
     }
 }
