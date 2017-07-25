@@ -36,7 +36,7 @@ namespace BAT.Core.Test
 				Configuration.LoadFromFile(GetConfigFilePath("pauseCountAnalysis.json"));
 			VerifyConfigPhaseCounts(config, 1, 2, 1, 1, 0);
 
-			var commandParams = config.Analyzers.Where(x => x.Name.Equals("PauseCountAnalysis"))
+			var commandParams = config.Analyzers.Where(x => x.Name.Equals("PauseCount"))
 									  .FirstOrDefault().Parameters;
 			Assert.AreEqual(1, commandParams.Count);
 
@@ -83,7 +83,7 @@ namespace BAT.Core.Test
 				Configuration.LoadFromFile(GetConfigFilePath("pauseDurationAnalysis.json"));
 			VerifyConfigPhaseCounts(config, 1, 2, 1, 2, 0);
 
-			var commandParams = config.Analyzers.Where(x => x.Name.Equals("PauseDurationAnalysis"))
+			var commandParams = config.Analyzers.Where(x => x.Name.Equals("PauseDuration"))
 									  .FirstOrDefault().Parameters;
 			Assert.AreEqual(1, commandParams.Count);
 
@@ -130,9 +130,9 @@ namespace BAT.Core.Test
 				Configuration.LoadFromFile(GetConfigFilePath("taskTimeAnalysis.json"));
 			VerifyConfigPhaseCounts(config, 1, 2, 1, 1, 0);
 
-			var commandParams = config.Analyzers.Where(x => x.Name.Equals("TaskTimeAnalysis"))
+			var commandParams = config.Analyzers.Where(x => x.Name.Equals("TaskTime"))
 									  .FirstOrDefault().Parameters;
-			Assert.AreEqual(0, commandParams.Count);
+			Assert.AreEqual(null, commandParams);
 
 			var success = config.LoadInputs();
 			Assert.AreEqual(true, success);

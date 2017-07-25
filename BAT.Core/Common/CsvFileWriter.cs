@@ -30,11 +30,11 @@ namespace BAT.Core.Common
         /// <param name="header">Header.</param>
         /// <param name="input">Input.</param>
 		public static void WriteSummaryToFile(string[] outputDirs, string filename,
-                                              string header, IEnumerable<KeyValuePair<string, string>> input,
+                                              string header, IEnumerable<string[]> input,
                                               string footer, string[] footerVals)
 		{
             string output = $"{header}\n" +
-                (input != null ? string.Join("\n", input.Select(x => x.Key + "," + x.Value)) : "") +
+                (input != null ? string.Join("\n", input.Select(x => string.Join(",", x))) : "") +
                 $"\n{footer}\n{string.Join(",", footerVals)}";
             WriteToFile(outputDirs, filename, output);
 		}

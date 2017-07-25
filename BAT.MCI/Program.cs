@@ -56,12 +56,12 @@ namespace BAT.MCI
 				return;
 			}
 
-			success = config.RunSummarizers(writePhaseOutputToFiles);
+			/*success = config.RunSummarizers(writePhaseOutputToFiles);
 			if (success) LogManager.Info("Selected summary operations successfully run on input data.");
 			else {
 				LogManager.Error("Something went wrong while running summary operations.  Exiting program.");
 				return;
-			}
+			}*/
         }
     }
 }

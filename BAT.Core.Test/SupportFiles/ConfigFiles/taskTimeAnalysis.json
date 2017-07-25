@@ -1,9 +1,9 @@
 ﻿{
   "inputs": [ "SupportFiles/InputFiles/OA5-Breakfast.csv" ],
-  "transformers": [ "LinearAccelerationTransformer", "LabelCleanupTransformer" ],
+  "transformers": [ "LinearAcceleration", "LabelCleanup" ],
   "filters": [
     {
-      "Name": "ActivityFilter",
+      "Name": "Activity",
       "Parameters": [
         {
           "Field": "Label",
@@ -21,10 +21,5 @@
       ]
     }
   ],
-  "analyzers": [
-    {
-      "Name": "TaskTimeAnalysis",
-      "Parameters": []
-    }
-  ]
+  "analyzers": [ { "Name": "TaskTime" } ]
 }

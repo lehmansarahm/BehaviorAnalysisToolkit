@@ -102,7 +102,8 @@ namespace BAT.Core.Config
 
 					try
 					{
-						transformerType = Type.GetType(Constants.NAMESPACE_TRANSFORMER_IMPL + transformerName);
+                        transformerType = Type.GetType(Constants.NAMESPACE_TRANSFORMER_IMPL + 
+                                                       transformerName + Constants.PHASE_IMPL_TRANSFORMER);
 						transformer = (ITransformer)Activator.CreateInstance(transformerType);
                         success = true;
 					}
@@ -154,7 +155,8 @@ namespace BAT.Core.Config
                     try
 					{
 						filterName = filterCommand.Name;
-						filterType = Type.GetType(Constants.NAMESPACE_FILTER_IMPL + filterName);
+						filterType = Type.GetType(Constants.NAMESPACE_FILTER_IMPL +
+                                                  filterName + Constants.PHASE_IMPL_FILTER);
 						filter = (IFilter)Activator.CreateInstance(filterType);
 						success = true;
                     }
@@ -212,37 +214,68 @@ namespace BAT.Core.Config
 			if (Analyzers?.Count > 0 && InputData?.Keys?.Count >= 1)
 			{
                 var analyzedData = new Dictionary<string, IEnumerable<ICsvWritable>>();
-				foreach (var analyzerCommand in Analyzers)
-				{
-					string analyzerName;
-					Type analyzerType;
-					IAnalyzer analyzer;
+                foreach (var analyzerCommand in Analyzers)
+                {
+                    string analyzerName;
+                    Type analyzerType;
+                    IAnalyzer analyzer;
 
-					try
-					{
-						analyzerName = analyzerCommand.Name;
-						analyzerType = Type.GetType(Constants.NAMESPACE_ANALYZER_IMPL + analyzerName);
-						analyzer = (IAnalyzer)Activator.CreateInstance(analyzerType);
-						success = true;
-					}
-					catch (ArgumentNullException ex)
-					{
-						LogManager.Error("Could not create instance of provided analyzer.  "
-										+ "Please double-check configuration file.", ex, this);
-						continue; // proceed to next operation
-					}
+                    try
+                    {
+                        analyzerName = analyzerCommand.Name;
+                        analyzerType = Type.GetType(Constants.NAMESPACE_ANALYZER_IMPL +
+                                                    analyzerName + Constants.PHASE_IMPL_ANALYZER);
+                        analyzer = (IAnalyzer)Activator.CreateInstance(analyzerType);
+                        success = true;
+                    }
+                    catch (ArgumentNullException ex)
+                    {
+                        LogManager.Error("Could not create instance of provided analyzer.  "
+                                        + "Please double-check configuration file.", ex, this);
+                        continue; // proceed to next operation
+                    }
 
-					foreach (var key in InputData.Keys)
-					{
-						var analysisResult = analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
-						if (analyzedData.ContainsKey(key)) analyzedData[key] = analysisResult;
-						else analyzedData.Add(key, analysisResult);
+                    foreach (var key in InputData.Keys)
+                    {
+                        var analysisResult = analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
+                        if (analyzedData.ContainsKey(key)) analyzedData[key] = analysisResult;
+                        else analyzedData.Add(key, analysisResult);
 
-						if (writeOutputToFile)
-							CsvFileWriter.WriteResultsToFile(new string[] { Constants.OUTPUT_DIR_ANALYZERS, analyzerName }, 
+                        if (writeOutputToFile)
+                            CsvFileWriter.WriteResultsToFile(new string[] { Constants.OUTPUT_DIR_ANALYZERS, analyzerName },
                                                       key, analyzer.GetHeaderCsv(),
-													  analysisResult);
-					}
+                                                      analysisResult);
+                    }
+
+                    // now, check to see if there is an associated summary
+                    if (Summarizers.Any() && Summarizers.Contains(analyzerName))
+                    {
+                        Type summarizerType;
+                        ISummarizer summarizer;
+
+                        try
+                        {
+                            summarizerType = Type.GetType(Constants.NAMESPACE_SUMMARIZER_IMPL +
+                                                          analyzerName + Constants.PHASE_IMPL_SUMMARIZER);
+                            summarizer = (ISummarizer)Activator.CreateInstance(summarizerType);
+                            success = true;
+                        }
+                        catch (ArgumentNullException ex)
+                        {
+                            LogManager.Error("Could not create instance of provided summarizer.  "
+                                            + "Please double-check configuration file.", ex, this);
+                            continue; // proceed to next operation
+                        }
+
+                        var summarizedValues = summarizer.Summarize(analyzedData);
+                        if (writeOutputToFile)
+                            CsvFileWriter.WriteSummaryToFile(new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
+                                                             $"{analyzerName}.csv",
+                                                             summarizer.GetHeaderCsv(),
+                                                             summarizedValues,
+                                                             summarizer.GetFooterCsv(),
+                                                             summarizer.GetFooterValues());
+                    }
 				}
 
                 // use different collection to maintain integrity of original input data
@@ -258,7 +291,7 @@ namespace BAT.Core.Config
         /// </summary>
         /// <returns><c>true</c>, if summarizers was run, <c>false</c> otherwise.</returns>
         /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
-		public bool RunSummarizers(bool writeOutputToFile = false)
+		/*public bool RunSummarizers(bool writeOutputToFile = false)
 		{
 			bool success = false;
             if (Summarizers?.Count > 0 && AnalysisData?.Keys?.Count >= 1)
@@ -270,7 +303,8 @@ namespace BAT.Core.Config
 
 					try
 					{
-						summarizerType = Type.GetType(Constants.NAMESPACE_SUMMARIZER_IMPL + summarizerName);
+						summarizerType = Type.GetType(Constants.NAMESPACE_SUMMARIZER_IMPL + 
+                                                      summarizerName + Constants.PHASE_IMPL_SUMMARIZER);
                         summarizer = (ISummarizer)Activator.CreateInstance(summarizerType);
 						success = true;
 					}
@@ -294,7 +328,7 @@ namespace BAT.Core.Config
 			else LogManager.Error("No input data to run summaries on.", this);
 
 			return success;
-        }
+        }*/
 
 		/// <summary>
 		/// Loads from file.

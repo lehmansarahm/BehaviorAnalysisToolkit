@@ -2,7 +2,7 @@
 	"inputs": [ "/SupportFiles/InputFiles/OA5-Breakfast.csv" ],
   "filters": [
     {
-      "Name": "ActivityFilter",
+      "Name": "Activity",
       "Parameters": [
         {
           "Field": "Invalid",

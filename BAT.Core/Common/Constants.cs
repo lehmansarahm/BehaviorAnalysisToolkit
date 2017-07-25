@@ -25,6 +25,13 @@ namespace BAT.Core.Common
         public const double SAMPLING_PERIOD = 34.4827586207; // milliseconds ... approx 29 times per second
         public const string DEFAULT_CONFIG_FILE = "configuration.json";
 
+        #region Phase Implementation Suffixes
+        public const string PHASE_IMPL_TRANSFORMER = "Transformer";
+        public const string PHASE_IMPL_FILTER = "Filter";
+        public const string PHASE_IMPL_ANALYZER = "Analysis";
+        public const string PHASE_IMPL_SUMMARIZER = "Summarizer";
+        #endregion
+
         #region Command Parameters - Functional Clauses
         public const string COMMAND_PARAM_CONTAINS = "Contains";
         public const string COMMAND_PARAM_EQUAL_TO = "EqualTo";
@@ -74,7 +81,7 @@ namespace BAT.Core.Common
 					"Start Num",
 					"End Time",
 					"End Num",
-					"Pause Duration"
+                    "Pause Duration (sec)"
 				};
 			}
 		}
@@ -102,7 +109,7 @@ namespace BAT.Core.Common
 					"Start Num",
 					"End Time",
 					"End Num",
-					"Task Duration"
+                    "Task Duration (sec)"
 				};
 			}
 		}
@@ -120,18 +127,45 @@ namespace BAT.Core.Common
 
 		#region SUMMARIES
 
+		/// <summary>
+		/// Gets the task time summary header.
+		/// </summary>
+		/// <value>The task time summary header.</value>
+		public static string[] PAUSE_SUMMARY_HEADER
+		{
+			get
+			{
+                return new string[]
+                {
+                    "Source",
+                    "Number of Pauses",
+                    "Total Time Paused (sec)",
+                    "Average Pause Duration (sec)"
+				};
+			}
+		}
+
         /// <summary>
-        /// Gets the task time summary header.
+        /// Gets the pause summary header csv.
         /// </summary>
-        /// <value>The task time summary header.</value>
-        public static string[] TASK_TIME_SUMMARY_HEADER
+        /// <value>The pause summary header csv.</value>
+        public static string PAUSE_SUMMARY_HEADER_CSV 
+        { 
+            get { return string.Join(",", PAUSE_SUMMARY_HEADER); } 
+        }
+
+		/// <summary>
+		/// Gets the task time summary header.
+		/// </summary>
+		/// <value>The task time summary header.</value>
+		public static string[] TASK_TIME_SUMMARY_HEADER
 		{
 			get
 			{
 				return new string[]
 				{
 					"Source",
-					"Task Duration"
+                    "Task Duration (sec)"
 				};
 			}
 		}

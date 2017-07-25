@@ -49,10 +49,10 @@ namespace BAT.Core.Test
 			VerifyInputDataSetCount(config, 35);
             VerifyAnalysisDataSetCount(config, 35);
 
-            result = config.RunSummarizers(WRITE_TO_FILE);
+            /*result = config.RunSummarizers(WRITE_TO_FILE);
 			Assert.AreEqual(true, result);
 			VerifyInputDataSetCount(config, 35);
-			VerifyAnalysisDataSetCount(config, 35);
+			VerifyAnalysisDataSetCount(config, 35);*/
 		}
 	}
 }

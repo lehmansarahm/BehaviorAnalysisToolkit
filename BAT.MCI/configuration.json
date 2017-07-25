@@ -1,9 +1,9 @@
 ﻿{
   "inputs": [ "SupportFiles/OA5-Breakfast.csv" ],
-  "transformers": [ "LinearAccelerationTransformer", "LabelCleanupTransformer" ],
+  "transformers": [ "LinearAcceleration", "LabelCleanup" ],
   "filters": [
     {
-      "Name": "ActivityFilter",
+      "Name": "Activity",
       "Parameters": [
         {
           "Field": "Label",
@@ -23,7 +23,7 @@
   ],
   "analyzers": [
     {
-      "Name": "PauseCountAnalysis",
+      "Name": "PauseCount",
       "Parameters": [
         {
           "Field": "InstantSpeed",
@@ -41,7 +41,7 @@
       ]
     },
     {
-      "Name": "PauseDurationAnalysis",
+      "Name": "PauseDuration",
       "Parameters": [
         {
           "Field": "InstantSpeed",
@@ -58,10 +58,7 @@
         }
       ]
     },
-    {
-      "Name": "TaskTimeAnalysis",
-      "Parameters": []
-    }
+    { "Name": "TaskTime" }
   ],
-  "summarizers": [ "TaskTimeSummarizer" ]
+  "summarizers": [ "PauseCount", "TaskTime" ]
 }
