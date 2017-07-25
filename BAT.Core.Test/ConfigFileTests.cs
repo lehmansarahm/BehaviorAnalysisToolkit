@@ -44,20 +44,38 @@ namespace BAT.Core.Test
             Assert.AreEqual(2729, config.InputData[key].Count());
 		}
 
+        /// <summary>
+        /// Tests the incomplete config load.
+        /// </summary>
 		[Test]
 		public void TestIncompleteConfigLoad()
 		{
-            // file content improperly formatted...
-            // content stops halfway through...
+			// file content improperly formatted...
+			Configuration config =
+				Configuration.LoadFromFile(GetConfigFilePath("invalidConfigFormat.json"));
+			VerifyConfigPhaseCounts(config, 0, 0, 0, 0, 0);
+
+			// content stops halfway through...
+			config = Configuration.LoadFromFile(GetConfigFilePath("invalidConfigContent.json"));
+			VerifyConfigPhaseCounts(config, 0, 0, 0, 0, 0);
+            
             // basically, anything that results in an inability to serialize into a Configuration object
-			Assert.AreEqual(true, false);
 		}
 
+        /// <summary>
+        /// Tests the invalid config load.
+        /// </summary>
 		[Test]
 		public void TestInvalidConfigLoad()
 		{
-            // wrong file type, wrong file content (XML), etc.
-			Assert.AreEqual(true, false);
+			// wrong file type
+			Configuration config =
+				Configuration.LoadFromFile(GetConfigFilePath("invalidConfigFileType.txt"));
+			VerifyConfigPhaseCounts(config, 0, 0, 0, 0, 0);
+
+			// wrong file content (XML), etc.
+			config = Configuration.LoadFromFile(GetConfigFilePath("invalidConfigContentFormat.xml"));
+			VerifyConfigPhaseCounts(config, 0, 0, 0, 0, 0);
 		}
     }
 }

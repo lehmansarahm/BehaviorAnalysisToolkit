@@ -1,0 +1,3 @@
+﻿{
+	"inputs": [ "/SupportFiles/InputFiles/OA5-Breakfast.csv" ],
+	"transformers": [ "LinearAcceleration"

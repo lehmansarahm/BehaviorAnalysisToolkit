@@ -96,6 +96,14 @@
     <None Include="SupportFiles\ConfigFiles\labelCleanupTransform.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="SupportFiles\ConfigFiles\invalidConfigFormat.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\invalidConfigContent.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\invalidConfigFileType.txt" />
+    <None Include="SupportFiles\ConfigFiles\invalidConfigContentFormat.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SupportFiles\" />

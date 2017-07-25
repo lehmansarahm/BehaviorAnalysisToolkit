@@ -339,8 +339,18 @@ namespace BAT.Core.Config
 		/// <param name="filepath">Filepath.</param>
 		public static Configuration LoadFromFile(string filepath)
 		{
-			var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(filepath));
-            return config;
+            try
+			{
+				var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(filepath));
+				return config;
+            }
+            catch (JsonException ex)
+            {
+                LogManager.Error("Error encountered while attempting to serialize "
+                                 + $"configuration object from input file: {filepath}.",
+                                 ex, typeof(Configuration));
+                return new Configuration();
+            }
 		}
     }
 }
