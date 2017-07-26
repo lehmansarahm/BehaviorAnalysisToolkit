@@ -78,6 +78,9 @@ namespace BAT.Core.Common
 					InitDir(outputDir);
 				}
 
+                if (!filename.EndsWith(Constants.DEFAULT_INPUT_FILE_EXT))
+                    filename = (filename + Constants.DEFAULT_INPUT_FILE_EXT);
+
                 StreamWriter file = new StreamWriter($"{outputDir}/{filename}");
                 file.WriteLine(output);
                 file.Close();

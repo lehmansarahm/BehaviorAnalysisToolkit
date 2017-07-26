@@ -11,27 +11,24 @@ namespace BAT.Core.Filters
 		/// Gets the header.
 		/// </summary>
 		/// <returns>The header.</returns>
-		public string[] GetHeader()
-		{
-			return SensorReading.Header;
-		}
+		public string[] GetHeader() { return SensorReading.Header; }
 
 		/// <summary>
 		/// Gets the header csv.
 		/// </summary>
 		/// <returns>The header csv.</returns>
-		public string GetHeaderCsv()
-		{
-			return SensorReading.HeaderCsv;
-		}
+		public string GetHeaderCsv() { return SensorReading.HeaderCsv; }
 
-		/// <summary>
-		/// Filter the specified input and parameters.
-		/// </summary>
-		/// <returns>The filter.</returns>
-		/// <param name="input">Input.</param>
-		/// <param name="parameters">Parameters.</param>
-        public IEnumerable<PhaseResult<SensorReading>> Filter(IEnumerable<SensorReading> input, IEnumerable<Parameter> parameters)
+        /// <summary>
+        /// Filter the specified source, input and parameters.
+        /// </summary>
+        /// <returns>The filter.</returns>
+        /// <param name="source">Source.</param>
+        /// <param name="input">Input.</param>
+        /// <param name="parameters">Parameters.</param>
+        public IEnumerable<PhaseResult<SensorReading>> Filter(string source,
+                                                              IEnumerable<SensorReading> input, 
+                                                              IEnumerable<Parameter> parameters)
 		{
 			var results = new List<PhaseResult<SensorReading>>();
 			/*foreach (var record in input)

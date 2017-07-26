@@ -9,6 +9,15 @@
             { "Key": "Contains", "Value": "Select" },
             { "Key": "Split", "Value": "true" }
           ] }
+      ] },
+    { "Name": "ThresholdCalibration",
+      "Parameters": [
+        { "Field": "InstantSpeed",
+          "Clauses": [
+            { "Key": "Step", "Value": "select-bread" },
+            { "Key": "Percentage", "Value": "5" }
+          ]
+        }
       ] }
   ],
   "analyzers": [

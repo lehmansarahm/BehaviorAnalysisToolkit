@@ -14,7 +14,8 @@ namespace BAT.Core.Common
         public const char DEFAULT_PATH_SEPARATOR = '/';
         public const char DEFAULT_NAME_SEPARATOR = '_';
 
-		public const decimal SAMPLING_PERIOD_IN_MS = 34.4827586207M; // milliseconds ... approx 29 times per second
+		// milliseconds ... approx 29 times per second
+		public const decimal SAMPLING_PERIOD_IN_MS = 34.4827586207M; 
 		public const string EMPTY = "";
 	}
 
@@ -31,6 +32,8 @@ namespace BAT.Core.Common
         public const string NotEqualTo = "NotEqualTo";
         public const string Split = "Split";
 
+		public const string Percentage = "Percentage";
+		public const string Step = "Step";
         public const string Threshold = "Threshold";
         public const string Window = "Window";
     }

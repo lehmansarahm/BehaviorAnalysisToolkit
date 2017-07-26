@@ -9,7 +9,8 @@ namespace BAT.Core.Filters
 		string[] GetHeader();
 		string GetHeaderCsv();
 
-        IEnumerable<PhaseResult<SensorReading>> Filter(IEnumerable<SensorReading> input,
+        IEnumerable<PhaseResult<SensorReading>> Filter(string source,
+                                                       IEnumerable<SensorReading> input,
                                                        IEnumerable<Parameter> predicates);
 	}
 }

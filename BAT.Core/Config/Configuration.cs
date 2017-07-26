@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BAT.Core.Common;
+using BAT.Core.Filters;
 using BAT.Core.Summarizers;
 using Newtonsoft.Json;
 
@@ -136,10 +137,10 @@ namespace BAT.Core.Config
                     if (filter == null) continue;
 
                     foreach (var key in InputData.Keys)
-                    {
-                        IEnumerable<PhaseResult<SensorReading>> filteredResultSets = null;
+					{
+						IEnumerable<PhaseResult<SensorReading>> filteredResultSets = null;
                         if (filterCommand.Parameters != null)
-                            filteredResultSets = filter.Filter(InputData[key], filterCommand.Parameters);
+                            filteredResultSets = filter.Filter(key, InputData[key], filterCommand.Parameters);
 
                         if (filteredResultSets != null && filteredResultSets.Any())
                         {

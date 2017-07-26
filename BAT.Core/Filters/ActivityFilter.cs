@@ -11,19 +11,13 @@ namespace BAT.Core.Filters
         /// Gets the header.
         /// </summary>
         /// <returns>The header.</returns>
-        public string[] GetHeader()
-        {
-            return SensorReading.Header;
-        }
+        public string[] GetHeader() { return SensorReading.Header; }
 
         /// <summary>
         /// Gets the header csv.
         /// </summary>
         /// <returns>The header csv.</returns>
-        public string GetHeaderCsv()
-        {
-            return SensorReading.HeaderCsv;
-        }
+        public string GetHeaderCsv() { return SensorReading.HeaderCsv; }
 
         /// <summary>
         /// Filter the specified input and parameters.
@@ -31,7 +25,8 @@ namespace BAT.Core.Filters
         /// <returns>The filter.</returns>
         /// <param name="input">Input.</param>
         /// <param name="parameters">Parameters.</param>
-        public IEnumerable<PhaseResult<SensorReading>> Filter(IEnumerable<SensorReading> input,
+        public IEnumerable<PhaseResult<SensorReading>> Filter(string source,
+                                                              IEnumerable<SensorReading> input,
                                                               IEnumerable<Parameter> parameters)
 		{
             var results = new List<PhaseResult<SensorReading>>();
@@ -53,24 +48,22 @@ namespace BAT.Core.Filters
                     // (ends parameter for-each)
 					if (!isMatch) break;
 
-                    // if valid match AND split output, proceed with output split
-                    if (param.UseOutputSplit())
+					// if valid match AND split output, proceed with output split
+					string resultName = (param.UseOutputSplit() ? filterValue : source);
+					if (!results.Select(x => x.Name).Contains(resultName))
 					{
-						if (!results.Select(x => x.Name).Contains(filterValue))
+						var newResult = new PhaseResult<SensorReading>
 						{
-							var newResult = new PhaseResult<SensorReading>
-							{
-								Name = filterValue,
-                                Data = new List<SensorReading> { record }
-							};
-							results.Add(newResult);
-						}
-						else
-						{
-							var existingResult = results.Where(x => x.Name.Equals(filterValue)).FirstOrDefault();
-							existingResult.Data.Add(record);
-						}
-                    }
+							Name = resultName,
+							Data = new List<SensorReading> { record }
+						};
+						results.Add(newResult);
+					}
+					else
+					{
+						var existingResult = results.Where(x => x.Name.Equals(resultName)).FirstOrDefault();
+						existingResult.Data.Add(record);
+					}
                 }
             }
 
