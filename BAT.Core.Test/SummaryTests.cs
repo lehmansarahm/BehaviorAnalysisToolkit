@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using BAT.Core.Config;
+using BAT.Core.Test.SupportFiles;
 using NUnit.Framework;
 
 namespace BAT.Core.Test
@@ -35,17 +36,21 @@ namespace BAT.Core.Test
 			var result = config.LoadInputs();
 			Assert.IsTrue(result);
 			Assert.IsNull(config.AnalysisData);
-			VerifyInputDataSetCount(config, 1);
+			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 
 			result = config.RunFilters();
 			Assert.IsTrue(result);
 			Assert.IsNull(config.AnalysisData);
-			VerifyInputDataSetCount(config, 27);
+            VerifyInputDataSetCount(config, DefaultInput.TotalTaskCount);
 
 			result = config.RunAnalyzers();
 			Assert.IsTrue(result);
-			VerifyInputDataSetCount(config, 27);
-            VerifyAnalysisDataSetCount(config, 27);
+			VerifyInputDataSetCount(config, DefaultInput.TotalTaskCount);
+
+			// analysis results aggregated by original input file ...
+			// will only be one result set ...
+			VerifyAnalysisDataSetCount(config, DefaultInput.RawInputCount);
+			VerifyAnalysisDataSetValueCount(config, DefaultInput.Index, DefaultInput.TotalTaskCount);
 		}
 	}
 }

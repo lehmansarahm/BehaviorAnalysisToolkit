@@ -17,7 +17,13 @@ namespace BAT.Core.Test.SupportFiles
 
 		public static int ProcessedInputRecordCount { get { return 3057; } }
 
-        public static int SelectTaskCount { get { return 11; } }
+		public static int TotalTaskCount { get { return 27; } }
+
+		public static int SelectTaskCount { get { return 11; } }
+
+		public static int IndivPauseCount { get { return 6; } }
+
+		public static int DistinctPauseCount { get { return 2; } }
 
 		public static SensorReading FirstSelectBreadReading 
         {

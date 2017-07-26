@@ -89,7 +89,20 @@ namespace BAT.Core.Test
         {
             Assert.IsNotNull(config.AnalysisData);
             Assert.AreEqual(count, config.AnalysisData.Keys.Count);
-        }
+		}
+
+        /// <summary>
+        /// Verifies the analysis data set value count.
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="dataSetIndex">Data set index.</param>
+        /// <param name="count">Count.</param>
+		protected static void VerifyAnalysisDataSetValueCount(Configuration config, int dataSetIndex, int count)
+		{
+			Assert.IsNotNull(config.AnalysisData);
+			var dataSet = config.AnalysisData.ElementAt(dataSetIndex).Value;
+			Assert.AreEqual(count, dataSet.Count());
+		}
 
         /// <summary>
         /// Verifies the parameter count.

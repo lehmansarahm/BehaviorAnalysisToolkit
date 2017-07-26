@@ -86,8 +86,10 @@ namespace BAT.Core.Test
 			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
 			// count of an individual data set?
 
-			VerifyAnalysisDataSetCount(config, DefaultInput.SelectTaskCount);
-			// count of an individual data set?
+			// analysis results aggregated by original input file ...
+			// will only be one result set ...
+			VerifyAnalysisDataSetCount(config, DefaultInput.RawInputCount);
+			VerifyAnalysisDataSetValueCount(config, DefaultInput.Index, DefaultInput.IndivPauseCount);
 		}
 
 		/// <summary>
@@ -140,7 +142,11 @@ namespace BAT.Core.Test
 			success = config.RunAnalyzers();
 			Assert.IsTrue(success);
 			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
-			VerifyAnalysisDataSetCount(config, DefaultInput.SelectTaskCount);
+
+			// analysis results aggregated by original input file ...
+			// will only be one result set ...
+			VerifyAnalysisDataSetCount(config, DefaultInput.RawInputCount);
+			VerifyAnalysisDataSetValueCount(config, DefaultInput.Index, DefaultInput.DistinctPauseCount);
 		}
 
 		/// <summary>
@@ -185,7 +191,11 @@ namespace BAT.Core.Test
 			success = config.RunAnalyzers();
 			Assert.IsTrue(success);
 			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
-			VerifyAnalysisDataSetCount(config, DefaultInput.SelectTaskCount);
+
+			// analysis results aggregated by original input file ...
+			// will only be one result set ...
+			VerifyAnalysisDataSetCount(config, DefaultInput.RawInputCount);
+            VerifyAnalysisDataSetValueCount(config, DefaultInput.Index, DefaultInput.SelectTaskCount);
 		}
 	}
 }
