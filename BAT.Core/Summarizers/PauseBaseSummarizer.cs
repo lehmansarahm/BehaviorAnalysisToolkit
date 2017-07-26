@@ -13,19 +13,19 @@ namespace BAT.Core.Summarizers
 		/// Gets the header.
 		/// </summary>
 		/// <returns>The header.</returns>
-		public string[] GetHeader() { return Constants.PAUSE_SUMMARY_HEADER; }
+        public string[] GetHeader() { return PauseOutput.SummaryHeader; }
 
 		/// <summary>
 		/// Gets the header csv.
 		/// </summary>
 		/// <returns>The header csv.</returns>
-		public string GetHeaderCsv() { return Constants.PAUSE_SUMMARY_HEADER_CSV; }
+		public string GetHeaderCsv() { return PauseOutput.SummaryHeaderCsv; }
 
 		/// <summary>
 		/// Gets the footer labels.
 		/// </summary>
 		/// <returns>The footer labels.</returns>
-		public string[] GetFooterLabels() { return Constants.PAUSE_SUMMARY_FOOTER; }
+        public string[] GetFooterLabels() { return PauseOutput.SummaryFooter; }
 
 		/// <summary>
 		/// Gets the footer values.
@@ -44,7 +44,7 @@ namespace BAT.Core.Summarizers
 		/// Gets the footer csv.
 		/// </summary>
 		/// <returns>The footer csv.</returns>
-		public string GetFooterCsv() { return Constants.PAUSE_SUMMARY_FOOTER_CSV; }
+        public string GetFooterCsv() { return PauseOutput.SummaryFooterCsv; }
 
 		/// <summary>
 		/// Summarize the specified input.

@@ -72,6 +72,7 @@
     <Compile Include="Config\FilterManager.cs" />
     <Compile Include="Config\AnalyzerManager.cs" />
     <Compile Include="Config\SummarizerManager.cs" />
+    <Compile Include="Config\InputFileManager.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

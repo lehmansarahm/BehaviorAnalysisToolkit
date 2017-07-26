@@ -50,7 +50,7 @@ namespace BAT.Core.Common
         {
             try
 			{
-				string outputDir = Constants.OUTPUT_DIR_BY_TIME;
+                string outputDir = OutputDirs.ExecTime;
 				InitDir(outputDir);
 
 				foreach (var childDir in outputDirs)

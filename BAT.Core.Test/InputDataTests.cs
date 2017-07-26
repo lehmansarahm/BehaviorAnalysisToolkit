@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BAT.Core.Common;
+using BAT.Core.Test.SupportFiles;
 using NUnit.Framework;
 
 namespace BAT.Core.Test
@@ -26,8 +27,8 @@ namespace BAT.Core.Test
 		public void TestBasicDataLoad()
 		{
             List<SensorReading> inputRecords =
-                SensorReading.ReadSensorFile(GetInputFilePath("OA5-Breakfast.csv"));
-            Assert.AreEqual(3060, inputRecords.Count);
+                SensorReading.ReadSensorFile(GetInputFilePath(DefaultInput.Filename));
+            Assert.AreEqual(DefaultInput.RawInputRecordCount, inputRecords.Count);
 		}
 
         /// <summary>
@@ -78,8 +79,12 @@ namespace BAT.Core.Test
 			//------------------------------------------------------------------
 			// correct file type but data cuts out somewhere in the middle...
 			// think:  watch dies in middle of testing trial...
+            //
+            // Should still import just fine ... will dump incomplete records
 			//------------------------------------------------------------------
-			Assert.AreEqual(true, false);
+			var inputRecords = 
+                SensorReading.ReadSensorFile(GetInputFilePath("OA5-MissingSecondHalf.csv"));
+			Assert.AreEqual(2504, inputRecords.Count);
 		}
 
         /// <summary>

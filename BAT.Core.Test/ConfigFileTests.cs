@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using BAT.Core.Config;
+using BAT.Core.Test.SupportFiles;
 using NUnit.Framework;
 
 namespace BAT.Core.Test
@@ -8,6 +9,13 @@ namespace BAT.Core.Test
     public class ConfigFileTests : BATTest
     {
         const bool WRITE_TO_FILE = false;
+
+        const int MULT_INPUT_DATA_SET_COUNT = 2;
+        const int MULT_INPUT_FILTERED_DATA_SET_COUNT = 20;
+
+		const int SECOND_INPUT_INDEX = 1;
+		const int SECOND_INPUT_RAW_RECORD_COUNT = 6445;
+		const int SECOND_INPUT_PROCESSED_RECORD_COUNT = 6445;
 
         /// <summary>
         /// Setup this instance.
@@ -34,16 +42,15 @@ namespace BAT.Core.Test
         public void TestBasicConfigLoad()
         {
             var config = Configuration.LoadFromFile(GetConfigFilePath("basicConfigLoad.json"));
-
-            VerifyConfigPhaseCounts(config, 1, 1, 1, 0, 0);
-            Assert.AreEqual(0, config.Filters.FirstOrDefault().Parameters.Count);
+			VerifyConfigPhaseCounts(config, 1, 1, 1, 0, 0);
+			VerifyParameterCount(config.Filters, 0, 0);
 
             var success = config.LoadInputs();
             Assert.IsTrue(success);
-            VerifyInputDataSetCount(config, 1);
+            Assert.IsNull(config.AnalysisData);
 
-            string key = config.InputData.Keys.First();
-            Assert.AreEqual(3060, config.InputData[key].Count());
+            VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
+            VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.RawInputRecordCount);
         }
 
         /// <summary>
@@ -56,45 +63,37 @@ namespace BAT.Core.Test
             VerifyConfigPhaseCounts(config, 2, 2, 1, 0, 0);
 
             Assert.IsNull(config.InputData);
-            Assert.IsNull(config.AnalysisData);
-            Assert.AreEqual(1, config.Filters.FirstOrDefault().Parameters.Count);
-            Assert.AreEqual(2, config.Filters.FirstOrDefault().Parameters.FirstOrDefault().Clauses.Count);
+			Assert.IsNull(config.AnalysisData);
+
+			VerifyParameterCount(config.Filters, 0, 1);
+			VerifyClauseCount(config.Filters.FirstOrDefault().Parameters, 0, 2);
 
             // -----------------------------------------------------------------
 
             var success = config.LoadInputs();
-            Assert.IsTrue(success);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
 
-            VerifyInputDataSetCount(config, 2);
-            Assert.IsNull(config.AnalysisData);
-
-            string firstFile = config.InputData.Keys.FirstOrDefault();
-            Assert.AreEqual(3060, config.InputData[firstFile].Count());
-
-            string secondFile = config.InputData.Keys.LastOrDefault();
-            Assert.AreEqual(4490, config.InputData[secondFile].Count());
+            VerifyInputDataSetCount(config, MULT_INPUT_DATA_SET_COUNT);
+			VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.RawInputRecordCount);
+            VerifyInputDataSetValueCount(config, SECOND_INPUT_INDEX, SECOND_INPUT_RAW_RECORD_COUNT);
 
             // -----------------------------------------------------------------
 
             success = config.RunTransformers();
-            //Assert.IsTrue(success);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
 
-            VerifyInputDataSetCount(config, 2);
-            Assert.IsNull(config.AnalysisData);
-
-            firstFile = config.InputData.Keys.FirstOrDefault();
-            Assert.AreEqual(3059, config.InputData[firstFile].Count());
-
-            secondFile = config.InputData.Keys.LastOrDefault();
-            Assert.AreEqual(4489, config.InputData[secondFile].Count());
+			VerifyInputDataSetCount(config, MULT_INPUT_DATA_SET_COUNT);
+            VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.ProcessedInputRecordCount);
+            VerifyInputDataSetValueCount(config, SECOND_INPUT_INDEX, SECOND_INPUT_PROCESSED_RECORD_COUNT);
 
             // -----------------------------------------------------------------
 
             success = config.RunFilters();
-            Assert.IsTrue(success);
-
-            VerifyInputDataSetCount(config, 18);
-            Assert.IsNull(config.AnalysisData);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+            VerifyInputDataSetCount(config, MULT_INPUT_FILTERED_DATA_SET_COUNT);
         }
 
         /// <summary>

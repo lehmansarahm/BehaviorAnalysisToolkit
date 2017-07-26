@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using BAT.Core.Common;
 using BAT.Core.Config;
+using BAT.Core.Test.SupportFiles;
 using NUnit.Framework;
 
 namespace BAT.Core.Test
@@ -36,6 +37,8 @@ namespace BAT.Core.Test
 				Configuration.LoadFromFile(GetConfigFilePath("pauseCountAnalysis.json"));
 			VerifyConfigPhaseCounts(config, 1, 2, 1, 1, 0);
 
+			// -----------------------------------------------------------------
+
 			var commandParams = config.Analyzers.Where(x => x.Name.Equals("PauseCount"))
 									  .FirstOrDefault().Parameters;
 			Assert.AreEqual(1, commandParams.Count);
@@ -48,31 +51,43 @@ namespace BAT.Core.Test
 			Assert.AreEqual(CommandParameters.Threshold, thresholdClause.Key);
 			Assert.AreEqual("0.01", thresholdClause.Value);
 
+            // -----------------------------------------------------------------
+
 			var success = config.LoadInputs();
-			Assert.AreEqual(true, success);
-			Assert.AreEqual(1, config.InputData.Keys.Count);
-			Assert.AreEqual(null, config.AnalysisData);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+
+            VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
+			VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.RawInputRecordCount);
+
+			// -----------------------------------------------------------------
 
 			success = config.RunTransformers();
-			//Assert.AreEqual(true, success);
-			Assert.AreEqual(1, config.InputData.Keys.Count);
-			Assert.AreEqual(null, config.AnalysisData);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+
+			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
+            VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.ProcessedInputRecordCount);
+
+			// -----------------------------------------------------------------
 
 			success = config.RunFilters();
-			//Assert.AreEqual(true, success);
-			Assert.AreEqual(null, config.AnalysisData);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
 
-			// returning only tasks with "select" in label
-            // (should be 11, incl. "select quit")
-			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
+            // count of an individual data set?
+
+			// -----------------------------------------------------------------
 
 			success = config.RunAnalyzers();
-			//Assert.AreEqual(true, success);
+			Assert.IsTrue(success);
 
-			// returning only tasks with "select" in label
-			// (should be 11, incl. "select quit")
-			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
-            VerifyAnalysisDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
+			// count of an individual data set?
+
+			VerifyAnalysisDataSetCount(config, DefaultInput.SelectTaskCount);
+			// count of an individual data set?
 		}
 
 		/// <summary>
@@ -84,6 +99,8 @@ namespace BAT.Core.Test
 			Configuration config =
 				Configuration.LoadFromFile(GetConfigFilePath("pauseDurationAnalysis.json"));
 			VerifyConfigPhaseCounts(config, 1, 2, 1, 2, 0);
+
+            // -----------------------------------------------------------------
 
 			var commandParams = config.Analyzers.Where(x => x.Name.Equals("PauseDuration"))
 									  .FirstOrDefault().Parameters;
@@ -97,31 +114,33 @@ namespace BAT.Core.Test
 			Assert.AreEqual(CommandParameters.Threshold, thresholdClause.Key);
 			Assert.AreEqual("0.01", thresholdClause.Value);
 
+			// -----------------------------------------------------------------
+
 			var success = config.LoadInputs();
-			Assert.AreEqual(true, success);
-			Assert.AreEqual(1, config.InputData.Keys.Count);
-			Assert.AreEqual(null, config.AnalysisData);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+			VerifyInputDataSetCount(config, 1);
+
+			// -----------------------------------------------------------------
 
 			success = config.RunTransformers();
-			//Assert.AreEqual(true, success);
-			Assert.AreEqual(1, config.InputData.Keys.Count);
-			Assert.AreEqual(null, config.AnalysisData);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+			VerifyInputDataSetCount(config, 1);
+
+			// -----------------------------------------------------------------
 
 			success = config.RunFilters();
-			//Assert.AreEqual(true, success);
-			Assert.AreEqual(null, config.AnalysisData);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
 
-			// returning only tasks with "select" in label
-			// (should be 11, incl. "select quit")
-			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+			// -----------------------------------------------------------------
 
 			success = config.RunAnalyzers();
-			//Assert.AreEqual(true, success);
-
-			// returning only tasks with "select" in label
-			// (should be 11, incl. "select quit")
-			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
-			VerifyAnalysisDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+			Assert.IsTrue(success);
+			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
+			VerifyAnalysisDataSetCount(config, DefaultInput.SelectTaskCount);
 		}
 
 		/// <summary>
@@ -134,35 +153,39 @@ namespace BAT.Core.Test
 				Configuration.LoadFromFile(GetConfigFilePath("taskTimeAnalysis.json"));
 			VerifyConfigPhaseCounts(config, 1, 2, 1, 1, 0);
 
+			// -----------------------------------------------------------------
+
 			var commandParams = config.Analyzers.Where(x => x.Name.Equals("TaskTime"))
 									  .FirstOrDefault().Parameters;
-			Assert.AreEqual(null, commandParams);
+			Assert.IsNull(commandParams);
+
+			// -----------------------------------------------------------------
 
 			var success = config.LoadInputs();
-			Assert.AreEqual(true, success);
-			Assert.AreEqual(1, config.InputData.Keys.Count);
-			Assert.AreEqual(null, config.AnalysisData);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+			VerifyInputDataSetCount(config, 1);
+
+			// -----------------------------------------------------------------
 
 			success = config.RunTransformers();
-			//Assert.AreEqual(true, success);
-			Assert.AreEqual(1, config.InputData.Keys.Count);
-			Assert.AreEqual(null, config.AnalysisData);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+			VerifyInputDataSetCount(config, 1);
+
+			// -----------------------------------------------------------------
 
 			success = config.RunFilters();
-			//Assert.AreEqual(true, success);
-			Assert.AreEqual(null, config.AnalysisData);
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
 
-			// returning only tasks with "select" in label
-			// (should be 11, incl. "select quit")
-			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+			// -----------------------------------------------------------------
 
 			success = config.RunAnalyzers();
-			//Assert.AreEqual(true, success);
-
-			// returning only tasks with "select" in label
-			// (should be 11, incl. "select quit")
-			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
-			VerifyAnalysisDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+			Assert.IsTrue(success);
+			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
+			VerifyAnalysisDataSetCount(config, DefaultInput.SelectTaskCount);
 		}
 	}
 }

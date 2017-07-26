@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using BAT.Core.Common;
 using BAT.Core.Config;
+using BAT.Core.Test.SupportFiles;
 using NUnit.Framework;
 
 namespace BAT.Core.Test
@@ -37,10 +38,10 @@ namespace BAT.Core.Test
 			VerifyConfigPhaseCounts(config, 1, 2, 0, 0, 0);
 
 			config.LoadInputs();
-			VerifyInputDataSetCount(config, 1);
+			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 
 			config.RunTransformers();
-			VerifyInputDataSetCount(config, 1);
+			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 		}
 
         /// <summary>
@@ -54,12 +55,12 @@ namespace BAT.Core.Test
 			VerifyConfigPhaseCounts(config, 1, 1, 0, 0, 0);
 
 			config.LoadInputs();
-            VerifyInputDataSetCount(config, 1);
+            VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 
 			// user provided a transformer name that doesn't match anything we have
 			var result = config.RunTransformers();
-			Assert.AreEqual(false, result);
-			VerifyInputDataSetCount(config, 0);
+			Assert.IsFalse(result);
+			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 		}
 
         /// <summary>
@@ -75,21 +76,21 @@ namespace BAT.Core.Test
 			VerifyConfigPhaseCounts(config, 1, 1, 0, 0, 0);
 
 			var result = config.LoadInputs();
-			Assert.AreEqual(true, result);
-			VerifyInputDataSetCount(config, 1);
+			Assert.IsTrue(result);
+			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 
 			result = config.RunTransformers();
-			Assert.AreEqual(true, result);
-			VerifyInputDataSetCount(config, 1);
+			Assert.IsTrue(result);
+			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 
 			var firstDataSet = config.InputData.FirstOrDefault().Value;
-			Assert.AreNotEqual(null, firstDataSet);
+            Assert.IsNotNull(firstDataSet);
 
 			var firstSelectReading = firstDataSet.Where(x => x.Label.Contains("select")).FirstOrDefault();
-			Assert.AreNotEqual(null, firstSelectReading);
+			Assert.IsNotNull(firstSelectReading);
 
             // make sure that the first record of "select bread" is what we expect
-            VerifySensorReading(FIRST_SELECT_BREAD_READING, firstSelectReading);
+            VerifySensorReading(DefaultInput.FirstSelectBreadReading, firstSelectReading);
 		}
 
         /// <summary>
@@ -105,18 +106,18 @@ namespace BAT.Core.Test
 			VerifyConfigPhaseCounts(config, 1, 1, 0, 0, 0);
 
 			var result = config.LoadInputs();
-			Assert.AreEqual(true, result);
-			VerifyInputDataSetCount(config, 1);
+			Assert.IsTrue(result);
+			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 
 			result = config.RunTransformers();
-			Assert.AreEqual(true, result);
-			VerifyInputDataSetCount(config, 1);
+			Assert.IsTrue(result);
+			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 
 			var firstDataSet = config.InputData.FirstOrDefault().Value;
-			Assert.AreNotEqual(null, firstDataSet);
+			Assert.IsNotNull(firstDataSet);
 
 			var firstSelectReading = firstDataSet.Where(x => x.Label.Contains("select")).FirstOrDefault();
-			Assert.AreNotEqual(null, firstSelectReading);
+			Assert.IsNotNull(firstSelectReading);
 
             // make sure that the first record of "select bread" is what we expect
             Assert.AreEqual("select-bread", firstSelectReading.Label);

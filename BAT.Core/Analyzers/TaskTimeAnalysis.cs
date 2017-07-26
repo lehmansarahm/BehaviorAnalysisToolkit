@@ -12,13 +12,13 @@ namespace BAT.Core.Analyzers
 		/// Gets the header.
 		/// </summary>
 		/// <returns>The header.</returns>
-        public string[] GetHeader() { return Constants.TASK_TIME_RESULT_HEADER; }
+        public string[] GetHeader() { return TaskTimeOutput.ResultHeader; }
 
 		/// <summary>
 		/// Gets the header csv.
 		/// </summary>
 		/// <returns>The header csv.</returns>
-        public string GetHeaderCsv() { return Constants.TASK_TIME_RESULT_HEADER_CSV; }
+        public string GetHeaderCsv() { return TaskTimeOutput.ResultHeaderCsv; }
 
         /// <summary>
         /// Analyze the specified input and parameters.
@@ -30,8 +30,7 @@ namespace BAT.Core.Analyzers
                                                  IEnumerable<Parameter> parameters)
 		{
 			var first = input.FirstOrDefault();
-            if (first == null || !first.HasValidTimeData)
-                return new List<TaskTimeResult>();
+            if (first == null) return new List<TaskTimeResult>();
 
             var numOfRecordings = input.Count() - 1;
             var execTimeInMs = numOfRecordings * Constants.SAMPLING_PERIOD_IN_MS;
@@ -41,10 +40,10 @@ namespace BAT.Core.Analyzers
             var results = new List<TaskTimeResult>
             {
                 new TaskTimeResult {
-                    Start = first.Time.Value,
-                    StartNum = first.RecordNum.Value,
-                    End = last.Time.Value,
-                    EndNum = last.RecordNum.Value,
+                    Start = first.Time,
+                    StartNum = first.RecordNum,
+                    End = last.Time,
+                    EndNum = last.RecordNum,
                     Duration = execTimeInSec
                 }
             };

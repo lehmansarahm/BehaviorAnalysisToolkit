@@ -35,6 +35,7 @@
     <Compile Include="FilterTests.cs" />
     <Compile Include="AnalysisTests.cs" />
     <Compile Include="SummaryTests.cs" />
+    <Compile Include="SupportFiles\DefaultInput.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
@@ -67,7 +68,7 @@
     <None Include="SupportFiles\ConfigFiles\invalidTransform.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="SupportFiles\InputFiles\OA5-Breakfast-Short.csv">
+    <None Include="SupportFiles\InputFiles\OA5-MissingSecondHalf.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SupportFiles\ConfigFiles\activityFilter.json">

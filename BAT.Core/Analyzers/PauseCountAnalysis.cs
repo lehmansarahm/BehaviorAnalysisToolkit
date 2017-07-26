@@ -12,13 +12,13 @@ namespace BAT.Core.Analyzers
         /// Gets the header.
         /// </summary>
         /// <returns>The header.</returns>
-        public string[] GetHeader() { return Constants.PAUSE_RESULT_HEADER; }
+        public string[] GetHeader() { return PauseOutput.ResultHeader; }
 
         /// <summary>
         /// Gets the header csv.
         /// </summary>
         /// <returns>The header csv.</returns>
-        public string GetHeaderCsv() { return Constants.PAUSE_RESULT_HEADER_CSV; }
+        public string GetHeaderCsv() { return PauseOutput.ResultHeaderCsv; }
 
         /// <summary>
         /// Analyze the specified input and parameters.
@@ -47,14 +47,14 @@ namespace BAT.Core.Analyzers
                     if (filterField == null) continue;
 
                     var filterValue = Double.Parse(filterField.GetValue(record, null).ToString());
-                    if (record.HasValidAccelVector && filterValue < threshold)
+                    if (filterValue < threshold)
                     {
                         // we've found a pause instance
                         if (!currentlyPaused)
                         {
                             // new pause instance ... log the starting details
-                            startTime = record.Time.GetValueOrDefault();
-                            startNo = record.RecordNum.Value;
+                            startTime = record.Time;
+                            startNo = record.RecordNum;
                             currentlyPaused = true;
                         }
                         // whether starting a new pause or continuing an old, bump the pause counter
@@ -71,8 +71,8 @@ namespace BAT.Core.Analyzers
                     if (currentlyPaused && windowCount == windowSize)
                     {
                         // log ending details
-                        endTime = record.Time.Value;
-                        endNo = record.RecordNum.Value;
+                        endTime = record.Time;
+                        endNo = record.RecordNum;
 
                         // determine the current duration and add to our running total
                         currentDuration = (windowCount * Constants.SAMPLING_PERIOD_IN_MS) / 1000.0M;

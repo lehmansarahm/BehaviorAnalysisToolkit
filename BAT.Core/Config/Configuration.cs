@@ -27,6 +27,8 @@ namespace BAT.Core.Config
         [JsonProperty("summarizers")]
         public List<string> Summarizers { get; set; }
 
+        public bool WriteOutputFile { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:BAT.Core.Config.Configuration"/> class.
         /// </summary>
@@ -38,9 +40,6 @@ namespace BAT.Core.Config
             Analyzers = new List<Command>();
             Summarizers = new List<string>();
         }
-
-        public bool WriteOutputFile = false;
-
 
         /// <summary>
         /// Loads the inputs.
@@ -89,12 +88,11 @@ namespace BAT.Core.Config
         /// Runs the transformers.
         /// </summary>
         /// <returns><c>true</c>, if transformers was run, <c>false</c> otherwise.</returns>
-        /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
         public bool RunTransformers()
-        {
-            bool success = false;
-
+		{
+			bool success = false;
             var transformers = TransformerManager.GetTransformers(Transformers);
+
             if (transformers?.Any() ?? false && InputData?.Keys?.Count >= 1)
             {
                 // iterate through the list of transformers and run on each input data set
@@ -112,13 +110,13 @@ namespace BAT.Core.Config
 
                         if (WriteOutputFile)
                             CsvFileWriter.WriteResultsToFile
-                                (new[] { Constants.OUTPUT_DIR_TRANSFORMERS, transformer.GetType().Name },
-                                key, transformer.GetHeaderCsv(), transformedValues);
+                                         (new[] { OutputDirs.Transformers, transformer.GetType().Name },
+                                          key, transformer.GetHeaderCsv(), transformedValues);
                     }
                 }
 
-                //recursively apply transformations
                 InputData = transformedData;
+                success = true;
             }
             else LogManager.Error("No input data to run transformations on.", this);
 
@@ -129,7 +127,6 @@ namespace BAT.Core.Config
         /// Runs the filters.
         /// </summary>
         /// <returns><c>true</c>, if filters was run, <c>false</c> otherwise.</returns>
-        /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
         public bool RunFilters()
         {
             bool success = false;
@@ -147,7 +144,7 @@ namespace BAT.Core.Config
                         if (filterCommand.Parameters != null)
                             filteredResultSets = filter.Filter(InputData[key], filterCommand.Parameters);
 
-                        if (filteredResultSets != null)
+                        if (filteredResultSets != null && filteredResultSets.Any())
                         {
                             foreach (var filterResult in filteredResultSets)
                             {
@@ -160,9 +157,11 @@ namespace BAT.Core.Config
 
                                 if (WriteOutputFile)
                                     CsvFileWriter.WriteResultsToFile
-                                                 (new string[] { Constants.OUTPUT_DIR_FILTERS, filterCommand.Name },
+                                                 (new string[] { OutputDirs.Filters, filterCommand.Name },
                                                   newFilename, filter.GetHeaderCsv(), filteredValues);
-                            }
+							}
+
+							success = true;
                         }
                     }
                 }
@@ -178,7 +177,6 @@ namespace BAT.Core.Config
         /// Runs the analyzers.
         /// </summary>
         /// <returns><c>true</c>, if analyzers was run, <c>false</c> otherwise.</returns>
-        /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
         public bool RunAnalyzers()
         {
             bool success = false;
@@ -189,8 +187,7 @@ namespace BAT.Core.Config
                 {
                     var analyzerName = analyzerCommand.Name;
                     var analyzer = AnalyzerManager.GetAnalyzer(analyzerName);
-                    if (analyzer == null)
-                        continue;
+                    if (analyzer == null) continue;
 
                     foreach (var key in InputData.Keys)
                     {
@@ -201,7 +198,7 @@ namespace BAT.Core.Config
 
                         if (WriteOutputFile)
                             CsvFileWriter.WriteResultsToFile
-                                         (new string[] { Constants.OUTPUT_DIR_ANALYZERS, analyzerName },
+                                         (new string[] { OutputDirs.Analyzers, analyzerName },
                                           key, analyzer.GetHeaderCsv(), analysisResult);
 
 	                    // now, check to see if there is an associated summary
@@ -211,12 +208,14 @@ namespace BAT.Core.Config
 	                        var summarizedValues = summarizer.Summarize(analyzedData);
 	                        if (WriteOutputFile)
 	                            CsvFileWriter.WriteSummaryToFile
-                                             (new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
+                                             (new string[] { OutputDirs.Summarizers },
                                               $"{analyzerName}.csv", summarizer.GetHeaderCsv(),
                                               summarizedValues, summarizer.GetFooterCsv(),
                                               summarizer.GetFooterValues());
 	                    }
                     }
+
+                    success = true;
                 }
 
                 // use different collection to maintain integrity of original input data
@@ -231,7 +230,6 @@ namespace BAT.Core.Config
         /// Runs the summarizers.
         /// </summary>
         /// <returns><c>true</c>, if summarizers was run, <c>false</c> otherwise.</returns>
-        /// <param name="writeOutputToFile">If set to <c>true</c> write output to file.</param>
         /*public bool RunSummarizers(bool writeOutputToFile = false)
         {
             bool success = false;

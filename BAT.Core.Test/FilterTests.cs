@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using BAT.Core.Common;
 using BAT.Core.Config;
+using BAT.Core.Test.SupportFiles;
 using NUnit.Framework;
 
 namespace BAT.Core.Test
@@ -151,7 +152,7 @@ namespace BAT.Core.Test
 
 			result = config.RunFilters();
 			//Assert.AreEqual(true, result);
-            VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);  // returning only tasks with "select" in label
+            VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);  // returning only tasks with "select" in label
 		}
 
 		/// <summary>
@@ -192,7 +193,7 @@ namespace BAT.Core.Test
 			result = config.RunFilters();
 			//Assert.AreEqual(true, result);
 
-			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
 
             var selectBreadDataSet = config.InputData.Where(x => x.Key.Contains("select-bread")).FirstOrDefault().Value;
 			Assert.AreNotEqual(null, selectBreadDataSet);
@@ -201,7 +202,7 @@ namespace BAT.Core.Test
 			Assert.AreNotEqual(null, firstReading);
 
 			// make sure that the first record of "select bread" is what we expect
-			VerifySensorReading(FIRST_SELECT_BREAD_READING, firstReading);
+			VerifySensorReading(DefaultInput.FirstSelectBreadReading, firstReading);
 		}
 
         /// <summary>
@@ -228,7 +229,7 @@ namespace BAT.Core.Test
             // TODO - actually implement "completion" filter
 			result = config.RunFilters();
 			//Assert.AreEqual(true, result);
-			VerifyInputDataSetCount(config, EXPECTED_SELECT_TASK_COUNT);
+			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
 		}
     }
 }

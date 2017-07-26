@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BAT.Core.Common;
 
 namespace BAT.Core.Transformers
 {
     public class LinearAccelerationTransformer : ITransformer
 	{
-		static decimal[] GRAVITY = new decimal[] { 0.0M, 0.0M, 0.0M };
+		static decimal[] GRAVITY = { 0.0M, 0.0M, 0.0M };
         const int ACCEL_X = 0, ACCEL_Y = 1, ACCEL_Z = 2;
 
 		/// <summary>
@@ -39,25 +38,21 @@ namespace BAT.Core.Transformers
 
             foreach(SensorReading reading in input)
             {
-                decimal newAccelX, newAccelY, newAccelZ;
-                if (reading.HasValidAccelVector)
-				{
-                    decimal xAccel = reading.AccelX.Value;
-                    decimal yAccel = reading.AccelY.Value;
-                    decimal zAccel = reading.AccelZ.Value;
+                decimal xAccel = reading.AccelX, 
+                        yAccel = reading.AccelY, 
+                        zAccel = reading.AccelZ;
 
-					GRAVITY[ACCEL_X] = alpha * GRAVITY[ACCEL_X] + (1 - alpha) * xAccel;
-					GRAVITY[ACCEL_Y] = alpha * GRAVITY[ACCEL_Y] + (1 - alpha) * yAccel;
-					GRAVITY[ACCEL_Z] = alpha * GRAVITY[ACCEL_Z] + (1 - alpha) * zAccel;
+				GRAVITY[ACCEL_X] = alpha * GRAVITY[ACCEL_X] + (1 - alpha) * xAccel;
+				GRAVITY[ACCEL_Y] = alpha * GRAVITY[ACCEL_Y] + (1 - alpha) * yAccel;
+				GRAVITY[ACCEL_Z] = alpha * GRAVITY[ACCEL_Z] + (1 - alpha) * zAccel;
 
-					newAccelX = (xAccel - GRAVITY[ACCEL_X]);
-					newAccelY = (yAccel - GRAVITY[ACCEL_Y]);
-					newAccelZ = (zAccel - GRAVITY[ACCEL_Z]);
+				decimal newAccelX = (xAccel - GRAVITY[ACCEL_X]), 
+                        newAccelY = (yAccel - GRAVITY[ACCEL_Y]), 
+                        newAccelZ = (zAccel - GRAVITY[ACCEL_Z]);
 
-                    SensorReading newReading = new SensorReading(reading);
-                    newReading.SetAccelVector(newAccelX, newAccelY, newAccelZ);
-                    output.Add(newReading);
-                }
+                SensorReading newReading = new SensorReading(reading);
+                newReading.SetAccelVector(newAccelX, newAccelY, newAccelZ);
+                output.Add(newReading);
             }
 
             return output;

@@ -13,23 +13,8 @@ namespace BAT.Core.Test
         const string TEST_DATA_FOLDER = "SupportFiles";
         const string TEST_DATA_FOLDER_CONFIGS = "ConfigFiles";
         const string TEST_DATA_FOLDER_INPUTS = "InputFiles";
-        const int PRECISION = 5;
 
-        protected const int EXPECTED_SELECT_TASK_COUNT = 11;
-        protected static SensorReading FIRST_SELECT_BREAD_READING = new SensorReading
-        {
-            Time = DateTime.Parse("14:31:07"),
-            RecordNum = 32,
-            Azimuth = 2.9787378M,
-            Pitch = 0.8177647M,
-            Roll = 2.534702M,
-            AccelX = -0.037580M, // -0.03299761 -0.004323006    0.05408764
-            AccelY = -0.0016299M,
-            AccelZ = 0.04918999M,
-            Start = true,
-            End = false,
-            Label = "select-bread"
-        };
+        const int PRECISION = 5;
 
         /// <summary>
         /// Gets the config file path.
@@ -83,6 +68,19 @@ namespace BAT.Core.Test
         }
 
         /// <summary>
+        /// Verifies the input data set value count.
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="dataSetIndex">Data set index.</param>
+        /// <param name="count">Count.</param>
+        protected static void VerifyInputDataSetValueCount(Configuration config, int dataSetIndex, int count)
+        {
+            Assert.IsNotNull(config.InputData);
+            var dataSet = config.InputData.ElementAt(dataSetIndex).Value;
+            Assert.AreEqual(count, dataSet.Count());
+        }
+
+        /// <summary>
         /// Verifies the analysis data set count.
         /// </summary>
         /// <param name="config">Config.</param>
@@ -91,6 +89,34 @@ namespace BAT.Core.Test
         {
             Assert.IsNotNull(config.AnalysisData);
             Assert.AreEqual(count, config.AnalysisData.Keys.Count);
+        }
+
+        /// <summary>
+        /// Verifies the parameter count.
+        /// </summary>
+        /// <param name="commands">Commands.</param>
+        /// <param name="commandIndex">Command index.</param>
+        /// <param name="count">Count.</param>
+        protected static void VerifyParameterCount(IEnumerable<Command> commands, int commandIndex, int count)
+        {
+            var command = commands.ElementAt(commandIndex);
+            Assert.IsNotNull(command);
+            Assert.IsNotNull(command.Parameters);
+            Assert.AreEqual(count, command.Parameters.Count);
+        }
+
+        /// <summary>
+        /// Verifies the clause count.
+        /// </summary>
+        /// <param name="parameters">Parameters.</param>
+        /// <param name="paramIndex">Parameter index.</param>
+        /// <param name="count">Count.</param>
+        protected static void VerifyClauseCount(IEnumerable<Parameter> parameters, int paramIndex, int count)
+        {
+            var parameter = parameters.ElementAt(paramIndex);
+            Assert.IsNotNull(parameter);
+            Assert.IsNotNull(parameter.Clauses);
+            Assert.AreEqual(count, parameter.Clauses.Count);
         }
 
         /// <summary>
@@ -145,19 +171,19 @@ namespace BAT.Core.Test
             Assert.AreEqual(expected.Time, actual.Time);
             Assert.AreEqual(expected.RecordNum, actual.RecordNum);
 
-            Assert.AreEqual(Math.Round(expected.Azimuth.Value, PRECISION),
-                            Math.Round(actual.Azimuth.Value, PRECISION));
-            Assert.AreEqual(Math.Round(expected.Pitch.Value, PRECISION),
-                            Math.Round(actual.Pitch.Value, PRECISION));
-            Assert.AreEqual(Math.Round(expected.Roll.Value, PRECISION),
-                            Math.Round(actual.Roll.Value, PRECISION));
+            Assert.AreEqual(Math.Round(expected.Azimuth, PRECISION),
+                            Math.Round(actual.Azimuth, PRECISION));
+            Assert.AreEqual(Math.Round(expected.Pitch, PRECISION),
+                            Math.Round(actual.Pitch, PRECISION));
+            Assert.AreEqual(Math.Round(expected.Roll, PRECISION),
+                            Math.Round(actual.Roll, PRECISION));
 
-            Assert.AreEqual(Math.Round(expected.AccelX.Value, PRECISION),
-                            Math.Round(actual.AccelX.Value, PRECISION));
-            Assert.AreEqual(Math.Round(expected.AccelY.Value, PRECISION),
-                            Math.Round(actual.AccelY.Value, PRECISION));
-            Assert.AreEqual(Math.Round(expected.AccelZ.Value, PRECISION),
-                            Math.Round(actual.AccelZ.Value, PRECISION));
+            Assert.AreEqual(Math.Round(expected.AccelX, PRECISION),
+                            Math.Round(actual.AccelX, PRECISION));
+            Assert.AreEqual(Math.Round(expected.AccelY, PRECISION),
+                            Math.Round(actual.AccelY, PRECISION));
+            Assert.AreEqual(Math.Round(expected.AccelZ, PRECISION),
+                            Math.Round(actual.AccelZ, PRECISION));
 
             if (includeSupportingFields)
             {

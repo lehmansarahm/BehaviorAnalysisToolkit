@@ -3,6 +3,20 @@ using System.Globalization;
 
 namespace BAT.Core.Common
 {
+    /// <summary>
+    /// Constants.
+    /// </summary>
+	public static class Constants
+	{
+		public static CultureInfo CULTURE = CultureInfo.CurrentCulture;
+        public const string DEFAULT_CONFIG_FILE = "configuration.json";
+		public const decimal SAMPLING_PERIOD_IN_MS = 34.4827586207M; // milliseconds ... approx 29 times per second
+		public const string EMPTY = "";
+	}
+
+    /// <summary>
+    /// Command parameters.
+    /// </summary>
     public static class CommandParameters
     {
         public const string Contains = "Contains";
@@ -17,114 +31,83 @@ namespace BAT.Core.Common
         public const string Window = "Window";
     }
 
-    public enum InputFileColumnOrder
-    {
-        Time,
-        RecordNumber,
-        Azimuth,
-        Pitch,
-        Roll,
-        AccelerationX,
-        AccelarationY,
-        AccelerationZ,
-        StartQuit,
-        Label
-    };
+    /// <summary>
+    /// Output dirs.
+    /// </summary>
+    public static class OutputDirs
+	{
+        static string ExecDateTime = DateTime.Now.ToString("MMddyyyy-hhmmss");
+        public static string ExecTime = $"output-{ExecDateTime}";
 
-    public static class Constants
-    {
-        public static CultureInfo CULTURE = CultureInfo.CurrentCulture;
+		public const string Analyzers = "analysis";
+		public const string Filters = "filters";
+		public const string Inputs = "input";
+		public const string Summarizers = "summaries";
+		public const string Transformers = "transforms";
+    }
 
-        public static string EXECUTION_DATE_TIME = DateTime.Now.ToString("MMddyyyy-hhmmss");
-        public static string OUTPUT_DIR_BY_TIME = $"output-{EXECUTION_DATE_TIME}";
+    /// <summary>
+    /// Input file.
+    /// </summary>
+    public static class InputFile
+	{
+		public const string StartFlag = "Start";
+		public const string EndFlag = "Quit";
+		public const string NoLabelProvided = "no label provided";
 
-        public const string OUTPUT_DIR_ANALYZERS = "analysis";
-        public const string OUTPUT_DIR_FILTERS = "filters";
-        public const string OUTPUT_DIR_INPUT = "input";
-        public const string OUTPUT_DIR_SUMMARIZERS = "summaries";
-        public const string OUTPUT_DIR_TRANSFORMERS = "transforms";
+		public enum ColumnOrder
+		{
+			Time,
+			RecordNumber,
+			Azimuth,
+			Pitch,
+			Roll,
+			AccelerationX,
+			AccelarationY,
+			AccelerationZ,
+			StartQuit,
+			Label
+		};
+    }
 
-        public const decimal SAMPLING_PERIOD_IN_MS = 34.4827586207M; // milliseconds ... approx 29 times per second
-        public const string DEFAULT_CONFIG_FILE = "configuration.json";
-
-
-
-        public const string INPUT_FILE_START_TRIAL_FLAG = "Start";
-        public const string INPUT_FILE_END_TRIAL_FLAG = "Quit";
-        public const string INPUT_FILE_NO_LABEL_PROVIDED = "no label provided";
-
-        #region RESULTS
-
-        //todo: move this to appropriate class for this csv file
+    /// <summary>
+    /// Pause output.
+    /// </summary>
+    public static class PauseOutput
+	{
         /// <summary>
-        /// Gets the pause result header.
+        /// Gets the result header.
         /// </summary>
-        /// <value>The pause result header.</value>
-        public static string[] PAUSE_RESULT_HEADER
-        {
-            get
-            {
-                return new string[]
-                {
-                    "Start Time",
-                    "Start Num",
-                    "End Time",
-                    "End Num",
-                    "Pause Duration (sec)"
-                };
-            }
-        }
+        /// <value>The result header.</value>
+        public static string[] ResultHeader
+		{
+			get
+			{
+				return new string[]
+				{
+					"Start Time",
+					"Start Num",
+					"End Time",
+					"End Num",
+					"Pause Duration (sec)"
+				};
+			}
+		}
 
-        //todo: move this to appropriate class for this csv file
         /// <summary>
-        /// Gets the pause result header csv.
+        /// Gets the result header csv.
         /// </summary>
-        /// <value>The pause result header csv.</value>
-		public static string PAUSE_RESULT_HEADER_CSV
-        {
-            get { return string.Join(",", PAUSE_RESULT_HEADER); }
-        }
+        /// <value>The result header csv.</value>
+		public static string ResultHeaderCsv
+		{
+			get { return string.Join(",", ResultHeader); }
+		}
 
-        //todo: move this to appropriate class for this csv file
         /// <summary>
-        /// Gets the task time result header.
+        /// Gets the summary header.
         /// </summary>
-        /// <value>The task time result header.</value>
-		public static string[] TASK_TIME_RESULT_HEADER
-        {
-            get
-            {
-                return new string[]
-                {
-                    "Start Time",
-                    "Start Num",
-                    "End Time",
-                    "End Num",
-                    "Task Duration (sec)"
-                };
-            }
-        }
-
-        //todo: move this to appropriate class for this csv file
-        /// <summary>
-        /// Gets the task time result header csv.
-        /// </summary>
-        /// <value>The task time result header csv.</value>
-		public static string TASK_TIME_RESULT_HEADER_CSV
-        {
-            get { return string.Join(",", TASK_TIME_RESULT_HEADER); }
-        }
-
-        #endregion
-
-        #region SUMMARIES
-
-        //todo: move this to appropriate class for this csv file
-        /// <summary>
-        /// Gets the task time summary header.
-        /// </summary>
-        /// <value>The task time summary header.</value>
-        public static string[] PAUSE_SUMMARY_HEADER
+        /// <value>The summary header.</value>
+        public static string[] SummaryHeader
         {
             get
             {
@@ -138,22 +121,20 @@ namespace BAT.Core.Common
             }
         }
 
-        //todo: move this to appropriate class for this csv file
         /// <summary>
-        /// Gets the pause summary header csv.
+        /// Gets the summary header csv.
         /// </summary>
-        /// <value>The pause summary header csv.</value>
-        public static string PAUSE_SUMMARY_HEADER_CSV
+        /// <value>The summary header csv.</value>
+        public static string SummaryHeaderCsv
         {
-            get { return string.Join(",", PAUSE_SUMMARY_HEADER); }
+            get { return string.Join(",", SummaryHeader); }
         }
 
-        //todo: move this to appropriate class for this csv file
         /// <summary>
-        /// Gets the task time summary header.
+        /// Gets the summary footer.
         /// </summary>
-        /// <value>The task time summary header.</value>
-        public static string[] PAUSE_SUMMARY_FOOTER
+        /// <value>The summary footer.</value>
+        public static string[] SummaryFooter
         {
             get
             {
@@ -166,49 +147,79 @@ namespace BAT.Core.Common
             }
         }
 
-        //todo: move this to appropriate class for this csv file
         /// <summary>
-        /// Gets the pause summary header csv.
+        /// Gets the summary footer csv.
         /// </summary>
-        /// <value>The pause summary header csv.</value>
-        public static string PAUSE_SUMMARY_FOOTER_CSV
+        /// <value>The summary footer csv.</value>
+        public static string SummaryFooterCsv
         {
-            get { return string.Join(",", PAUSE_SUMMARY_FOOTER); }
+            get { return string.Join(",", SummaryFooter); }
         }
+    }
 
-        //todo: move this to appropriate class for this csv file
+    /// <summary>
+    /// Task time output.
+    /// </summary>
+    public static class TaskTimeOutput
+	{
         /// <summary>
-        /// Gets the task time summary header.
+        /// Gets the result header.
         /// </summary>
-        /// <value>The task time summary header.</value>
-        public static string[] TASK_TIME_SUMMARY_HEADER
-        {
-            get
-            {
-                return new string[]
-                {
-                    "Source",
-                    "Task Duration (sec)"
-                };
-            }
-        }
+        /// <value>The result header.</value>
+        public static string[] ResultHeader
+		{
+			get
+			{
+				return new string[]
+				{
+					"Start Time",
+					"Start Num",
+					"End Time",
+					"End Num",
+					"Task Duration (sec)"
+				};
+			}
+		}
 
-        //todo: move this to appropriate class for this csv file
         /// <summary>
-        /// Gets the task time summary header csv.
+        /// Gets the result header csv.
         /// </summary>
-        /// <value>The task time summary header csv.</value>
-        public static string TASK_TIME_SUMMARY_HEADER_CSV
-        {
-            get { return string.Join(",", TASK_TIME_SUMMARY_HEADER); }
-        }
+        /// <value>The result header csv.</value>
+		public static string ResultHeaderCsv
+		{
+			get { return string.Join(",", ResultHeader); }
+		}
 
-        //todo: move this to appropriate class for this csv file
         /// <summary>
-        /// Gets the task time summary footer.
+        /// Gets the summary header.
         /// </summary>
-        /// <value>The task time summary footer.</value>
-        public static string[] TASK_TIME_SUMMARY_FOOTER
+        /// <value>The summary header.</value>
+        public static string[] SummaryHeader
+		{
+			get
+			{
+				return new string[]
+				{
+					"Source",
+					"Task Duration (sec)"
+				};
+			}
+		}
+
+        /// <summary>
+        /// Gets the summary header csv.
+        /// </summary>
+        /// <value>The summary header csv.</value>
+		public static string SummaryHeaderCsv
+		{
+			get { return string.Join(",", SummaryHeader); }
+		}
+
+        /// <summary>
+        /// Gets the summary footer.
+        /// </summary>
+        /// <value>The summary footer.</value>
+        public static string[] SummaryFooter
         {
             get
             {
@@ -221,18 +232,13 @@ namespace BAT.Core.Common
             }
         }
 
-        // todo: move this to appropriate class for this csv file
-
         /// <summary>
-        /// Gets the task time summary footer csv.
+        /// Gets the summary footer csv.
         /// </summary>
-        /// <value>The task time summary footer csv.</value>
-        public static string TASK_TIME_SUMMARY_FOOTER_CSV
+        /// <value>The summary footer csv.</value>
+        public static string SummaryFooterCsv
         {
-            get { return string.Join(",", TASK_TIME_SUMMARY_FOOTER); }
+            get { return string.Join(",", SummaryFooter); }
         }
-
-        #endregion
-
     }
 }

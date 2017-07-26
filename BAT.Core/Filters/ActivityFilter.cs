@@ -35,11 +35,8 @@ namespace BAT.Core.Filters
                                                               IEnumerable<Parameter> parameters)
 		{
             var results = new List<PhaseResult<SensorReading>>();
-            foreach (var inputItem in input)
+            foreach (var record in input)
 			{
-                if (inputItem.GetType() != typeof(SensorReading)) continue;
-                var record = (SensorReading)inputItem;
-
                 bool isMatch = true;
                 foreach (var param in parameters)
 				{
