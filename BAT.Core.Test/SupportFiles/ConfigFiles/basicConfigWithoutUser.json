@@ -1,0 +1,5 @@
+﻿{
+  "inputs": [ { "source": "SupportFiles/InputFiles/OA5-Breakfast.csv" } ],
+  "transformers": [ "LinearAcceleration" ],
+  "filters": [ { "Name": "Activity", "Parameters": [] } ]
+}

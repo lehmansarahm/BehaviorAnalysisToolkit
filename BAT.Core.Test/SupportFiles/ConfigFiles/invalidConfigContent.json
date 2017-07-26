@@ -1,3 +1,8 @@
 ﻿{
-	"inputs": [ "/SupportFiles/InputFiles/OA5-Breakfast.csv" ],
-	"transformers": [ "LinearAcceleration"
+  "inputs": [
+    {
+      "username": "OA5",
+      "source": "SupportFiles/InputFiles/OA5-Breakfast.csv"
+    }
+  ],
+  "transformers": [ "LinearAcceleration"

@@ -27,7 +27,6 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ConfigurationTest.cs" />
     <Compile Include="InputDataTests.cs" />
     <Compile Include="ConfigFileTests.cs" />
     <Compile Include="BATTest.cs" />
@@ -117,6 +116,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SupportFiles\ConfigFiles\multInputs.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\basicConfigWithoutUser.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\basicConfigLoadFromDir.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SupportFiles\ConfigFiles\basicConfigLoadFromDirWithoutUser.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

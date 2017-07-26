@@ -1,6 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using BAT.Core.Common;
 using BAT.Core.Config;
+using BAT.Core.Filters;
 using BAT.Core.Test.SupportFiles;
+using BAT.Core.Transformers;
 using NUnit.Framework;
 
 namespace BAT.Core.Test
@@ -51,7 +57,75 @@ namespace BAT.Core.Test
 
             VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
             VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.RawInputRecordCount);
-        }
+		}
+
+        /// <summary>
+        /// Tests the basic config load without user.
+        /// </summary>
+		[Test]
+		public void TestBasicConfigLoadWithoutUser()
+		{
+			// should still work
+			var config = Configuration.LoadFromFile(GetConfigFilePath("basicConfigWithoutUser.json"));
+			VerifyConfigPhaseCounts(config, 1, 1, 1, 0, 0);
+			VerifyParameterCount(config.Filters, 0, 0);
+
+			var success = config.LoadInputs();
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+
+			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
+			VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.RawInputRecordCount);
+		}
+
+		[Test]
+		public void TestBasicConfigLoadFromDirectory()
+		{
+			var config = Configuration.LoadFromFile(GetConfigFilePath("basicConfigLoadFromDir.json"));
+			VerifyConfigPhaseCounts(config, 1, 1, 1, 0, 0);
+			VerifyParameterCount(config.Filters, 0, 0);
+
+			var success = config.LoadInputs();
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+
+			Assert.AreEqual(1, config.Inputs.Count);
+			string currentDir = AppDomain.CurrentDomain.BaseDirectory;
+			string source = $"{currentDir}/{config.Inputs.FirstOrDefault().InputSource}";
+
+            Assert.IsTrue(Directory.Exists(source));
+            var files = Directory.GetFiles(source);
+            var inputFileCount = files.Where(x => x.EndsWith(Constants.DEFAULT_INPUT_FILE_EXT)).Count();
+            var defaultInputIndex = Array.FindIndex(files, x => x.Contains(DefaultInput.Filename));
+
+            VerifyInputDataSetCount(config, inputFileCount);
+			VerifyInputDataSetValueCount(config, defaultInputIndex, DefaultInput.RawInputRecordCount);
+		}
+
+		[Test]
+		public void TestBasicConfigLoadFromDirectoryWithoutUser()
+		{
+			// should still work
+			var config = Configuration.LoadFromFile(GetConfigFilePath("basicConfigLoadFromDirWithoutUser.json"));
+			VerifyConfigPhaseCounts(config, 1, 1, 1, 0, 0);
+			VerifyParameterCount(config.Filters, 0, 0);
+
+			var success = config.LoadInputs();
+			Assert.IsTrue(success);
+			Assert.IsNull(config.AnalysisData);
+
+			Assert.AreEqual(1, config.Inputs.Count);
+			string currentDir = AppDomain.CurrentDomain.BaseDirectory;
+			string source = $"{currentDir}/{config.Inputs.FirstOrDefault().InputSource}";
+
+			Assert.IsTrue(Directory.Exists(source));
+			var files = Directory.GetFiles(source);
+			var inputFileCount = files.Where(x => x.EndsWith(Constants.DEFAULT_INPUT_FILE_EXT)).Count();
+			var defaultInputIndex = Array.FindIndex(files, x => x.Contains(DefaultInput.Filename));
+
+			VerifyInputDataSetCount(config, inputFileCount);
+			VerifyInputDataSetValueCount(config, defaultInputIndex, DefaultInput.RawInputRecordCount);
+		}
 
         /// <summary>
         /// Tests the config load with mult inputs.
@@ -140,6 +214,26 @@ namespace BAT.Core.Test
             // file does not exist...
             // -----------------------------------------------------------------
             VerifyBadConfigLoad("asdfsdsdf.xml");
-        }
-    }
+		}
+
+        /// <summary>
+        /// Cans the find transformers.
+        /// </summary>
+		[Test]
+		public void CanFindTransformers()
+		{
+			var config = new Configuration();
+
+			var transType = typeof(ITransformer);
+			var types = Assembly.GetAssembly(transType).GetTypes()
+								.Where(x => transType.IsAssignableFrom(x) && !x.IsInterface);
+
+			config.Transformers = types.Select(x => x.Name).ToList();
+			var transformers = TransformerManager.GetTransformers(config.Transformers);
+
+			Assert.AreEqual(transformers.Count(), types.Count());
+		}
+
+		//todo: repeat with analyzers, summarizers, and filters
+	}
 }

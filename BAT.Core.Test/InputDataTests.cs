@@ -43,24 +43,6 @@ namespace BAT.Core.Test
 			VerifyBadInputLoad("OA5-Invalid.csv");
 		}
 
-		[Test]
-		public void TestDataLoadWithUser()
-		{
-			Assert.AreEqual(true, false);
-		}
-
-		[Test]
-		public void TestDataLoadFromDirectory()
-		{
-			Assert.AreEqual(true, false);
-		}
-
-		[Test]
-		public void TestDataLoadFromDirectoryWithUsers()
-		{
-			Assert.AreEqual(true, false);
-		}
-
         /// <summary>
         /// Tests the data load with empty file.
         /// </summary>

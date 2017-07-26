@@ -11,7 +11,7 @@ namespace BAT.Core.Config
     public class Configuration
     {
         [JsonProperty("inputs")]
-        public List<string> Inputs { get; set; }
+        public List<UserInputFile> Inputs { get; set; }
         public Dictionary<string, IEnumerable<SensorReading>> InputData { get; set; }
 
         [JsonProperty("transformers")]
@@ -34,7 +34,7 @@ namespace BAT.Core.Config
         /// </summary>
         public Configuration()
         {
-            Inputs = new List<string>();
+            Inputs = new List<UserInputFile>();
             Transformers = new List<string>();
             Filters = new List<Command>();
             Analyzers = new List<Command>();
@@ -51,20 +51,22 @@ namespace BAT.Core.Config
 
             try
             {
-                string currentDir = AppDomain.CurrentDomain.BaseDirectory;
                 InputData = new Dictionary<string, IEnumerable<SensorReading>>();
-
-                foreach (var inputFile in Inputs)
+                foreach (var input in Inputs)
                 {
-                    // split out the actual file name from the config input
-                    var inputFileComponents = inputFile.Split('/');
-                    var inputFileName = inputFileComponents[inputFileComponents.Length - 1];
+                    foreach (var inputFile in input.InputFiles)
+					{
+						// read in the sensor data
+						var sensorReadings = SensorReading.ReadSensorFile(inputFile);
 
-                    // read in the sensor data
-                    var sensorReadings = SensorReading.ReadSensorFile(currentDir + "/" + inputFile);
+						// split out the actual file name from the config input
+						var inputFileComponents = inputFile.Split('/');
+                        var inputFileName = input.Username + Constants.DEFAULT_SEPARATOR 
+                                                 + inputFileComponents[inputFileComponents.Length - 1];
 
-                    // add data to collection using file name, not file path
-                    InputData.Add(inputFileName, sensorReadings);
+						// add data to collection using file name, not file path
+						InputData.Add(inputFileName, sensorReadings);
+                    }
                 }
 
                 // confirm that everything worked

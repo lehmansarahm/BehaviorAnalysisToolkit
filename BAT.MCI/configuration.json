@@ -1,5 +1,10 @@
 ﻿{
-  "inputs": [ "SupportFiles/OA5-Breakfast.csv", "SupportFiles/OA5-Lunch.csv" ],
+  "inputs": [
+    {
+      "username": "OA5",
+      "source": "SupportFiles/OA5-Breakfast.csv"
+    }
+  ],
   "transformers": [ "LinearAcceleration", "LabelCleanup" ],
   "filters": [
     {

@@ -1,0 +1,5 @@
+﻿{
+  "inputs": [ { "username": "OA5", "source": "SupportFiles/InputFiles" } ],
+  "transformers": [ "LinearAcceleration" ],
+  "filters": [ { "Name": "Activity", "Parameters": [] } ]
+}

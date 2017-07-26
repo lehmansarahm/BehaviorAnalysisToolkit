@@ -1,5 +1,10 @@
 ﻿{
-	"inputs": [ "/SupportFiles/InputFiles/OA5-Breakfast.csv" ],
+  "inputs": [
+    {
+      "username": "OA5",
+      "source": "SupportFiles/InputFiles/OA5-Breakfast.csv"
+    }
+  ],
   "filters": [
     {
       "Name": "InvalidFilter",
