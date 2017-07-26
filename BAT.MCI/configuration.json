@@ -1,68 +1,33 @@
 ﻿{
-  "inputs": [
-    {
-      "username": "OA14",
-      "source": "SupportFiles"
-    }
-  ],
+  "inputs": [ { "username": "OA14", "source": "SupportFiles" } ],
   "transformers": [ "LinearAcceleration", "LabelCleanup" ],
   "filters": [
-    {
-      "Name": "Activity",
+    { "Name": "Activity",
       "Parameters": [
-        {
-          "Field": "Label",
+        { "Field": "Label",
           "Clauses": [
-            {
-              "Key": "Contains",
-              "Value": "Select"
-            },
-            {
-              "Key": "Split",
-              "Value": "true"
-            }
-          ]
-        }
-      ]
-    }
+            { "Key": "Contains", "Value": "Select" },
+            { "Key": "Split", "Value": "true" }
+          ] }
+      ] }
   ],
   "analyzers": [
-    {
-      "Name": "PauseCount",
+    { "Name": "PauseCount",
       "Parameters": [
-        {
-          "Field": "InstantSpeed",
+        { "Field": "InstantSpeed",
           "Clauses": [
-            {
-              "Key": "Threshold",
-              "Value": "0.01"
-            },
-            {
-              "Key": "Window",
-              "Value": "12"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Name": "PauseDuration",
+            { "Key": "Threshold", "Value": "0.01" },
+            { "Key": "Window", "Value": "12" }
+          ] }
+      ] },
+    { "Name": "PauseDuration",
       "Parameters": [
-        {
-          "Field": "InstantSpeed",
+        { "Field": "InstantSpeed",
           "Clauses": [
-            {
-              "Key": "Threshold",
-              "Value": "0.01"
-            },
-            {
-              "Key": "Window",
-              "Value": "12"
-            }
-          ]
-        }
-      ]
-    },
+            { "Key": "Threshold", "Value": "0.01" },
+            { "Key": "Window", "Value": "12" }
+          ] }
+      ] },
     { "Name": "TaskTime" }
   ],
   "summarizers": [ "PauseCount", "PauseDuration", "TaskTime" ]

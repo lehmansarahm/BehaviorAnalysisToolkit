@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 using BAT.Core.Summarizers;
 using Newtonsoft.Json;
@@ -13,7 +12,6 @@ namespace BAT.Core.Config
     {
         [JsonProperty("inputs")]
         public List<UserInputFile> Inputs { get; set; }
-        public List<string> InputFileNames { get; set; }
         public Dictionary<string, IEnumerable<SensorReading>> InputData { get; set; }
 
         [JsonProperty("transformers")]
@@ -59,15 +57,10 @@ namespace BAT.Core.Config
                     foreach (var inputFile in input.InputFiles)
 					{
 						// read in the sensor data
-						var sensorReadings = SensorReading.ReadSensorFile(inputFile);
-
-						// split out the actual file name from the config input
-						var inputFileComponents = inputFile.Split(Constants.DEFAULT_PATH_SEPARATOR);
-                        var inputFileName = input.Username + Constants.DEFAULT_NAME_SEPARATOR 
-                                                 + inputFileComponents[inputFileComponents.Length - 1];
+                        var sensorReadings = SensorReading.ReadSensorFile(inputFile.Value);
 
 						// add data to collection using file name, not file path
-						InputData.Add(inputFileName, sensorReadings);
+                        InputData.Add(inputFile.Key, sensorReadings);
                     }
                 }
 
@@ -85,8 +78,6 @@ namespace BAT.Core.Config
                 LogManager.Error("Fatal error encountered while loading input data.  Exiting program.", e, this);
             }
 
-            InputFileNames = InputData.Keys.Select(x => x.Substring(0, 
-                                x.IndexOf(Constants.DEFAULT_INPUT_FILE_EXT))).ToList();
             return success;
         }
 
@@ -155,7 +146,7 @@ namespace BAT.Core.Config
                             foreach (var filterResult in filteredResultSets)
                             {
 								var filteredValues = filterResult.Data;
-								var newFilename = FilterManager.GetFilename(key, filterResult.Name);
+								var newFilename = FilterManager.GetLabeledFilename(key, filterResult.Name);
 
                                 if (filteredData.ContainsKey(newFilename))
                                     filteredData[newFilename] = filteredValues;
@@ -203,10 +194,12 @@ namespace BAT.Core.Config
                     // ---------------------------------------------------------
                     bool summaryRequested = Summarizers.Contains(analyzerName);
 
-					// ---------------------------------------------------------
-					//          Group input data by original file name
-					// ---------------------------------------------------------
-					foreach (var origInputFile in InputFileNames)
+                    // ---------------------------------------------------------
+                    //          Group input data by original file name
+                    // ---------------------------------------------------------
+                    var consolidatedInputFiles = 
+                        Inputs.SelectMany(x => x.InputFiles.Select(y => y.Key)).ToList();
+                    foreach (var origInputFile in consolidatedInputFiles)
 					{
 						var analysisDataByInputFile = new Dictionary<string, IEnumerable<ICsvWritable>>();
                         var analysisKeysByInputFile = InputData.Keys.Where(x => x.Contains(origInputFile));
@@ -269,32 +262,6 @@ namespace BAT.Core.Config
 										  summarizer.GetHeaderCsv(), summarizedValues,
 										  summarizer.GetFooterCsv(), summarizer.GetFooterValues());
 					}
-
-					/*foreach (var key in InputData.Keys)
-                    {
-                        var analysisResult = analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
-                        if (analyzedData.ContainsKey(key))
-                            analyzedData[key] = analysisResult;
-                        else analyzedData.Add(key, analysisResult);
-
-                        if (WriteOutputFile)
-                            CsvFileWriter.WriteResultsToFile
-                                         (new string[] { OutputDirs.Analyzers, analyzerName },
-                                          key, analyzer.GetHeaderCsv(), analysisResult);
-
-	                    // now, check to see if there is an associated summary
-	                    if (Summarizers.Contains(analyzerName))
-						{
-                            ISummarizer summarizer = SummarizerManager.GetSummarizer(analyzerName);
-	                        var summarizedValues = summarizer.Summarize(analyzedData);
-	                        if (WriteOutputFile)
-	                            CsvFileWriter.WriteSummaryToFile
-                                             (new string[] { OutputDirs.Summarizers },
-                                              $"{analyzerName}Aggregate{Constants.DEFAULT_INPUT_FILE_EXT}", 
-                                              summarizer.GetHeaderCsv(), summarizedValues, 
-                                              summarizer.GetFooterCsv(), summarizer.GetFooterValues());
-	                    }
-                    }*/
 
                     success = true;
                 }

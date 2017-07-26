@@ -18,13 +18,15 @@ namespace BAT.Core.Config
 			return null;
 		}
 
-        public static string GetFilename(string key, string id)
+        /// <summary>
+        /// Gets the labeled filename.
+        /// </summary>
+        /// <returns>The labeled filename.</returns>
+        /// <param name="key">Key.</param>
+        /// <param name="id">Identifier.</param>
+        public static string GetLabeledFilename(string key, string id)
         {
-            var filenameComponents = key.Split('.');
-            var fileName = filenameComponents[filenameComponents.Length - 2];
-            var fileExtension = filenameComponents[filenameComponents.Length - 1];
-            var newFilename = $"{fileName}_{id}.{fileExtension}";
-            return newFilename;
+            return $"{key}_{id}{Constants.DEFAULT_INPUT_FILE_EXT}";
         }
     }
 }
