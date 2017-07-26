@@ -72,7 +72,7 @@
     <Compile Include="Config\FilterManager.cs" />
     <Compile Include="Config\AnalyzerManager.cs" />
     <Compile Include="Config\SummarizerManager.cs" />
-    <Compile Include="Config\UserInputFile.cs" />
+    <Compile Include="Config\UserInput.cs" />
     <Compile Include="Filters\ThresholdCalibrationFilter.cs" />
   </ItemGroup>
   <ItemGroup />

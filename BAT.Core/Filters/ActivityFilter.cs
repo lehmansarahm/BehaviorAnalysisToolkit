@@ -25,7 +25,7 @@ namespace BAT.Core.Filters
         /// <returns>The filter.</returns>
         /// <param name="input">Input.</param>
         /// <param name="parameters">Parameters.</param>
-        public IEnumerable<PhaseResult<SensorReading>> Filter(string source,
+        public IEnumerable<PhaseResult<SensorReading>> Filter(string sourceUser,
                                                               IEnumerable<SensorReading> input,
                                                               IEnumerable<Parameter> parameters)
 		{
@@ -49,7 +49,7 @@ namespace BAT.Core.Filters
 					if (!isMatch) break;
 
 					// if valid match AND split output, proceed with output split
-					string resultName = (param.UseOutputSplit() ? filterValue : source);
+					string resultName = (param.UseOutputSplit() ? filterValue : sourceUser);
 					if (!results.Select(x => x.Name).Contains(resultName))
 					{
 						var newResult = new PhaseResult<SensorReading>

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace BAT.Core.Config
 {
-    public class UserInputFile
+    public class UserInput
 	{
 		string source;
 		List<KeyValuePair<string, string>> files = 
@@ -26,8 +26,8 @@ namespace BAT.Core.Config
             }
         }
 
-        // key = file name (no ext), value = full file path
-        public List<KeyValuePair<string,string>> InputFiles { get { return files; } }
+		// key = file name (no ext), value = full file path
+		public List<KeyValuePair<string, string>> InputFiles { get { return files; } }
 
         /// <summary>
         /// Sets the files.

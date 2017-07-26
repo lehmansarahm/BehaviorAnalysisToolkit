@@ -12,14 +12,15 @@ namespace BAT.Core.Config
     public class Configuration
     {
         [JsonProperty("inputs")]
-        public List<UserInputFile> Inputs { get; set; }
-        public Dictionary<string, IEnumerable<SensorReading>> InputData { get; set; }
+		public List<UserInput> Inputs { get; set; }
+		public Dictionary<string, IEnumerable<SensorReading>> InputData { get; set; }
 
         [JsonProperty("transformers")]
         public List<string> Transformers { get; set; }
 
         [JsonProperty("filters")]
-        public List<Command> Filters { get; set; }
+		public List<Command> Filters { get; set; }
+		public Dictionary<string, IEnumerable<KeyValuePair<string, decimal>>> CalibrationData { get; set; }
 
         [JsonProperty("analyzers")]
         public List<Command> Analyzers { get; set; }
@@ -35,11 +36,15 @@ namespace BAT.Core.Config
         /// </summary>
         public Configuration()
         {
-            Inputs = new List<UserInputFile>();
+            Inputs = new List<UserInput>();
             Transformers = new List<string>();
             Filters = new List<Command>();
             Analyzers = new List<Command>();
             Summarizers = new List<string>();
+
+            InputData = new Dictionary<string, IEnumerable<SensorReading>>();
+            CalibrationData = new Dictionary<string, IEnumerable<KeyValuePair<string, decimal>>>();
+            AnalysisData = new Dictionary<string, IEnumerable<ICsvWritable>>();
         }
 
         /// <summary>
@@ -129,8 +134,9 @@ namespace BAT.Core.Config
         {
             bool success = false;
             if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1)
-            {
-                var filteredData = new Dictionary<string, IEnumerable<SensorReading>>();
+			{
+				var filteredData = new Dictionary<string, IEnumerable<SensorReading>>();
+
                 foreach (var filterCommand in Filters)
                 {
                     var filter = FilterManager.GetFilter(filterCommand.Name);
@@ -138,20 +144,28 @@ namespace BAT.Core.Config
 
                     foreach (var key in InputData.Keys)
 					{
+						var thresholdData = 
+                            new Dictionary<string, IEnumerable<KeyValuePair<string, decimal>>>();
+                            
 						IEnumerable<PhaseResult<SensorReading>> filteredResultSets = null;
                         if (filterCommand.Parameters != null)
-                            filteredResultSets = filter.Filter(key, InputData[key], filterCommand.Parameters);
+                            filteredResultSets = filter.Filter(key, InputData[key], 
+                                                               filterCommand.Parameters);
 
-                        if (filteredResultSets != null && filteredResultSets.Any())
+						if (filter is ThresholdCalibrationFilter calibFilter)
+						{
+							// list of calibrated thresholds for various fields
+							// ONLY APPLICABLE TO THIS INDIVIDUAL INPUT DATA SET!!
+							var thresholdValues = calibFilter.CalibratedThresholds;
+							thresholdData[key] = thresholdValues;
+						}
+                        else if (filteredResultSets != null && filteredResultSets.Any())
                         {
                             foreach (var filterResult in filteredResultSets)
                             {
 								var filteredValues = filterResult.Data;
-								var newFilename = FilterManager.GetLabeledFilename(key, filterResult.Name);
-
-                                if (filteredData.ContainsKey(newFilename))
-                                    filteredData[newFilename] = filteredValues;
-                                else filteredData.Add(newFilename, filteredValues);
+								var newFilename = FilterManager.GetFilterFilename(key, filterResult.Name);
+								filteredData[newFilename] = filteredValues;
 
                                 if (WriteOutputFile)
                                     CsvFileWriter.WriteResultsToFile
@@ -160,7 +174,10 @@ namespace BAT.Core.Config
 							}
 
 							success = true;
-                        }
+						}
+
+                        foreach (var threshold in thresholdData)
+                            CalibrationData.Add(threshold.Key, threshold.Value);
                     }
                 }
 
@@ -206,14 +223,21 @@ namespace BAT.Core.Config
                         var analysisKeysByInputFile = InputData.Keys.Where(x => x.Contains(origInputFile));
                         foreach (var key in analysisKeysByInputFile)
 						{
-							// -------------------------------------------------
+                            // -------------------------------------------------
                             //      Perform the actual analysis operation
-							// -------------------------------------------------
-							var analysisResult = 
-                                analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
-							if (analysisDataByInputFile.ContainsKey(key))
-								analysisDataByInputFile[key] = analysisResult;
-							else analysisDataByInputFile.Add(key, analysisResult);
+                            // -------------------------------------------------
+                            if (analyzerCommand.HasParameters &&
+                                FilterManager.ContainsFilter(Filters, typeof(ThresholdCalibrationFilter)))
+                            {
+                                var calibData = CalibrationData[origInputFile];
+                                analyzerCommand.Parameters =
+                                    ThresholdCalibrationFilter.CalibrateParameters
+                                        (analyzerCommand.Parameters, calibData);
+                            }
+
+							var analysisResult =
+								analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
+							analysisDataByInputFile[key] = analysisResult;
 
                             // -------------------------------------------------
                             //          Dump output to file if necessary
