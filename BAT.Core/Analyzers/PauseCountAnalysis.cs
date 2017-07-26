@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 using BAT.Core.Config;
@@ -97,6 +98,15 @@ namespace BAT.Core.Analyzers
             }
 
             return results;
-        }
+		}
+
+		/// <summary>
+		/// Returns the type.
+		/// </summary>
+		/// <returns>The type.</returns>
+        public IEnumerable<ICsvWritable> ConsolidateData(Dictionary<string, IEnumerable<ICsvWritable>> data)
+		{
+            return data.Values.SelectMany(x => (List<PauseResult>)x).ToList();
+		}
     }
 }

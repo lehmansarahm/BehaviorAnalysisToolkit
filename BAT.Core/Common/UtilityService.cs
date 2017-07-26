@@ -38,14 +38,25 @@ namespace BAT.Core.Common
 			double M = 0.0;
 			double S = 0.0;
 			int k = 1;
-			foreach (double value in valueList)
+
+            try
 			{
-				double tmpM = M;
-				M += (value - tmpM) / k;
-				S += (value - tmpM) * (value - M);
-				k++;
-			}
-			return (decimal)Math.Sqrt(S / (k - 2));
+				foreach (double value in valueList)
+				{
+					double tmpM = M;
+					M += (value - tmpM) / k;
+					S += (value - tmpM) * (value - M);
+					k++;
+				}
+
+				return (decimal)Math.Sqrt(S / (k - 2));
+            }
+            catch (OverflowException ex)
+            {
+                LogManager.Error("Something went wrong while attempting to calculate "
+                                 + "standard deviation", ex, typeof(UtilityService));
+                return 0.0M;
+            }
 		}
 
         /// <summary>

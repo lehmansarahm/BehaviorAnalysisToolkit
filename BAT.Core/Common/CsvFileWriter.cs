@@ -7,6 +7,25 @@ namespace BAT.Core.Common
 {
     public static class CsvFileWriter
     {
+        /// <summary>
+        /// Copies the file to dir.
+        /// </summary>
+        /// <param name="filename">Filepath.</param>
+        /// <param name="outputDir">Output dir.</param>
+        public static void CopyFileToDir(string filename, string outputDir)
+		{
+			string currentDir = AppDomain.CurrentDomain.BaseDirectory + Constants.DEFAULT_PATH_SEPARATOR;
+            string currentFilepath = currentDir + filename;
+
+            if (File.Exists(currentFilepath))
+            {
+                InitDir(outputDir);
+                string targetFilepath = currentDir + outputDir 
+                    + Constants.DEFAULT_PATH_SEPARATOR + filename;
+                File.Copy(currentFilepath, targetFilepath);
+            }
+        }
+
 		/// <summary>
 		/// Writes to file.
 		/// </summary>

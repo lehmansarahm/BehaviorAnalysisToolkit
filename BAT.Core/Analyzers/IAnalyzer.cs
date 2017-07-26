@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BAT.Core.Common;
 using BAT.Core.Config;
 
@@ -10,6 +11,7 @@ namespace BAT.Core.Analyzers
 		string GetHeaderCsv();
 
         IEnumerable<ICsvWritable> Analyze(IEnumerable<SensorReading> input,
-                                          IEnumerable<Parameter> parameters);
+										  IEnumerable<Parameter> parameters);
+		IEnumerable<ICsvWritable> ConsolidateData(Dictionary<string, IEnumerable<ICsvWritable>> data);
     }
 }

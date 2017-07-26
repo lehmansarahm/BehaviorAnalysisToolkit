@@ -18,7 +18,7 @@ namespace BAT.Core.Analyzers
 		/// Gets the header csv.
 		/// </summary>
 		/// <returns>The header csv.</returns>
-        public string GetHeaderCsv() { return TaskTimeOutput.ResultHeaderCsv; }
+		public string GetHeaderCsv() { return TaskTimeOutput.ResultHeaderCsv; }
 
         /// <summary>
         /// Analyze the specified input and parameters.
@@ -49,6 +49,16 @@ namespace BAT.Core.Analyzers
             };
 
 			return results;
+		}
+
+        /// <summary>
+        /// Consolidates the data.
+        /// </summary>
+        /// <returns>The data.</returns>
+        /// <param name="data">Data.</param>
+		public IEnumerable<ICsvWritable> ConsolidateData(Dictionary<string, IEnumerable<ICsvWritable>> data)
+		{
+            return data.Values.SelectMany(x => (List<TaskTimeResult>)x).ToList();
 		}
 	}
 }

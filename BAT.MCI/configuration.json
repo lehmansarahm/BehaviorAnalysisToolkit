@@ -1,8 +1,8 @@
 ﻿{
   "inputs": [
     {
-      "username": "OA5",
-      "source": "SupportFiles/OA5-Breakfast.csv"
+      "username": "OA14",
+      "source": "SupportFiles"
     }
   ],
   "transformers": [ "LinearAcceleration", "LabelCleanup" ],

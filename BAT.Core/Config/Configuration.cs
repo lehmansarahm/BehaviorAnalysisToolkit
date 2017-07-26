@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 using BAT.Core.Summarizers;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ namespace BAT.Core.Config
     {
         [JsonProperty("inputs")]
         public List<UserInputFile> Inputs { get; set; }
+        public List<string> InputFileNames { get; set; }
         public Dictionary<string, IEnumerable<SensorReading>> InputData { get; set; }
 
         [JsonProperty("transformers")]
@@ -60,8 +62,8 @@ namespace BAT.Core.Config
 						var sensorReadings = SensorReading.ReadSensorFile(inputFile);
 
 						// split out the actual file name from the config input
-						var inputFileComponents = inputFile.Split('/');
-                        var inputFileName = input.Username + Constants.DEFAULT_SEPARATOR 
+						var inputFileComponents = inputFile.Split(Constants.DEFAULT_PATH_SEPARATOR);
+                        var inputFileName = input.Username + Constants.DEFAULT_NAME_SEPARATOR 
                                                  + inputFileComponents[inputFileComponents.Length - 1];
 
 						// add data to collection using file name, not file path
@@ -83,6 +85,8 @@ namespace BAT.Core.Config
                 LogManager.Error("Fatal error encountered while loading input data.  Exiting program.", e, this);
             }
 
+            InputFileNames = InputData.Keys.Select(x => x.Substring(0, 
+                                x.IndexOf(Constants.DEFAULT_INPUT_FILE_EXT))).ToList();
             return success;
         }
 
@@ -186,12 +190,87 @@ namespace BAT.Core.Config
             {
                 var analyzedData = new Dictionary<string, IEnumerable<ICsvWritable>>();
                 foreach (var analyzerCommand in Analyzers)
-                {
-                    var analyzerName = analyzerCommand.Name;
+				{
+					// ---------------------------------------------------------
+					//          Retrieve analysis operation details
+					// ---------------------------------------------------------
+					var analyzerName = analyzerCommand.Name;
                     var analyzer = AnalyzerManager.GetAnalyzer(analyzerName);
                     if (analyzer == null) continue;
 
-                    foreach (var key in InputData.Keys)
+                    // ---------------------------------------------------------
+                    //      Check to see if user requested a summary
+                    // ---------------------------------------------------------
+                    bool summaryRequested = Summarizers.Contains(analyzerName);
+
+					// ---------------------------------------------------------
+					//          Group input data by original file name
+					// ---------------------------------------------------------
+					foreach (var origInputFile in InputFileNames)
+					{
+						var analysisDataByInputFile = new Dictionary<string, IEnumerable<ICsvWritable>>();
+                        var analysisKeysByInputFile = InputData.Keys.Where(x => x.Contains(origInputFile));
+                        foreach (var key in analysisKeysByInputFile)
+						{
+							// -------------------------------------------------
+                            //      Perform the actual analysis operation
+							// -------------------------------------------------
+							var analysisResult = 
+                                analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
+							if (analysisDataByInputFile.ContainsKey(key))
+								analysisDataByInputFile[key] = analysisResult;
+							else analysisDataByInputFile.Add(key, analysisResult);
+
+                            // -------------------------------------------------
+                            //          Dump output to file if necessary
+                            // -------------------------------------------------
+							if (WriteOutputFile)
+								CsvFileWriter.WriteResultsToFile
+											 (new string[] { OutputDirs.Analyzers, analyzerName },
+											  key, analyzer.GetHeaderCsv(), analysisResult);
+
+							// -------------------------------------------------
+							//  If requested, summarize file-specific results
+							// -------------------------------------------------
+							if (summaryRequested)
+							{
+								ISummarizer summarizer = 
+                                    SummarizerManager.GetSummarizer(analyzerName);
+								var summarizedValues = 
+                                    summarizer.Summarize(analysisDataByInputFile);
+                                
+								if (WriteOutputFile)
+									CsvFileWriter.WriteSummaryToFile
+                                                 (new string[] { OutputDirs.Summarizers, analyzerName },
+                                                  $"{origInputFile}{Constants.DEFAULT_INPUT_FILE_EXT}",
+												  summarizer.GetHeaderCsv(), summarizedValues,
+												  summarizer.GetFooterCsv(), summarizer.GetFooterValues());
+							}
+						}
+                        // consolidate the results by input file
+                        var inputFileResults = analyzer.ConsolidateData(analysisDataByInputFile);
+						if (analyzedData.ContainsKey(origInputFile))
+							analyzedData[origInputFile] = inputFileResults;
+						else analyzedData.Add(origInputFile, inputFileResults);
+					}
+
+					// -----------------------------------------------------
+					// If requested, aggregate all file-specific summaries 
+					// into one high level file in root summarizer directory
+					// -----------------------------------------------------
+					if (summaryRequested)
+					{
+						ISummarizer summarizer = SummarizerManager.GetSummarizer(analyzerName);
+						var summarizedValues = summarizer.Summarize(analyzedData);
+						if (WriteOutputFile)
+							CsvFileWriter.WriteSummaryToFile
+										 (new string[] { OutputDirs.Summarizers },
+										  $"{analyzerName}Aggregate{Constants.DEFAULT_INPUT_FILE_EXT}",
+										  summarizer.GetHeaderCsv(), summarizedValues,
+										  summarizer.GetFooterCsv(), summarizer.GetFooterValues());
+					}
+
+					/*foreach (var key in InputData.Keys)
                     {
                         var analysisResult = analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
                         if (analyzedData.ContainsKey(key))
@@ -211,11 +290,11 @@ namespace BAT.Core.Config
 	                        if (WriteOutputFile)
 	                            CsvFileWriter.WriteSummaryToFile
                                              (new string[] { OutputDirs.Summarizers },
-                                              $"{analyzerName}.csv", summarizer.GetHeaderCsv(),
-                                              summarizedValues, summarizer.GetFooterCsv(),
-                                              summarizer.GetFooterValues());
+                                              $"{analyzerName}Aggregate{Constants.DEFAULT_INPUT_FILE_EXT}", 
+                                              summarizer.GetHeaderCsv(), summarizedValues, 
+                                              summarizer.GetFooterCsv(), summarizer.GetFooterValues());
 	                    }
-                    }
+                    }*/
 
                     success = true;
                 }
@@ -229,49 +308,6 @@ namespace BAT.Core.Config
         }
 
         /// <summary>
-        /// Runs the summarizers.
-        /// </summary>
-        /// <returns><c>true</c>, if summarizers was run, <c>false</c> otherwise.</returns>
-        /*public bool RunSummarizers(bool writeOutputToFile = false)
-        {
-            bool success = false;
-            if (Summarizers?.Count > 0 && AnalysisData?.Keys?.Count >= 1)
-            {
-                foreach (var summarizerName in Summarizers)
-                {
-                    Type summarizerType;
-                    ISummarizer summarizer;
-
-                    try
-                    {
-                        summarizerType = Type.GetType(Constants.NAMESPACE_SUMMARIZER_IMPL +
-                                                      summarizerName + Constants.PHASE_IMPL_SUMMARIZER);
-                        summarizer = (ISummarizer)Activator.CreateInstance(summarizerType);
-                        success = true;
-                    }
-                    catch (ArgumentNullException ex)
-                    {
-                        LogManager.Error("Could not create instance of provided summarizer.  "
-                                        + "Please double-check configuration file.", ex, this);
-                        continue; // proceed to next operation
-                    }
-
-                    var summarizedValues = summarizer.Summarize(AnalysisData);
-                    if (writeOutputToFile)
-                        CsvFileWriter.WriteSummaryToFile(new string[] { Constants.OUTPUT_DIR_SUMMARIZERS },
-                                                         $"{summarizerName}.csv",
-                                                         summarizer.GetHeaderCsv(),
-                                                         summarizedValues,
-                                                         summarizer.GetFooterCsv(),
-                                                         summarizer.GetFooterValues());
-                }
-            }
-            else LogManager.Error("No input data to run summaries on.", this);
-
-            return success;
-        }*/
-
-        /// <summary>
         /// Loads from file.
         /// </summary>
         /// <returns>The from file.</returns>
@@ -281,12 +317,13 @@ namespace BAT.Core.Config
             try
             {
                 var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(filepath));
+                CsvFileWriter.CopyFileToDir(filepath, OutputDirs.ExecTime);
                 return config;
             }
             catch (FileNotFoundException ex)
             {
                 LogManager.Error($"Could not locate input file: {filepath}.  "
-                                 + "Please double check file name / path.",
+                                 + "Please double check file name and path.",
                                  ex, typeof(Configuration));
                 return new Configuration();
             }
