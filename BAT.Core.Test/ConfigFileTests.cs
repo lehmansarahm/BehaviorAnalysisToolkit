@@ -53,7 +53,7 @@ namespace BAT.Core.Test
 
             var success = config.LoadInputs();
             Assert.IsTrue(success);
-            Assert.IsNull(config.AnalysisData);
+            Assert.IsEmpty(config.AnalysisData);
 
             VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
             VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.RawInputRecordCount);
@@ -72,7 +72,7 @@ namespace BAT.Core.Test
 
 			var success = config.LoadInputs();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 
 			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 			VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.RawInputRecordCount);
@@ -87,7 +87,7 @@ namespace BAT.Core.Test
 
 			var success = config.LoadInputs();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 
 			Assert.AreEqual(1, config.Inputs.Count);
 			string currentDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -112,7 +112,7 @@ namespace BAT.Core.Test
 
 			var success = config.LoadInputs();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 
 			Assert.AreEqual(1, config.Inputs.Count);
 			string currentDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -136,8 +136,8 @@ namespace BAT.Core.Test
             var config =Configuration.LoadFromFile(GetConfigFilePath("multInputs.json"));
             VerifyConfigPhaseCounts(config, 2, 2, 1, 0, 0);
 
-            Assert.IsNull(config.InputData);
-			Assert.IsNull(config.AnalysisData);
+            Assert.IsEmpty(config.InputData);
+			Assert.IsEmpty(config.AnalysisData);
 
 			VerifyParameterCount(config.Filters, 0, 1);
 			VerifyClauseCount(config.Filters.FirstOrDefault().Parameters, 0, 2);
@@ -146,7 +146,7 @@ namespace BAT.Core.Test
 
             var success = config.LoadInputs();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 
             VerifyInputDataSetCount(config, MULT_INPUT_DATA_SET_COUNT);
 			VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.RawInputRecordCount);
@@ -156,7 +156,7 @@ namespace BAT.Core.Test
 
             success = config.RunTransformers();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 
 			VerifyInputDataSetCount(config, MULT_INPUT_DATA_SET_COUNT);
             VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.ProcessedInputRecordCount);
@@ -166,7 +166,7 @@ namespace BAT.Core.Test
 
             success = config.RunFilters();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
             VerifyInputDataSetCount(config, MULT_INPUT_FILTERED_DATA_SET_COUNT);
         }
 

@@ -1,6 +1,6 @@
 ﻿{
   "inputs": [ { "username": "OA14", "source": "SupportFiles" } ],
-  "transformers": [ "LinearAcceleration", "LabelCleanup" ],
+  "transformers": [ "LinearAcceleration", "LabelCleanup", "Normalization", "Smoothing" ],
   "filters": [
     { "Name": "Activity",
       "Parameters": [

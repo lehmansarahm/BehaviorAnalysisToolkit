@@ -75,6 +75,7 @@
     <Compile Include="Config\UserInput.cs" />
     <Compile Include="Filters\ThresholdCalibrationFilter.cs" />
     <Compile Include="Transformers\SmoothingTransformer.cs" />
+    <Compile Include="Common\ExponentialMovingAverage.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

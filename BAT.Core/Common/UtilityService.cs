@@ -53,8 +53,8 @@ namespace BAT.Core.Common
             }
             catch (OverflowException ex)
             {
-                LogManager.Error("Something went wrong while attempting to calculate "
-                                 + "standard deviation", ex, typeof(UtilityService));
+                //LogManager.Error("Something went wrong while attempting to calculate "
+                //                 + "standard deviation", ex, typeof(UtilityService));
                 return 0.0M;
             }
 		}

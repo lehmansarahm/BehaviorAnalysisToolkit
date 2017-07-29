@@ -144,22 +144,22 @@ namespace BAT.Core.Test
 
             var success = config.LoadInputs();
             Assert.IsFalse(success);
-            Assert.IsNull(config.AnalysisData);
+            Assert.IsEmpty(config.AnalysisData);
             VerifyInputDataSetCount(config, 0);
 
             success = config.RunTransformers();
-            Assert.IsFalse(success);
-            Assert.IsNull(config.AnalysisData);
+            Assert.IsTrue(success);
+            Assert.IsEmpty(config.AnalysisData);
             VerifyInputDataSetCount(config, 0);
 
             success = config.RunFilters();
-            Assert.IsFalse(success);
-            Assert.IsNull(config.AnalysisData);
+            Assert.IsTrue(success);
+            Assert.IsEmpty(config.AnalysisData);
             VerifyInputDataSetCount(config, 0);
 
             success = config.RunAnalyzers();
-            Assert.IsFalse(success);
-            Assert.IsNull(config.AnalysisData);
+            Assert.IsTrue(success);
+            Assert.IsEmpty(config.AnalysisData);
             VerifyInputDataSetCount(config, 0);
         }
 

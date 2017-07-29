@@ -55,7 +55,7 @@ namespace BAT.Core.Test
 
 			var success = config.LoadInputs();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+            Assert.IsEmpty(config.AnalysisData);
 
             VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 			VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.RawInputRecordCount);
@@ -64,7 +64,7 @@ namespace BAT.Core.Test
 
 			success = config.RunTransformers();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 
 			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
             VerifyInputDataSetValueCount(config, DefaultInput.Index, DefaultInput.ProcessedInputRecordCount);
@@ -73,7 +73,7 @@ namespace BAT.Core.Test
 
 			success = config.RunFilters();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 
 			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
             // count of an individual data set?
@@ -120,21 +120,21 @@ namespace BAT.Core.Test
 
 			var success = config.LoadInputs();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 			VerifyInputDataSetCount(config, 1);
 
 			// -----------------------------------------------------------------
 
 			success = config.RunTransformers();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 			VerifyInputDataSetCount(config, 1);
 
 			// -----------------------------------------------------------------
 
 			success = config.RunFilters();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
 
 			// -----------------------------------------------------------------
@@ -169,21 +169,21 @@ namespace BAT.Core.Test
 
 			var success = config.LoadInputs();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 			VerifyInputDataSetCount(config, 1);
 
 			// -----------------------------------------------------------------
 
 			success = config.RunTransformers();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 			VerifyInputDataSetCount(config, 1);
 
 			// -----------------------------------------------------------------
 
 			success = config.RunFilters();
 			Assert.IsTrue(success);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 			VerifyInputDataSetCount(config, DefaultInput.SelectTaskCount);
 
 			// -----------------------------------------------------------------

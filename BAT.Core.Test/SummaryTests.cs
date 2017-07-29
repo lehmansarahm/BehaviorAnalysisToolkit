@@ -35,12 +35,12 @@ namespace BAT.Core.Test
 
 			var result = config.LoadInputs();
 			Assert.IsTrue(result);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
 			VerifyInputDataSetCount(config, DefaultInput.RawInputCount);
 
 			result = config.RunFilters();
 			Assert.IsTrue(result);
-			Assert.IsNull(config.AnalysisData);
+			Assert.IsEmpty(config.AnalysisData);
             VerifyInputDataSetCount(config, DefaultInput.TotalTaskCount);
 
 			result = config.RunAnalyzers();
