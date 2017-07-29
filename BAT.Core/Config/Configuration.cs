@@ -74,7 +74,7 @@ namespace BAT.Core.Config
                 LogManager.Debug($"{InputData.Keys.Count} files processed.");
                 foreach (var key in InputData.Keys)
                 {
-                    LogManager.Debug($"Input file: {key} \n\t... contains {InputData[key].Count()} records.");
+                    LogManager.Debug($"Input file: {key} ... contains {InputData[key].Count()} records.");
                 }
 
                 success = InputData.Any();
@@ -93,15 +93,25 @@ namespace BAT.Core.Config
         /// <returns><c>true</c>, if transformers was run, <c>false</c> otherwise.</returns>
         public bool RunTransformers()
 		{
-			bool success = false;
-            var transformers = TransformerManager.GetTransformers(Transformers);
+            if (!Transformers.Any())
+            {
+                LogManager.Info("No transformation operations configured.", this);
+                return true;
+            }
+
+            bool success = false;
+			var transformers = TransformerManager.GetTransformers(Transformers);
 
             if (transformers?.Any() ?? false && InputData?.Keys?.Count >= 1)
             {
                 // iterate through the list of transformers and run on each input data set
                 var transformedData = new Dictionary<string, IEnumerable<SensorReading>>();
                 foreach (var transformer in transformers)
-                {
+				{
+					// Sanity checking ...
+                    LogManager.Info($"Running transformation operation:\n\t{transformer}", this);
+
+                    // Run the operation ...
                     foreach (var key in InputData.Keys)
                     {
                         bool dataAlreadyProcessedForKey = transformedData.ContainsKey(key);
@@ -131,17 +141,26 @@ namespace BAT.Core.Config
         /// </summary>
         /// <returns><c>true</c>, if filters was run, <c>false</c> otherwise.</returns>
         public bool RunFilters()
-        {
-            bool success = false;
+		{
+			if (!Filters.Any())
+			{
+				LogManager.Info("No filter operations configured.", this);
+				return true;
+			}
+
+			bool success = false;
             if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1)
 			{
 				var filteredData = new Dictionary<string, IEnumerable<SensorReading>>();
-
                 foreach (var filterCommand in Filters)
                 {
                     var filter = FilterManager.GetFilter(filterCommand.Name);
-                    if (filter == null) continue;
+					if (filter == null) continue;
 
+					// Sanity checking ...
+                    LogManager.Info($"Running filter operation:\n\t{filter}", this);
+
+                    // Data processing ...
                     foreach (var key in InputData.Keys)
 					{
 						var thresholdData = 
@@ -193,9 +212,15 @@ namespace BAT.Core.Config
         /// </summary>
         /// <returns><c>true</c>, if analyzers was run, <c>false</c> otherwise.</returns>
         public bool RunAnalyzers()
-        {
-            bool success = false;
-            if (Analyzers?.Count > 0 && InputData?.Keys?.Count >= 1)
+		{
+            if (!Analyzers.Any())
+			{
+				LogManager.Info("No analysis operations configured.", this);
+				return true;
+			}
+
+			bool success = false;
+			if (Analyzers?.Count > 0 && InputData?.Keys?.Count >= 1)
             {
                 var analyzedData = new Dictionary<string, IEnumerable<ICsvWritable>>();
                 foreach (var analyzerCommand in Analyzers)
@@ -207,10 +232,13 @@ namespace BAT.Core.Config
                     var analyzer = AnalyzerManager.GetAnalyzer(analyzerName);
                     if (analyzer == null) continue;
 
-                    // ---------------------------------------------------------
-                    //      Check to see if user requested a summary
-                    // ---------------------------------------------------------
-                    bool summaryRequested = Summarizers.Contains(analyzerName);
+					// Sanity checking ...
+					LogManager.Info($"Running analysis operation:\n\t{analyzer}", this);
+
+					// ---------------------------------------------------------
+					//      Check to see if user requested a summary
+					// ---------------------------------------------------------
+					bool summaryRequested = Summarizers.Contains(analyzerName);
 
                     // ---------------------------------------------------------
                     //          Group input data by original file name

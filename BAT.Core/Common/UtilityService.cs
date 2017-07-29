@@ -68,8 +68,8 @@ namespace BAT.Core.Common
         /// <param name="defaultVal">Default value.</param>
 		public static string GetString(string[] inputFields, InputFile.ColumnOrder field, string defaultVal)
 		{
-			var index = (int)field;
-			return inputFields.Length < index + 1 ? defaultVal : inputFields[index];
+				var index = (int)field;
+				return inputFields.Length < index + 1 ? defaultVal : inputFields[index];
 		}
 
         /// <summary>

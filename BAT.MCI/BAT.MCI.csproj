@@ -54,6 +54,9 @@
     <None Include="SupportFiles\OA5-Lunch.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="SupportFiles\15-01-12_ReachAndRetractStraight.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SupportFiles\" />

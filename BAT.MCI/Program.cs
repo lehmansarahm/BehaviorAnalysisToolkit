@@ -35,21 +35,21 @@ namespace BAT.MCI
 			}
 
 			success = config.RunTransformers();
-			if (success) LogManager.Info("Selected transformations successfully run on input data.");
+			if (success) LogManager.Info("Transformation phase complete.");
 			else {
 				LogManager.Error("Something went wrong while running transformations.  Exiting program.");
 				return;
 			}
 
 			success = config.RunFilters();
-			if (success) LogManager.Info("Selected filters successfully run on input data.");
+			if (success) LogManager.Info("Filter phase complete.");
 			else {
 				LogManager.Error("Something went wrong while running filters.  Exiting program.");
 				return;
 			}
 
 			success = config.RunAnalyzers();
-			if (success) LogManager.Info("Selected analysis operations successfully run on input data.");
+			if (success) LogManager.Info("Analysis phase complete.");
 			else {
 				LogManager.Error("Something went wrong while running analysis operations.  Exiting program.");
 				return;

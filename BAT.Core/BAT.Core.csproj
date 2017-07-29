@@ -74,6 +74,7 @@
     <Compile Include="Config\SummarizerManager.cs" />
     <Compile Include="Config\UserInput.cs" />
     <Compile Include="Filters\ThresholdCalibrationFilter.cs" />
+    <Compile Include="Transformers\SmoothingTransformer.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

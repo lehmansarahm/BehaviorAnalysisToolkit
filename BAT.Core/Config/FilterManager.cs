@@ -8,6 +8,11 @@ namespace BAT.Core.Config
 {
     public class FilterManager : TypeManager
 	{
+        /// <summary>
+        /// Gets the filter.
+        /// </summary>
+        /// <returns>The filter.</returns>
+        /// <param name="name">Name.</param>
 		public static IFilter GetFilter(string name)
 		{
 			var filters = GetInheritingTypes<IFilter>();

@@ -73,10 +73,10 @@ namespace BAT.Core.Common
         /// </summary>
         /// <value>The instant speed.</value>
         public decimal InstantSpeed
-        {
+        { 
             get
             {
-				return AccelMag * (Constants.SAMPLING_PERIOD_IN_MS / 1000.0M);
+                return AccelMag * (Constants.SAMPLING_PERIOD_IN_MS / 1000.0M);
             }
         }
 
@@ -131,11 +131,19 @@ namespace BAT.Core.Common
             AccelY = UtilityService.GetDecimal(inputFields, InputFile.ColumnOrder.AccelarationY);
             AccelZ = UtilityService.GetDecimal(inputFields, InputFile.ColumnOrder.AccelerationZ);
 
-            string rawStartQuit = inputFields[(int)InputFile.ColumnOrder.StartQuit];
-            Start = rawStartQuit.Equals(InputFile.StartFlag);
-            End = rawStartQuit.Equals(InputFile.EndFlag);
+            if (inputFields.Length > (int)InputFile.ColumnOrder.StartQuit)
+			{
+				string rawStartQuit = inputFields[(int)InputFile.ColumnOrder.StartQuit];
+				Start = rawStartQuit.Equals(InputFile.StartFlag);
+				End = rawStartQuit.Equals(InputFile.EndFlag);
+            }
 
-            Label = UtilityService.GetString(inputFields, InputFile.ColumnOrder.Label, InputFile.NoLabelProvided);
+            if (inputFields.Length > (int)InputFile.ColumnOrder.Label)
+			{
+				Label = UtilityService.GetString(inputFields, 
+                                                 InputFile.ColumnOrder.Label, 
+                                                 InputFile.NoLabelProvided);
+            }
         }
 
         /// <summary>
@@ -181,7 +189,9 @@ namespace BAT.Core.Common
         /// <param name="filepath">Filepath.</param>
         public static List<SensorReading> ReadSensorFile(string filepath)
         {
-            List<SensorReading> sensorReadings = new List<SensorReading>();
+			List<SensorReading> sensorReadings = new List<SensorReading>();
+			List<string> failedInputLines = new List<string>();
+
             if (!File.Exists(filepath))
             {
                 LogManager.Error($"Unable to locate input file: {filepath}.  Exiting program.");
@@ -193,15 +203,24 @@ namespace BAT.Core.Common
 			{
 				try
 				{
-					sensorReadings.Add(new SensorReading(contentLine));
+                    if (!contentLine[0].Equals(Header[0]))
+					    sensorReadings.Add(new SensorReading(contentLine));
 				}
 				catch (FormatException ex)
 				{
-					LogManager.Error($"Unable to parse data from input file: {filepath}.  Exiting program.",
-									 ex, typeof(SensorReading));
+                    // We've encountered an input line that is missing crucial data.
+                    // Add to list of failed lines.  (do something with the ex message?)
+					failedInputLines.Add(contentLine[0]);
                     continue;
 				}
 			}
+
+            if (failedInputLines.Any())
+			{
+				LogManager.Error("Unable to parse data from input file: " +
+                                 $"{filepath}, at entry lines:\n\t{string.Join("\n\t", failedInputLines)}",
+                                 typeof(SensorReading));
+            }
 
             return sensorReadings;
         }
