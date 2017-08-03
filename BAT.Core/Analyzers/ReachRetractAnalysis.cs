@@ -58,26 +58,13 @@ namespace BAT.Core.Analyzers
 						{
                             if (windowRecord.AccelX > threshold)
                             {
-                                /*LogManager.Debug("\tThreshold match FOUND at index: " +
-                                                 $"{windowRecords.IndexOf(windowRecord)}" +
-                                                 $"\n\tRecord num: {windowRecord.RecordNum}" +
-                                                 $"\n\tAccel-x: {windowRecord.AccelX}" +
-                                                 $"\n\tThreshold: {threshold}", this);*/
                                 peakStart = windowRecord;
                                 aboveThreshold = true;
                             }
                             else
                             {
-                                if (aboveThreshold && peakStart != null)
-								{
-									/*LogManager.Debug("\tThreshold match LOST at index: " +
-													 $"{windowRecords.IndexOf(windowRecord)}" +
-													 $"\n\tRecord num: {windowRecord.RecordNum}" +
-													 $"\n\tAccel-x: {windowRecord.AccelX}" +
-													 $"\n\tThreshold: {threshold}", this);*/
-                                    peaks.Add(new SensorReading[] { peakStart, windowRecord });
-                                }
-
+								if (aboveThreshold && peakStart != null)
+									peaks.Add(new SensorReading[] { peakStart, windowRecord });
 								aboveThreshold = false;
 								peakStart = null;
                             }
@@ -89,10 +76,6 @@ namespace BAT.Core.Analyzers
 						// shift window and try again
 						var initialWindowRecordCount = windowRecords.Count;
 						windowRecords.RemoveAt(0);
-                        /*LogManager.Debug("Shifting reach-retract window.  " + 
-                                         "Previous window record count: " +
-                                         $"{initialWindowRecordCount}; trying again with " +
-                                         $"{windowRecords.Count()} records.", this);*/
 					}
                 }
             }
@@ -143,8 +126,10 @@ namespace BAT.Core.Analyzers
             {
                 Start = first.Time,
                 StartNum = first.RecordNum,
+                StartLabel = first.Label,
                 End = last.Time,
                 EndNum = last.RecordNum,
+                EndLabel = last.Label,
                 WasGrab = (peaks.Count > 1)
             });
 

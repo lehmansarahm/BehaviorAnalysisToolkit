@@ -79,6 +79,7 @@
     <Compile Include="Analyzers\BasePauseAnalysis.cs" />
     <Compile Include="Analyzers\ReachRetractAnalysis.cs" />
     <Compile Include="Analyzers\Results\RetractResult.cs" />
+    <Compile Include="Summarizers\ReachRetractSummarizer.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

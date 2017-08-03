@@ -270,8 +270,10 @@ namespace BAT.Core.Common
 				{
 					"Start Time",
 					"Start Num",
+                    "Start Label",
 					"End Time",
 					"End Num",
+                    "End Label",
 					"Reach Duration (sec)",
                     "Was Grab?"
 				};
@@ -298,7 +300,8 @@ namespace BAT.Core.Common
 				return new string[]
 				{
 					"Source",
-					"Task Duration (sec)"
+					"Reach and Grab Count",
+                    "Reach and No-Touch Count"
 				};
 			}
 		}
@@ -322,9 +325,8 @@ namespace BAT.Core.Common
 			{
 				return new string[]
 				{
-					"Total Task Time (sec)",
-					"Average Task Time (sec)",
-					"Standard Deviation"
+					"Total Reach and Grab Count",
+					"Total Reach and No-Touch Count"
 				};
 			}
 		}

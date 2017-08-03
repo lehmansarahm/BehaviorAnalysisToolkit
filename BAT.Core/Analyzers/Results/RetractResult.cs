@@ -7,8 +7,12 @@ namespace BAT.Core.Analyzers.Results
 	{
 		public DateTime Start { get; set; }
         public int StartNum { get; set; }
+        public string StartLabel { get; set; }
+
         public DateTime End { get; set; }
         public int EndNum { get; set; }
+        public string EndLabel { get; set; }
+
         public decimal Duration
         {
             get
@@ -24,11 +28,13 @@ namespace BAT.Core.Analyzers.Results
         /// <returns>The csv.</returns>
         public string ToCsv()
 		{
-			string[] props = {
-				Start.ToString(),
-				StartNum.ToString(),
-				End.ToString(),
-				EndNum.ToString(),
+            string[] props = {
+                Start.ToString(),
+                StartNum.ToString(),
+                StartLabel,
+                End.ToString(),
+                EndNum.ToString(),
+                EndLabel,
 				Duration.ToString(),
                 WasGrab.ToString()
 			};
