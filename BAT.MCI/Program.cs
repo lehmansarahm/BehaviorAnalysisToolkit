@@ -12,6 +12,8 @@ namespace BAT.MCI
         /// <param name="args">The command-line arguments.</param>
         public static void Main(string[] args)
         {
+            LogManager.ResetLogs();
+
             Configuration config;
             try {
 				string configFilepath = Constants.DEFAULT_CONFIG_FILE;

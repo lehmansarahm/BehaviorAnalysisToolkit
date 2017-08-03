@@ -9,7 +9,11 @@ namespace BAT.Core.Common
 	public static class Constants
 	{
 		public static CultureInfo CULTURE = CultureInfo.CurrentCulture;
+
         public const string DEFAULT_CONFIG_FILE = "configuration.json";
+        public const string DEFAULT_ERROR_LOG_FILE = "error.txt";
+        public const string DEFAULT_DEBUG_LOG_FILE = "debug.txt";
+
         public const string DEFAULT_INPUT_FILE_EXT = ".csv";
         public const char DEFAULT_PATH_SEPARATOR = '/';
         public const char DEFAULT_NAME_SEPARATOR = '_';
@@ -43,7 +47,7 @@ namespace BAT.Core.Common
     /// </summary>
     public static class OutputDirs
 	{
-        static string ExecDateTime = DateTime.Now.ToString("MMddyyyy-hhmmss");
+        public static string ExecDateTime = DateTime.Now.ToString("MMddyyyy-hhmmss");
         public static string ExecTime = $"output-{ExecDateTime}";
 
 		public const string Analyzers = "analysis";

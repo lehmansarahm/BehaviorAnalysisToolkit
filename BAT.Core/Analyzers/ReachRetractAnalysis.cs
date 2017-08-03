@@ -39,65 +39,61 @@ namespace BAT.Core.Analyzers
                 var windowRecords = new List<SensorReading>();
                 foreach (var record in input)
                 {
-                    if (windowRecords.Count < windowSize && record.HasValidAccelVector)
-                        windowRecords.Add(record);
+					if (windowRecords.Count < windowSize && record.HasValidAccelVector)
+					{
+						LogManager.Debug($"\tCurrent window record count: {windowRecords.Count}" +
+										 $"\n\tAdding new record num: {record.RecordNum}", this);
+						windowRecords.Add(record);
+					}
 
                     if (windowRecords.Count == windowSize)
-                    {
-                        SensorReading[] firstPeak = null, secondPeak = null;
-						bool aboveThreshold = false;
-						
-                        // we have a full window ... check to see if we have two threshold peaks
-						foreach (var windowRecord in windowRecords)
-                        {
+					{
+						LogManager.Debug("Window record collection is full", this);
+                        var peaks = new List<SensorReading[]>();
+                        SensorReading peakStart = null;
+						var aboveThreshold = false;
+
+                        // check to see if we have one or more peaks along the X axis
+                        foreach (var windowRecord in windowRecords)
+						{
                             if (windowRecord.AccelX > threshold)
-							{
-								if (!aboveThreshold && firstPeak == null)
-								{
-									firstPeak = new SensorReading[2];
-									firstPeak[0] = windowRecord;
-								}
-								else if (!aboveThreshold && secondPeak == null)
-								{
-									secondPeak = new SensorReading[2];
-									secondPeak[0] = windowRecord;
-								}
+                            {
+                                /*LogManager.Debug("\tThreshold match FOUND at index: " +
+                                                 $"{windowRecords.IndexOf(windowRecord)}" +
+                                                 $"\n\tRecord num: {windowRecord.RecordNum}" +
+                                                 $"\n\tAccel-x: {windowRecord.AccelX}" +
+                                                 $"\n\tThreshold: {threshold}", this);*/
+                                peakStart = windowRecord;
                                 aboveThreshold = true;
                             }
                             else
-							{
-                                if (aboveThreshold && firstPeak[1] == null)
-									firstPeak[1] = windowRecord;
-								else if (aboveThreshold && secondPeak[1] == null)
-									secondPeak[1] = windowRecord;
-                                aboveThreshold = false;
+                            {
+                                if (aboveThreshold && peakStart != null)
+								{
+									/*LogManager.Debug("\tThreshold match LOST at index: " +
+													 $"{windowRecords.IndexOf(windowRecord)}" +
+													 $"\n\tRecord num: {windowRecord.RecordNum}" +
+													 $"\n\tAccel-x: {windowRecord.AccelX}" +
+													 $"\n\tThreshold: {threshold}", this);*/
+                                    peaks.Add(new SensorReading[] { peakStart, windowRecord });
+                                }
+
+								aboveThreshold = false;
+								peakStart = null;
                             }
                         }
 
-                        if (firstPeak?[0] != null && secondPeak?[1] != null)
-						{
-                            // if match found, add match to results
-                            results.Add(new RetractResult
-                            {
-                                Start = firstPeak[0].Time,
-                                StartNum = firstPeak[0].RecordNum,
-                                End = secondPeak[1].Time,
-                                EndNum = secondPeak[1].RecordNum,
-                                WasGrab = false
-                            });
+                        // update match result set
+                        if (peaks.Any()) AddMatches(results, peaks);
 
-							// then remove first 50% of window and fill again
-							for (int i = 0; i < (windowSize / 2); i++)
-                            {
-                                windowRecords.RemoveAt(i);
-                            }
-						}
-                        else
-						{
-                            // slide window by a single record and try again
-                            windowRecords.RemoveAt(0);
-						}
-                    }
+						// shift window and try again
+						var initialWindowRecordCount = windowRecords.Count;
+						windowRecords.RemoveAt(0);
+                        /*LogManager.Debug("Shifting reach-retract window.  " + 
+                                         "Previous window record count: " +
+                                         $"{initialWindowRecordCount}; trying again with " +
+                                         $"{windowRecords.Count()} records.", this);*/
+					}
                 }
             }
             return results;
@@ -112,5 +108,58 @@ namespace BAT.Core.Analyzers
 		{
             return data.Values.SelectMany(x => (List<RetractResult>)x).ToList();
 		}
+
+        /// <summary>
+        /// Adds the matches.
+        /// </summary>
+        /// <param name="peaks">Peaks.</param>
+        void AddMatches(List<RetractResult> results, List<SensorReading[]> peaks)
+		{
+			var first = peaks.First()[0];
+			var last = peaks.Last()[1];
+
+			// input verification ...
+            LogManager.Debug($"Peaks found: {peaks.Count}; logging new match " +
+                             $"from start record num: {first.RecordNum} to " +
+                             $"end record num: {last.RecordNum}", this);
+
+            // check to see if dups of individual peaks exist (remove if true)
+            for (int i = 0; i < peaks.Count; i++)
+			{
+                var peak = peaks[i];
+				results.RemoveAll(x => x.StartNum == peak[0].RecordNum
+                                  && x.EndNum == peak[1].RecordNum);
+                for (int j = (i + 1); j < peaks.Count; j++)
+                {
+					var nextPeak = peaks[j];
+					results.RemoveAll(x => x.StartNum == peak[0].RecordNum
+                                      && x.EndNum == nextPeak[1].RecordNum);
+                }
+            }
+
+            // add new match to results ...
+            // if mult peaks exist in a single window, it's a reach-and-grab
+            var newResult = (new RetractResult
+            {
+                Start = first.Time,
+                StartNum = first.RecordNum,
+                End = last.Time,
+                EndNum = last.RecordNum,
+                WasGrab = (peaks.Count > 1)
+            });
+
+            // only add this new result if it is NOT already encompassed by 
+            // the start / end nums of a previously stored result
+            if (!results.Where(x => x.StartNum <= newResult.StartNum 
+                               && newResult.EndNum <= x.EndNum).Any())
+                results.Add(newResult);
+
+			// output match results ...
+			string output = "Current matches found: " + results.Count;
+			foreach (var result in results)
+				output += $"\n\tStart record num: {result.StartNum}, " +
+						  $"End record num: {result.EndNum}";
+			LogManager.Debug(output, this);
+        }
     }
 }

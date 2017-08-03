@@ -8,6 +8,7 @@ namespace BAT.Core.Common
 	{
         static log4net.ILog log;
         static bool configInitialized;
+        static string currentDir = AppDomain.CurrentDomain.BaseDirectory + Constants.DEFAULT_PATH_SEPARATOR;
 
         /// <summary>
         /// Checks the config init.
@@ -18,7 +19,6 @@ namespace BAT.Core.Common
 			log = log4net.LogManager.GetLogger(source ?? System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             if (!configInitialized)
 			{
-				string currentDir = AppDomain.CurrentDomain.BaseDirectory + Constants.DEFAULT_PATH_SEPARATOR;
 				string configFilepath = currentDir + "log4net.config";
                 XmlConfigurator.Configure(new FileInfo(configFilepath));
 
@@ -32,6 +32,20 @@ namespace BAT.Core.Common
                     else Console.WriteLine("Could not initialize Log4Net config.");
                 }
             }
+        }
+
+        /// <summary>
+        /// Resets the logs.
+        /// </summary>
+        public static void ResetLogs()
+		{
+            string errorLogFilepath = currentDir + Constants.DEFAULT_ERROR_LOG_FILE;
+            if (File.Exists(errorLogFilepath)) 
+                File.Move(errorLogFilepath, $"{errorLogFilepath}.{OutputDirs.ExecDateTime}.old");
+
+			string debugLogFilepath = currentDir + Constants.DEFAULT_DEBUG_LOG_FILE;
+			if (File.Exists(debugLogFilepath)) 
+                File.Move(debugLogFilepath, $"{debugLogFilepath}.{OutputDirs.ExecDateTime}.old");
         }
 
 		/// <summary>
