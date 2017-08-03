@@ -52,6 +52,13 @@ namespace BAT.Core.Common
 		public decimal AccelX { get; set; }
         public decimal AccelY { get; set; }
 		public decimal AccelZ { get; set; }
+        public bool HasValidAccelVector
+        {
+            get
+			{
+				return (AccelX != 0.0M && AccelY != 0.0M && AccelZ != 0.0M);   
+            }
+        }
 		// ---------------------------------------------------------------------
 
         /// <summary>
@@ -62,9 +69,11 @@ namespace BAT.Core.Common
         {
             get
 			{
-				return (decimal)Math.Sqrt(Math.Pow((double)AccelX, 2)
-										  + Math.Pow((double)AccelY, 2)
-										  + Math.Pow((double)AccelZ, 2));
+                if (HasValidAccelVector)
+                    return (decimal)Math.Sqrt(Math.Pow((double)AccelX, 2)
+                                              + Math.Pow((double)AccelY, 2)
+                                              + Math.Pow((double)AccelZ, 2));
+                return 0.0M;
             }
         }
 
@@ -144,15 +153,28 @@ namespace BAT.Core.Common
                                                  InputFile.ColumnOrder.Label, 
                                                  InputFile.NoLabelProvided);
             }
-        }
+		}
 
         /// <summary>
-        /// Sets the accel vector.
+        /// Sets the gyro vector.
         /// </summary>
-        /// <param name="accelX">Accel x.</param>
-        /// <param name="accelY">Accel y.</param>
-        /// <param name="accelZ">Accel z.</param>
-        public void SetAccelVector(decimal accelX, decimal accelY, decimal accelZ)
+        /// <param name="azimuth">Azimuth.</param>
+        /// <param name="pitch">Pitch.</param>
+        /// <param name="roll">Roll.</param>
+		public void SetGyroVector(decimal azimuth, decimal pitch, decimal roll)
+		{
+            Azimuth = azimuth;
+            Pitch = pitch;
+            Roll = roll;
+		}
+
+		/// <summary>
+		/// Sets the accel vector.
+		/// </summary>
+		/// <param name="accelX">Accel x.</param>
+		/// <param name="accelY">Accel y.</param>
+		/// <param name="accelZ">Accel z.</param>
+		public void SetAccelVector(decimal accelX, decimal accelY, decimal accelZ)
 		{
 			AccelX = accelX;
 			AccelY = accelY;

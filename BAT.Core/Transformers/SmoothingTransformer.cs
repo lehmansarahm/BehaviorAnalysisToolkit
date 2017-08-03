@@ -25,6 +25,10 @@ namespace BAT.Core.Transformers
         /// <param name="input">Input.</param>
         public List<SensorReading> Transform(IEnumerable<ICsvWritable> input)
         {
+            var emaAzimuth = new ExponentialMovingAverage();
+            var emaPitch = new ExponentialMovingAverage();
+            var emaRoll = new ExponentialMovingAverage();
+
             var emaAccelX = new ExponentialMovingAverage();
             var emaAccelY = new ExponentialMovingAverage();
             var emaAccelZ = new ExponentialMovingAverage();
@@ -33,6 +37,9 @@ namespace BAT.Core.Transformers
             foreach (SensorReading reading in input)
             {
 				var newReading = new SensorReading(reading);
+                newReading.SetGyroVector(emaAzimuth.GetAverage(reading.Azimuth),
+                                         emaPitch.GetAverage(reading.Pitch),
+                                         emaRoll.GetAverage(reading.Roll));
                 newReading.SetAccelVector(emaAccelX.GetAverage(reading.AccelX), 
                                           emaAccelY.GetAverage(reading.AccelY), 
                                           emaAccelZ.GetAverage(reading.AccelZ));

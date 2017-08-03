@@ -349,8 +349,8 @@ namespace BAT.Core.Config
             }
             catch (JsonReaderException ex)
             {
-                LogManager.Error($"Could not parse configuration object from "
-                                 + "input file: {filepath}.  Is input properly formatted?",
+                LogManager.Error("Could not parse configuration object from "
+                                 + $"input file: {filepath}.  Is input properly formatted?",
                                  ex, typeof(Configuration));
                 return new Configuration();
             }

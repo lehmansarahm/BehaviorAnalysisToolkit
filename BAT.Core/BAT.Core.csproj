@@ -76,6 +76,9 @@
     <Compile Include="Filters\ThresholdCalibrationFilter.cs" />
     <Compile Include="Transformers\SmoothingTransformer.cs" />
     <Compile Include="Common\ExponentialMovingAverage.cs" />
+    <Compile Include="Analyzers\BasePauseAnalysis.cs" />
+    <Compile Include="Analyzers\ReachRetractAnalysis.cs" />
+    <Compile Include="Analyzers\Results\RetractResult.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

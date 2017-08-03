@@ -1,28 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 using BAT.Core.Config;
 
 namespace BAT.Core.Analyzers
 {
-	public class PauseDurationAnalysis : IAnalyzer
+    public class PauseDurationAnalysis : BasePauseAnalysis
 	{
         decimal totalDuration = 0.0M;
         int totalPauseCount = 0;
-
-		/// <summary>
-		/// Gets the header.
-		/// </summary>
-		/// <returns>The header.</returns>
-        public string[] GetHeader() { return PauseOutput.ResultHeader; }
-
-		/// <summary>
-		/// Gets the header csv.
-		/// </summary>
-		/// <returns>The header csv.</returns>
-		public string GetHeaderCsv() { return PauseOutput.ResultHeaderCsv; }
 
         /// <summary>
         /// Analyze the specified input and parameters.
@@ -30,8 +17,8 @@ namespace BAT.Core.Analyzers
         /// <returns>The analyze.</returns>
         /// <param name="input">Input.</param>
         /// <param name="parameters">Parameters.</param>
-        public IEnumerable<ICsvWritable> Analyze(IEnumerable<SensorReading> input,
-                                                 IEnumerable<Parameter> parameters)
+        public override IEnumerable<ICsvWritable> Analyze(IEnumerable<SensorReading> input,
+                                                          IEnumerable<Parameter> parameters)
 		{
 			var results = new List<PauseResult>();
 			foreach (var param in parameters)
@@ -101,9 +88,11 @@ namespace BAT.Core.Analyzers
         /// <param name="endTime">Last time.</param>
         /// <param name="endNo">Last no.</param>
         /// <param name="windowCount">Window count.</param>
-        private PauseResult verifyPause(bool currentlyPaused, bool validWindow, DateTime startTime,
-                                 int startNo, DateTime endTime, int endNo, int windowCount) {
-	        if (currentlyPaused && validWindow) {
+        PauseResult verifyPause(bool currentlyPaused, bool validWindow, DateTime startTime,
+                                int startNo, DateTime endTime, int endNo, int windowCount)
+        {
+	        if (currentlyPaused && validWindow)
+            {
 				// determine the current duration and add to our running total
 				decimal currentDuration = (windowCount * Constants.SAMPLING_PERIOD_IN_MS) / 1000.0M;
                 totalDuration += currentDuration;
@@ -121,16 +110,6 @@ namespace BAT.Core.Analyzers
 	        }
 
             return null;
-		}
-
-        /// <summary>
-        /// Consolidates the data.
-        /// </summary>
-        /// <returns>The data.</returns>
-        /// <param name="data">Data.</param>
-		public IEnumerable<ICsvWritable> ConsolidateData(Dictionary<string, IEnumerable<ICsvWritable>> data)
-		{
-            return data.Values.SelectMany(x => (List<PauseResult>)x).ToList();
 		}
 	}
 }

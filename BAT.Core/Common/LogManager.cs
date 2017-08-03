@@ -1,25 +1,36 @@
 ﻿using System;
+using System.IO;
 using log4net.Config;
 
 namespace BAT.Core.Common
 {
     public class LogManager
 	{
-        private static log4net.ILog log;
-        private static bool configInitialized = false;
+        static log4net.ILog log;
+        static bool configInitialized;
 
         /// <summary>
         /// Checks the config init.
         /// </summary>
         /// <param name="source">Source.</param>
-        private static void checkConfigInit(Type source)
+        static void checkConfigInit(Type source)
 		{
 			log = log4net.LogManager.GetLogger(source ?? System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             if (!configInitialized)
-            {
-				BasicConfigurator.Configure();
-                if (log4net.LogManager.GetRepository().Configured) configInitialized = true; 
-                else Console.WriteLine("Could not initialize Log4Net config.");
+			{
+				string currentDir = AppDomain.CurrentDomain.BaseDirectory + Constants.DEFAULT_PATH_SEPARATOR;
+				string configFilepath = currentDir + "log4net.config";
+                XmlConfigurator.Configure(new FileInfo(configFilepath));
+
+                if (log4net.LogManager.GetRepository().Configured)
+                    configInitialized = true;
+                else
+                {
+                    BasicConfigurator.Configure();
+                    if (log4net.LogManager.GetRepository().Configured) 
+                        configInitialized = true;
+                    else Console.WriteLine("Could not initialize Log4Net config.");
+                }
             }
         }
 
