@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 using BAT.Core.Config;
+using BAT.Core.Constants;
 
 namespace BAT.Core.Analyzers
 {
@@ -63,7 +64,7 @@ namespace BAT.Core.Analyzers
                         endNo = record.RecordNum;
 
                         // determine the current duration and add to our running total
-                        currentDuration = (windowCount * Constants.SAMPLING_PERIOD_IN_MS) / 1000.0M;
+                        currentDuration = (windowCount * Constants.BAT.SAMPLING_PERIOD_IN_MS) / 1000.0M;
                         totalDuration += currentDuration;
 
                         // output pause details to file

@@ -95,7 +95,7 @@ namespace BAT.Core.Test
 
             Assert.IsTrue(Directory.Exists(source));
             var files = Directory.GetFiles(source);
-            var inputFileCount = files.Where(x => x.EndsWith(Constants.DEFAULT_INPUT_FILE_EXT)).Count();
+            var inputFileCount = files.Where(x => x.EndsWith(Constants.BAT.DEFAULT_INPUT_FILE_EXT)).Count();
             var defaultInputIndex = Array.FindIndex(files, x => x.Contains(DefaultInput.Filename));
 
             VerifyInputDataSetCount(config, inputFileCount);
@@ -120,7 +120,7 @@ namespace BAT.Core.Test
 
 			Assert.IsTrue(Directory.Exists(source));
 			var files = Directory.GetFiles(source);
-			var inputFileCount = files.Where(x => x.EndsWith(Constants.DEFAULT_INPUT_FILE_EXT)).Count();
+			var inputFileCount = files.Where(x => x.EndsWith(Constants.BAT.DEFAULT_INPUT_FILE_EXT)).Count();
 			var defaultInputIndex = Array.FindIndex(files, x => x.Contains(DefaultInput.Filename));
 
 			VerifyInputDataSetCount(config, inputFileCount);

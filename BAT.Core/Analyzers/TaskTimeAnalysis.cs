@@ -3,6 +3,7 @@ using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
 using BAT.Core.Config;
+using BAT.Core.Constants;
 
 namespace BAT.Core.Analyzers
 {
@@ -33,7 +34,7 @@ namespace BAT.Core.Analyzers
             if (first == null) return new List<TaskTimeResult>();
 
             var numOfRecordings = input.Count() - 1;
-            var execTimeInMs = numOfRecordings * Constants.SAMPLING_PERIOD_IN_MS;
+            var execTimeInMs = numOfRecordings * Constants.BAT.SAMPLING_PERIOD_IN_MS;
             var execTimeInSec = execTimeInMs / 1000.0M;
 
             var last = input.LastOrDefault();

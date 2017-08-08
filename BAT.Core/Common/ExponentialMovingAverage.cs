@@ -5,7 +5,7 @@ namespace BAT.Core.Common
 	public class ExponentialMovingAverage
 	{
 		const decimal EMA_ALPHA = 0.5M;
-		const int EMA_SAMPLE_SIZE = (int)Constants.SAMPLING_PERIOD_IN_MS;
+		const int EMA_SAMPLE_SIZE = (int)Constants.BAT.SAMPLING_PERIOD_IN_MS;
 
 		public decimal Alpha { get; set; }
         public int SampleSize { get; set; }

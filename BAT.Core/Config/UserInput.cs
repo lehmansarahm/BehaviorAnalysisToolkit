@@ -46,7 +46,7 @@ namespace BAT.Core.Config
             else if (Directory.Exists(currentInput))
 			{
 				var paths = Directory.GetFiles(@currentInput,
-                                           $"*{Constants.DEFAULT_INPUT_FILE_EXT}");
+                                           $"*{Constants.BAT.DEFAULT_INPUT_FILE_EXT}");
                 foreach (var path in paths)
 				{
 					LogManager.Debug($"Returning input file: {path} for user: {Username}");
@@ -66,10 +66,10 @@ namespace BAT.Core.Config
         /// <param name="path">Path.</param>
         string GetFilenameFromPath(string path)
 		{
-            var pathComponents = path.Split(Constants.DEFAULT_PATH_SEPARATOR);
-            var filename = Username + Constants.DEFAULT_NAME_SEPARATOR
+            var pathComponents = path.Split(Constants.BAT.DEFAULT_PATH_SEPARATOR);
+            var filename = Username + Constants.BAT.DEFAULT_NAME_SEPARATOR
                            + pathComponents[pathComponents.Length - 1];
-            return filename.Substring(0, filename.IndexOf(Constants.DEFAULT_INPUT_FILE_EXT));
+            return filename.Substring(0, filename.IndexOf(Constants.BAT.DEFAULT_INPUT_FILE_EXT));
         }
     }
 }

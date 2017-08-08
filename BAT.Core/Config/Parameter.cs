@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using BAT.Core.Common;
+using BAT.Core.Constants;
 
 namespace BAT.Core.Config
 {
@@ -24,7 +25,7 @@ namespace BAT.Core.Config
 				switch (clause.Key)
 				{
 					case CommandParameters.Contains:
-						isMatch = (Constants.CULTURE
+                        isMatch = (Constants.BAT.CULTURE
                                    .CompareInfo.IndexOf(source, clause.Value,
                                                         CompareOptions.IgnoreCase) >= 0);
 						break;

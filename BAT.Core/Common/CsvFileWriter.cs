@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BAT.Core.Constants;
 
 namespace BAT.Core.Common
 {
@@ -14,14 +15,14 @@ namespace BAT.Core.Common
         /// <param name="outputDir">Output dir.</param>
         public static void CopyFileToDir(string filename, string outputDir)
 		{
-			string currentDir = AppDomain.CurrentDomain.BaseDirectory + Constants.DEFAULT_PATH_SEPARATOR;
+			string currentDir = AppDomain.CurrentDomain.BaseDirectory + Constants.BAT.DEFAULT_PATH_SEPARATOR;
             string currentFilepath = currentDir + filename;
 
             if (File.Exists(currentFilepath))
             {
                 InitDir(outputDir);
                 string targetFilepath = currentDir + outputDir 
-                    + Constants.DEFAULT_PATH_SEPARATOR + filename;
+                    + Constants.BAT.DEFAULT_PATH_SEPARATOR + filename;
                 File.Copy(currentFilepath, targetFilepath);
             }
         }
@@ -78,8 +79,8 @@ namespace BAT.Core.Common
 					InitDir(outputDir);
 				}
 
-                if (!filename.EndsWith(Constants.DEFAULT_INPUT_FILE_EXT))
-                    filename = (filename + Constants.DEFAULT_INPUT_FILE_EXT);
+                if (!filename.EndsWith(Constants.BAT.DEFAULT_INPUT_FILE_EXT))
+                    filename = (filename + Constants.BAT.DEFAULT_INPUT_FILE_EXT);
 
                 StreamWriter file = new StreamWriter($"{outputDir}/{filename}");
                 file.WriteLine(output);

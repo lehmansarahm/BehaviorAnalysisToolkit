@@ -2,6 +2,7 @@
 using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
+using BAT.Core.Constants;
 
 namespace BAT.Core.Summarizers
 {

@@ -2,11 +2,13 @@
 using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
+using BAT.Core.Constants;
 
 namespace BAT.Core.Summarizers
 {
     public class ReachRetractSummarizer : ISummarizer
-	{
+    {
+        public static Dictionary<string, int> SelectTaskCounts = new Dictionary<string, int>();
         List<int> reachGrab, reachNoTouch;
 
 		/// <summary>
@@ -35,7 +37,9 @@ namespace BAT.Core.Summarizers
 		{
 			return new string[]
             {
+                "", // source
                 reachGrab.Sum(x => x).ToString(), 
+                "", // select task count
                 reachNoTouch.Sum(x => x).ToString()
             };
 		}
@@ -66,10 +70,14 @@ namespace BAT.Core.Summarizers
                     var grabCount = analysisResults.Where(x => x.WasGrab).Count();
                     var noTouchCount = analysisResults.Where(x => !x.WasGrab).Count();
 
+                    var selectTaskCount = 0;
+                    SelectTaskCounts.TryGetValue(key, out selectTaskCount);
+
 					results.Add(new string[] {
-						key,                // source
-                        $"{grabCount}",     // num of grab instances
-                        $"{noTouchCount}"   // num of no-touch instances
+						key,                    // source
+                        $"{grabCount}",         // num of grab instances
+                        $"{selectTaskCount}",   // number of "select" tasks for this input
+                        $"{noTouchCount}"       // num of no-touch instances
                     });
 
 					reachGrab.Add(grabCount);

@@ -1,55 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BAT.Core.Constants;
 
 namespace BAT.Core.Common
 {
     public class UtilityService
 	{
-        /// <summary>
-        /// Total the specified valueList.
-        /// </summary>
-        /// <returns>The total.</returns>
-        /// <param name="valueList">Value list.</param>
-        public static decimal Total(List<decimal> valueList)
-        {
-            return valueList.Sum(x => x);
-        }
+		/// <summary>
+		/// Total the specified valueList.
+		/// </summary>
+		/// <returns>The total.</returns>
+		/// <param name="valueList">Value list.</param>
+		public static decimal Total(IEnumerable<decimal> valueList)
+		{
+			return valueList.Sum(x => x);
+		}
 
-        /// <summary>
-        /// Average the specified valueList.
-        /// </summary>
-        /// <returns>The average.</returns>
-        /// <param name="valueList">Value list.</param>
-        public static decimal Average(List<decimal> valueList)
-        {
-            return (valueList != null && valueList.Any()) 
-                ? (valueList.Sum(x => x) / valueList.Count)
-                : 0;
-        }
+		/// <summary>
+		/// Average the specified valueList.
+		/// </summary>
+		/// <returns>The average.</returns>
+		/// <param name="valueList">Value list.</param>
+		public static decimal Average(IEnumerable<decimal> valueList)
+		{
+			return (valueList != null && valueList.Any())
+				? (valueList.Sum(x => x) / valueList.Count())
+				: 0;
+		}
 
 		/// <summary>
 		/// Standards the deviation.
 		/// </summary>
 		/// <returns>The deviation.</returns>
-		/// <param name="valueList">Value list.</param>
-		public static decimal StandardDeviation(List<decimal> valueList)
+		/// <param name="values">Value list.</param>
+        public static decimal StandardDeviation(IEnumerable<decimal> values)
 		{
-			double M = 0.0;
-			double S = 0.0;
-			int k = 1;
-
             try
 			{
-				foreach (double value in valueList)
+                double ret = 0;
+				if (values.Count() > 0)
 				{
-					double tmpM = M;
-					M += (value - tmpM) / k;
-					S += (value - tmpM) * (value - M);
-					k++;
+					//Compute the Average      
+					double avg = (double)values.Average();
+					//Perform the Sum of (value-avg)_2_2      
+					double sum = values.Sum(d => Math.Pow((double)d - avg, 2));
+					//Put it all together      
+					ret = Math.Sqrt((sum) / (values.Count() - 1));
 				}
-
-				return (decimal)Math.Sqrt(S / (k - 2));
+				return (decimal)ret;
             }
             catch (OverflowException ex)
             {
@@ -80,7 +79,7 @@ namespace BAT.Core.Common
         /// <param name="field">Field.</param>
         public static DateTime GetDate(string[] inputFields, InputFile.ColumnOrder field)
 		{
-            var rawString = GetString(inputFields, field, Constants.EMPTY);
+            var rawString = GetString(inputFields, field, Constants.BAT.EMPTY);
 			return DateTime.Parse(rawString);
 		}
 
@@ -92,7 +91,7 @@ namespace BAT.Core.Common
         /// <param name="field">Field.</param>
 		public static int GetInt(string[] inputFields, InputFile.ColumnOrder field)
 		{
-			var rawString = GetString(inputFields, field, Constants.EMPTY);
+			var rawString = GetString(inputFields, field, Constants.BAT.EMPTY);
 			return int.Parse(rawString);
 		}
 
@@ -104,7 +103,7 @@ namespace BAT.Core.Common
         /// <param name="field">Field.</param>
 		public static decimal GetDecimal(string[] inputFields, InputFile.ColumnOrder field)
 		{
-			var rawString = GetString(inputFields, field, Constants.EMPTY);
+			var rawString = GetString(inputFields, field, Constants.BAT.EMPTY);
 			return decimal.Parse(rawString);
 		}
     }

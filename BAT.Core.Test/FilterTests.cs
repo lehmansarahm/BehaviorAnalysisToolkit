@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using BAT.Core.Common;
 using BAT.Core.Config;
+using BAT.Core.Constants;
 using BAT.Core.Test.SupportFiles;
 using NUnit.Framework;
 

@@ -16,7 +16,7 @@ namespace BAT.MCI
 
             Configuration config;
             try {
-				string configFilepath = Constants.DEFAULT_CONFIG_FILE;
+				string configFilepath = Core.Constants.BAT.DEFAULT_CONFIG_FILE;
 				if (args.Length >= 1) configFilepath = args[0];
 				else LogManager.Info("No configuration file provided.  Using default.");
 

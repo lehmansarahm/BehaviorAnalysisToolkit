@@ -17,7 +17,7 @@ namespace BAT.Core.Analyzers.Results
         {
             get
 			{
-                return ((EndNum - StartNum) * Constants.SAMPLING_PERIOD_IN_MS) / 1000.0M;
+                return ((EndNum - StartNum) * Constants.BAT.SAMPLING_PERIOD_IN_MS) / 1000.0M;
             }
         }
         public bool WasGrab { get; set; }

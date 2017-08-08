@@ -28,7 +28,19 @@
             { "Key": "Window", "Value": "12" }
           ] }
       ] },
-    { "Name": "TaskTime" }
+    { "Name": "TaskTime" },
+    { "Name": "Select",
+      "Parameters": [
+        { "Field": "InstantSpeed",
+          "Clauses": [
+            { "Key": "Threshold", "Value": "0.01" },
+            { "Key": "Window", "Value": "12" }
+          ] },
+        { "Field": "Acceleration",
+          "Clauses": [
+            { "Key": "Variance", "Value": "0.01" }
+          ] }
+      ] }
   ],
   "summarizers": [ "PauseCount", "PauseDuration", "TaskTime" ]
 }

@@ -44,7 +44,6 @@
     <Compile Include="Summarizers\ISummarizer.cs" />
     <Compile Include="Transformers\ITransformer.cs" />
     <Compile Include="Common\SensorReading.cs" />
-    <Compile Include="Common\Constants.cs" />
     <Compile Include="Transformers\LinearAccelerationTransformer.cs" />
     <Compile Include="Filters\ActivityFilter.cs" />
     <Compile Include="Filters\CompletionFilter.cs" />
@@ -80,6 +79,17 @@
     <Compile Include="Analyzers\ReachRetractAnalysis.cs" />
     <Compile Include="Analyzers\Results\RetractResult.cs" />
     <Compile Include="Summarizers\ReachRetractSummarizer.cs" />
+    <Compile Include="Analyzers\SelectAnalysis.cs" />
+    <Compile Include="Constants\OutputDirs.cs" />
+    <Compile Include="Constants\InputFile.cs" />
+    <Compile Include="Constants\PauseOutput.cs" />
+    <Compile Include="Constants\TaskTimeOutput.cs" />
+    <Compile Include="Constants\ReachRetractOutput.cs" />
+    <Compile Include="Constants\CommandParameters.cs" />
+    <Compile Include="Constants\BAT.cs" />
+    <Compile Include="Constants\SelectOutput.cs" />
+    <Compile Include="Analyzers\Results\SelectResult.cs" />
+    <Compile Include="Summarizers\SelectSummarizer.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -89,6 +99,9 @@
     <EmbeddedResource Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Constants\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

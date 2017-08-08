@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BAT.Core.Constants;
 
 namespace BAT.Core.Common
 {
@@ -85,7 +86,7 @@ namespace BAT.Core.Common
         { 
             get
             {
-                return AccelMag * (Constants.SAMPLING_PERIOD_IN_MS / 1000.0M);
+                return AccelMag * (Constants.BAT.SAMPLING_PERIOD_IN_MS / 1000.0M);
             }
         }
 

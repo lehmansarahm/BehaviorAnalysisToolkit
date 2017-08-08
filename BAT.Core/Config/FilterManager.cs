@@ -44,7 +44,7 @@ namespace BAT.Core.Config
         /// <param name="id">Identifier.</param>
         public static string GetFilterFilename(string key, string id)
         {
-            return $"{key}_{id}{Constants.DEFAULT_INPUT_FILE_EXT}";
+            return $"{key}_{id}{Constants.BAT.DEFAULT_INPUT_FILE_EXT}";
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BAT.Core.Common;
+using BAT.Core.Constants;
 using BAT.Core.Filters;
 using BAT.Core.Summarizers;
 using Newtonsoft.Json;
@@ -67,6 +68,8 @@ namespace BAT.Core.Config
 
 						// add data to collection using file name, not file path
                         InputData.Add(inputFile.Key, sensorReadings);
+                        ReachRetractSummarizer.SelectTaskCounts[inputFile.Key] = 
+                            sensorReadings.Where(x => x.Label.Contains("select")).Select(x => x.Label).Distinct().Count();
                     }
                 }
 
@@ -288,7 +291,7 @@ namespace BAT.Core.Config
 								if (WriteOutputFile)
 									CsvFileWriter.WriteSummaryToFile
                                                  (new string[] { OutputDirs.Summarizers, analyzerName },
-                                                  $"{origInputFile}{Constants.DEFAULT_INPUT_FILE_EXT}",
+                                                  $"{origInputFile}{Constants.BAT.DEFAULT_INPUT_FILE_EXT}",
 												  summarizer.GetHeaderCsv(), summarizedValues,
 												  summarizer.GetFooterCsv(), summarizer.GetFooterValues());
 							}
@@ -311,7 +314,7 @@ namespace BAT.Core.Config
 						if (WriteOutputFile)
 							CsvFileWriter.WriteSummaryToFile
 										 (new string[] { OutputDirs.Summarizers },
-										  $"{analyzerName}Aggregate{Constants.DEFAULT_INPUT_FILE_EXT}",
+										  $"{analyzerName}Aggregate{Constants.BAT.DEFAULT_INPUT_FILE_EXT}",
 										  summarizer.GetHeaderCsv(), summarizedValues,
 										  summarizer.GetFooterCsv(), summarizer.GetFooterValues());
 					}

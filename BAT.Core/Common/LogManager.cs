@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using BAT.Core.Constants;
 using log4net.Config;
 
 namespace BAT.Core.Common
@@ -8,7 +9,7 @@ namespace BAT.Core.Common
 	{
         static log4net.ILog log;
         static bool configInitialized;
-        static string currentDir = AppDomain.CurrentDomain.BaseDirectory + Constants.DEFAULT_PATH_SEPARATOR;
+        static string currentDir = AppDomain.CurrentDomain.BaseDirectory + Constants.BAT.DEFAULT_PATH_SEPARATOR;
 
         /// <summary>
         /// Checks the config init.
@@ -39,11 +40,11 @@ namespace BAT.Core.Common
         /// </summary>
         public static void ResetLogs()
 		{
-            string errorLogFilepath = currentDir + Constants.DEFAULT_ERROR_LOG_FILE;
+            string errorLogFilepath = currentDir + Constants.BAT.DEFAULT_ERROR_LOG_FILE;
             if (File.Exists(errorLogFilepath)) 
                 File.Move(errorLogFilepath, $"{errorLogFilepath}.{OutputDirs.ExecDateTime}.old");
 
-			string debugLogFilepath = currentDir + Constants.DEFAULT_DEBUG_LOG_FILE;
+			string debugLogFilepath = currentDir + Constants.BAT.DEFAULT_DEBUG_LOG_FILE;
 			if (File.Exists(debugLogFilepath)) 
                 File.Move(debugLogFilepath, $"{debugLogFilepath}.{OutputDirs.ExecDateTime}.old");
         }
