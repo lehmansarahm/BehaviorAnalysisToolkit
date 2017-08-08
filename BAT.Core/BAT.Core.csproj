@@ -90,6 +90,7 @@
     <Compile Include="Constants\SelectOutput.cs" />
     <Compile Include="Analyzers\Results\SelectResult.cs" />
     <Compile Include="Summarizers\SelectSummarizer.cs" />
+    <Compile Include="Common\Extensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

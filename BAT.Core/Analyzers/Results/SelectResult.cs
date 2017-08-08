@@ -10,30 +10,29 @@ namespace BAT.Core.Analyzers.Results
 			get
 			{
 				return (StartedImmediately &&
-						ContainedPauses &&
+						WasContinuous &&
 						WasSingleTrajectory);
 			}
 		}
 
         public decimal Duration { get; set; }
-        public int TaskStartRecordNum { get; set; }
-        public int MovementStartRecordNum { get; set; }
-        public bool StartedImmediately
+		public int TaskStartRecordNum { get; set; }
+		public int? FirstPauseRecordNum { get; set; }
+		public bool WasContinuous
         {
             get
             {
-                return (TaskStartRecordNum == MovementStartRecordNum);
+                return (!FirstPauseRecordNum.HasValue);
             }
-        }
-
-		public int NumOfPauses { get; set; }
-		public bool ContainedPauses
-        {
-            get
-            {
-                return (NumOfPauses != 0);
-            }
-        }
+		}
+		public bool StartedImmediately
+		{
+			get
+			{
+				return (!FirstPauseRecordNum.HasValue ||
+						TaskStartRecordNum != FirstPauseRecordNum.Value);
+			}
+		}
 
 		public decimal AccelXStdDev { get; set; }
 		public decimal AccelYStdDev { get; set; }
@@ -59,13 +58,15 @@ namespace BAT.Core.Analyzers.Results
                 Label,
                 Duration.ToString(),
                 TaskStartRecordNum.ToString(),
-                MovementStartRecordNum.ToString(),
-                NumOfPauses.ToString(),
+                FirstPauseRecordNum.HasValue 
+                    ? FirstPauseRecordNum.Value.ToString() 
+                    : "N/A",
+                FirstPauseRecordNum.ToString(),
                 AccelXStdDev.ToString(),
                 AccelYStdDev.ToString(),
                 AccelZStdDev.ToString(),
                 StartedImmediately.ToString(),
-                ContainedPauses.ToString(),
+                WasContinuous.ToString(),
                 WasSingleTrajectory.ToString(),
                 WasNormal.ToString()
 			};

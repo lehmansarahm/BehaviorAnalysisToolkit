@@ -18,7 +18,7 @@
 					"Source",
                     "Task Length (sec)",
                     "Task Start Record Num",
-                    "Movement Start Record Num",
+                    "First Pause Record Num",
                     "Number of Pauses",
                     "Accel-X Std. Dev",
 					"Accel-Y Std. Dev",

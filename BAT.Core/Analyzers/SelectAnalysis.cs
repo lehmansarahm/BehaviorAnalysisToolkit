@@ -32,15 +32,21 @@ namespace BAT.Core.Analyzers
 		{
             // first, split records according to distinct labels containing the word "select"
             var inputGroups = input.Where(x => x.Label.Contains("select")).GroupBy(x => x.Label);
-            if (inputGroups == null) return new List<SelectResult>();
+            if (inputGroups == null || !inputGroups.Any()) 
+                return new List<SelectResult>();
 
             // next, parse out the parameters we need
-            var pauseCommand = parameters.Where(x => x.Field.Equals(CommandParameters.InstantaneousSpeed)).FirstOrDefault();
-            var pauseThreshold = pauseCommand.Clauses.Where(x => x.Key.Equals(CommandParameters.Threshold)).FirstOrDefault().Value;
-            var pauseWindow = pauseCommand.Clauses.Where(x => x.Key.Equals(CommandParameters.Window)).FirstOrDefault().Value;
+            var pauseCommand = parameters.Where(x => 
+                x.Field.Equals(CommandParameters.InstantaneousSpeed)).FirstOrDefault();
+            var pauseThreshold = decimal.Parse(pauseCommand.Clauses.Where(x => 
+                x.Key.Equals(CommandParameters.Threshold)).FirstOrDefault().Value);
+            var pauseWindow = int.Parse(pauseCommand.Clauses.Where(x => 
+                x.Key.Equals(CommandParameters.Window)).FirstOrDefault().Value);
 
-            var varianceCommand = parameters.Where(x => x.Field.Equals(CommandParameters.Acceleration)).FirstOrDefault();
-            var varianceThreshold = varianceCommand.Clauses.Where(x => x.Key.Equals(CommandParameters.Variance)).FirstOrDefault().Value;
+            var varianceCommand = parameters.Where(x => 
+                x.Field.Equals(CommandParameters.Acceleration)).FirstOrDefault();
+            var varianceThreshold = varianceCommand.Clauses.Where(x => 
+                x.Key.Equals(CommandParameters.Variance)).FirstOrDefault().Value;
 
 			// next, for each group with a distinct label, calculate:
 			//      total task time
@@ -53,15 +59,18 @@ namespace BAT.Core.Analyzers
 			var results = new List<SelectResult>();
             foreach (var inputGroup in inputGroups)
 			{
+                var pauseMatches = 
+                    inputGroup.FindConsecutiveMatch(x => x.InstantSpeed < pauseThreshold, pauseWindow);
                 var result = new SelectResult
                 {
                     Label = inputGroup.First().Label,
-                    Duration = ((inputGroup.Last().RecordNum - 
-                                inputGroup.First().RecordNum) * 
+                    Duration = ((inputGroup.Last().RecordNum -
+                                inputGroup.First().RecordNum) *
                                 Constants.BAT.SAMPLING_PERIOD_IN_MS) / 1000.0M,
-					TaskStartRecordNum = inputGroup.First().RecordNum,
-                    // TODO - MoveStartRecordNum
-                    // TODO - PauseCount
+                    TaskStartRecordNum = inputGroup.First().RecordNum,
+                    FirstPauseRecordNum = pauseMatches.Any() 
+                                                      ? pauseMatches?.First()?.First()?.RecordNum 
+                                                      : null,
 					AccelXStdDev = UtilityService.StandardDeviation(inputGroup.Select(x => x.AccelX)),
 					AccelYStdDev = UtilityService.StandardDeviation(inputGroup.Select(x => x.AccelY)),
 					AccelZStdDev = UtilityService.StandardDeviation(inputGroup.Select(x => x.AccelZ)),
