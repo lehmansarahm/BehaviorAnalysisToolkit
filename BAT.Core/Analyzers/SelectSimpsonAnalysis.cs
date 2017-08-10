@@ -7,8 +7,10 @@ using BAT.Core.Constants;
 
 namespace BAT.Core.Analyzers
 {
-	public class SelectAnalysis : IAnalyzer
+	public class SelectSimpsonAnalysis : IAnalyzer
 	{
+        const int X_INDEX = 0, Y_INDEX = 1, Z_INDEX = 2;
+
 		/// <summary>
 		/// Gets the header.
 		/// </summary>
@@ -48,32 +50,40 @@ namespace BAT.Core.Analyzers
             var varianceThreshold = varianceCommand.Clauses.Where(x => 
                 x.Key.Equals(CommandParameters.Variance)).FirstOrDefault().Value;
 
-			// next, for each group with a distinct label, calculate:
-			//      total task time
-			//      num of first record (when task starts)
-			//      num of first record when user starts moving
-			//      count of significant pauses
-			//      accel-x std. dev.
-			//      accel-y std. dev.
-			//      accel-z std. dev.
 			var results = new List<SelectResult>();
             foreach (var inputGroup in inputGroups)
 			{
-				// generating a result
-				var result = new SelectResult
+                // converting accel to velocity
+                List<decimal>[] velocities =
+                {
+                    MathService.SimpsonsRuleIntegral(inputGroup.Select(x => x.AccelX).ToList()),
+					MathService.SimpsonsRuleIntegral(inputGroup.Select(x => x.AccelY).ToList()),
+					MathService.SimpsonsRuleIntegral(inputGroup.Select(x => x.AccelZ).ToList())
+                };
+
+				// converting velocity to position
+				List<decimal>[] positions =
+				{
+					MathService.SimpsonsRuleIntegral(velocities[X_INDEX]),
+					MathService.SimpsonsRuleIntegral(velocities[Y_INDEX]),
+					MathService.SimpsonsRuleIntegral(velocities[Z_INDEX])
+				};
+
+                // generating a result
+                var result = new SelectResult
                 {
                     Label = inputGroup.First().Label,
                     Duration = ((inputGroup.Last().RecordNum -
                                 inputGroup.First().RecordNum) *
-                                Constants.BAT.SAMPLING_PERIOD_IN_MS) / 1000.0M,
-                    TaskStartRecordNum = inputGroup.First().RecordNum,
-                    Pauses = PauseDurationAnalysis.EvaluatePause(inputGroup, 
-                                                                 CommandParameters.InstantaneousSpeed, 
-                                                                 pauseThreshold, pauseWindow),
-					AccelXStdDev = UtilityService.StandardDeviation(inputGroup.Select(x => x.AccelX)),
-					AccelYStdDev = UtilityService.StandardDeviation(inputGroup.Select(x => x.AccelY)),
-					AccelZStdDev = UtilityService.StandardDeviation(inputGroup.Select(x => x.AccelZ)),
-                    StdDevThreshold = decimal.Parse(varianceThreshold)
+                                Constants.BAT.SAMPLING_PERIOD_IN_SEC),
+					TaskStartRecordNum = inputGroup.First().RecordNum,
+					Pauses = PauseDurationAnalysis.EvaluatePause(inputGroup,
+																 CommandParameters.InstantaneousSpeed,
+																 pauseThreshold, pauseWindow),
+                    AccelXStdDev = positions[X_INDEX].Last(),
+                    AccelYStdDev = positions[Y_INDEX].Last(), 
+                    AccelZStdDev = positions[Z_INDEX].Last(), 
+					StdDevThreshold = decimal.Parse(varianceThreshold)
                 };
                 results.Add(result);
 			}

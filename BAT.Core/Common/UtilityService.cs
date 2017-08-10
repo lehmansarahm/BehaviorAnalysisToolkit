@@ -24,9 +24,7 @@ namespace BAT.Core.Common
 		/// <param name="valueList">Value list.</param>
 		public static decimal Average(IEnumerable<decimal> valueList)
 		{
-			return (valueList != null && valueList.Any())
-				? (valueList.Sum(x => x) / valueList.Count())
-				: 0;
+			return (valueList != null && valueList.Any()) ? valueList.Average() : 0;
 		}
 
 		/// <summary>

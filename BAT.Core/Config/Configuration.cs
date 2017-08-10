@@ -145,62 +145,73 @@ namespace BAT.Core.Config
         /// <returns><c>true</c>, if filters was run, <c>false</c> otherwise.</returns>
         public bool RunFilters()
 		{
+			bool success = true;
 			if (!Filters.Any())
 			{
 				LogManager.Info("No filter operations configured.", this);
-				return true;
+                return success;
 			}
 
-			bool success = false;
             if (Filters?.Count > 0 && InputData?.Keys?.Count >= 1)
 			{
 				var filteredData = new Dictionary<string, IEnumerable<SensorReading>>();
                 foreach (var filterCommand in Filters)
                 {
                     var filter = FilterManager.GetFilter(filterCommand.Name);
-					if (filter == null) continue;
+                    if (filter == null)
+                    {
+                        success = false;
+                        continue;
+                    }
 
-					// Sanity checking ...
+                    // Sanity checking ...
                     LogManager.Info($"Running filter operation:\n\t{filter}", this);
 
-                    // Data processing ...
-                    foreach (var key in InputData.Keys)
-					{
-						var thresholdData = 
-                            new Dictionary<string, IEnumerable<KeyValuePair<string, decimal>>>();
-                            
-						IEnumerable<PhaseResult<SensorReading>> filteredResultSets = null;
-                        if (filterCommand.Parameters != null)
-                            filteredResultSets = filter.Filter(key, InputData[key], 
-                                                               filterCommand.Parameters);
+                    // Processing the data for the phase...
+                    if (filterCommand.Parameters != null)
+                    {
+                        // retrieving the input for the phase
+                        var phaseData = new List<PhaseData<SensorReading>>();
+                        foreach (var key in InputData.Keys)
+                        {
+                            phaseData.Add(new PhaseData<SensorReading>
+                            {
+                                Name = key,
+                                Data = InputData[key].ToList()
+                            });
+                        }
 
-						if (filter is ThresholdCalibrationFilter calibFilter)
-						{
-							// list of calibrated thresholds for various fields
-							// ONLY APPLICABLE TO THIS INDIVIDUAL INPUT DATA SET!!
-							var thresholdValues = calibFilter.CalibratedThresholds;
-							thresholdData[key] = thresholdValues;
-						}
-                        else if (filteredResultSets != null && filteredResultSets.Any())
+	                    // INPUT = COMMANDS, SET OF FILE NAMES AND DATA VALUES
+	                    // OUTPUT = SET OF FILE NAMES AND NEW DATA VALUES
+
+                        var filteredResultSets = filter.Filter(new PhaseInput<SensorReading>
+                        {
+                            Input = phaseData,
+                            Parameters = filterCommand.Parameters
+						});
+
+						// list of calibrated thresholds for various fields
+						// ONLY APPLICABLE TO THIS INDIVIDUAL INPUT DATA SET!!
+						/*if (filter is ThresholdCalibrationFilter calibFilter)
+                        {
+                            var thresholdValues = calibFilter.CalibratedThresholds;
+                            CalibrationData.Add(phaseInput.Name, thresholdValues);
+                        }*/
+
+						if (filteredResultSets != null && filteredResultSets.Any())
                         {
                             foreach (var filterResult in filteredResultSets)
                             {
-								var filteredValues = filterResult.Data;
-								var newFilename = FilterManager.GetFilterFilename(key, filterResult.Name);
-								filteredData[newFilename] = filteredValues;
-
+                                filteredData[filterResult.Name] = filterResult.Data;
                                 if (WriteOutputFile)
                                     CsvFileWriter.WriteResultsToFile
-                                                 (new string[] { OutputDirs.Filters, filterCommand.Name },
-                                                  newFilename, filter.GetHeaderCsv(), filteredValues);
-							}
-
-							success = true;
-						}
-
-                        foreach (var threshold in thresholdData)
-                            CalibrationData.Add(threshold.Key, threshold.Value);
+                                         (new string[] { OutputDirs.Filters, filterCommand.Name },
+                                          filterResult.Name, filter.HeaderCsv, filterResult.Data);
+                            }
+                        }
+                        else success = false;
                     }
+                    else success = false;
                 }
 
                 InputData = filteredData;
@@ -366,5 +377,29 @@ namespace BAT.Core.Config
                 return new Configuration();
             }
         }
+
+		bool EvaluateResults(IEnumerable<PhaseData<SensorReading>> filteredResultSets,
+							 Dictionary<string, IEnumerable<SensorReading>> filteredData,
+							 string inputName, string commandName, string headerCSV)
+		{
+			bool success = false;
+			if (filteredResultSets != null && filteredResultSets.Any())
+			{
+				foreach (var filterResult in filteredResultSets)
+				{
+					var newFilename =
+						FilterManager.GetFilterFilename(inputName, filterResult.Name);
+					filteredData[newFilename] = filterResult.Data;
+
+					if (WriteOutputFile)
+						CsvFileWriter.WriteResultsToFile
+									 (new string[] { OutputDirs.Filters, commandName },
+									  newFilename, headerCSV, filterResult.Data);
+				}
+
+				success = true;
+			}
+			return success;
+		}
     }
 }

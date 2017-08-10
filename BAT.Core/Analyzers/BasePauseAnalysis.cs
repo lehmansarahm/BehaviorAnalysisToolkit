@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;

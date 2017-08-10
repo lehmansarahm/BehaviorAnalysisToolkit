@@ -10,16 +10,16 @@ namespace BAT.Core.Filters
     public class ThresholdCalibrationFilter : IFilter
 	{
 		/// <summary>
-		/// Gets the header.
+		/// Gets the get header.
 		/// </summary>
-		/// <returns>The header.</returns>
-        public string[] GetHeader() { return CalibrationResult.Header; }
+		/// <value>The get header.</value>
+        public string[] Header => CalibrationResult.Header;
 
 		/// <summary>
-		/// Gets the header csv.
+		/// Gets the get header csv.
 		/// </summary>
-		/// <returns>The header csv.</returns>
-		public string GetHeaderCsv() { return CalibrationResult.HeaderCsv; }
+		/// <value>The get header csv.</value>
+		public string HeaderCsv => CalibrationResult.HeaderCsv;
 
 		/// <summary>
 		/// Gets or sets the calibrations.
@@ -27,50 +27,51 @@ namespace BAT.Core.Filters
 		/// <value>The calibrations.</value>
 		public List<KeyValuePair<string, decimal>> CalibratedThresholds { get; set; }
 
-        /// <summary>
-        /// Filter the specified input and parameters.
-        /// </summary>
-        /// <returns>The filter.</returns>
-        /// <param name="input">Input.</param>
-        /// <param name="parameters">Parameters.</param>
-        public IEnumerable<PhaseResult<SensorReading>> Filter(string sourceUser,
-                                                              IEnumerable<SensorReading> input,
-                                                              IEnumerable<Parameter> parameters)
+		/// <summary>
+		/// Filter the specified phaseInput.
+		/// </summary>
+		/// <returns>The filter.</returns>
+		/// <param name="phaseInput">Phase input.</param>
+		public IEnumerable<PhaseData<SensorReading>> Filter(PhaseInput<SensorReading> phaseInput)
 		{
 			CalibratedThresholds = new List<KeyValuePair<string, decimal>>();
             var calibrationResults = new List<CalibrationResult>();
 
-            foreach (var param in parameters)
+            foreach (var input in phaseInput.Input)
 			{
-                var calibrationField = typeof(SensorReading).GetProperty(param.Field);
-                var fieldTypeCode = Type.GetTypeCode(calibrationField.PropertyType);
-				var calibStep = param.GetClauseValue(CommandParameters.Step);
-                var calibPercentage = param.GetClauseValue(CommandParameters.Percentage);
-
-                if (fieldTypeCode == TypeCode.Decimal && calibStep != null && calibPercentage != null)
+				foreach (var param in phaseInput.Parameters)
 				{
-					var calibRecords = input.Where(x => x.Label.Contains(calibStep)).ToList();
-                    var calibVals = calibRecords.Select(x => (decimal)calibrationField.GetValue(x, null)).ToList();
-					var avgVal = UtilityService.Average(calibVals);
-                    var threshVal = avgVal * (decimal.Parse(calibPercentage) / 100.0M);
+					var calibrationField = typeof(SensorReading).GetProperty(param.Field);
+					var fieldTypeCode = Type.GetTypeCode(calibrationField.PropertyType);
+					var calibStep = param.GetClauseValue(CommandParameters.Step);
+					var calibPercentage = param.GetClauseValue(CommandParameters.Percentage);
 
-                    CalibratedThresholds.Add(new KeyValuePair<string, decimal>(param.Field,threshVal));
-                    calibrationResults.Add(new CalibrationResult{
-                        Source = sourceUser,
-                        AvgVal = avgVal,
-                        ThresholdVal = threshVal
-                    });
+					if (fieldTypeCode == TypeCode.Decimal && calibStep != null && calibPercentage != null)
+					{
+                        var calibRecords = input.Data.Where(x => x.Label.Contains(calibStep)).ToList();
+						var calibVals = calibRecords.Select(x => (decimal)calibrationField.GetValue(x, null)).ToList();
+						var avgVal = UtilityService.Average(calibVals);
+						var threshVal = avgVal * (decimal.Parse(calibPercentage) / 100.0M);
+
+						CalibratedThresholds.Add(new KeyValuePair<string, decimal>(param.Field, threshVal));
+						calibrationResults.Add(new CalibrationResult
+						{
+							Source = input.Name,
+							AvgVal = avgVal,
+							ThresholdVal = threshVal
+						});
+					}
 				}
-            }
 
-            // dump own results to file
-            CsvFileWriter.WriteResultsToFile
-                         (new string[] { OutputDirs.Filters, "ThresholdCalibration" },
-                          sourceUser, GetHeaderCsv(), calibrationResults);
+				// dump own results to file
+				CsvFileWriter.WriteResultsToFile
+							 (new string[] { OutputDirs.Filters, "ThresholdCalibration" },
+                              input.Name, HeaderCsv, calibrationResults);
+            }
 
             // return empty list ... we don't actually want to 
             // affect the post-phase data set
-            return new List<PhaseResult<SensorReading>>();
+            return new List<PhaseData<SensorReading>>();
         }
 
         /// <summary>

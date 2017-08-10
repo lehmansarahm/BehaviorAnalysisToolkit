@@ -35,6 +35,9 @@
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="MathNet.Numerics">
+      <HintPath>..\packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -58,9 +61,8 @@
     <Compile Include="Summarizers\PauseBaseSummarizer.cs" />
     <Compile Include="Summarizers\UserResultSummarizer.cs" />
     <Compile Include="Transformers\NormalizationTransformer.cs" />
-    <Compile Include="Transformers\LabelCleanupTransformer.cs" />
     <Compile Include="Config\Parameter.cs" />
-    <Compile Include="Common\PhaseResult.cs" />
+    <Compile Include="Common\PhaseData.cs" />
     <Compile Include="Analyzers\Results\PauseResult.cs" />
     <Compile Include="Analyzers\Results\TaskTimeResult.cs" />
     <Compile Include="Common\UtilityService.cs" />
@@ -79,7 +81,7 @@
     <Compile Include="Analyzers\ReachRetractAnalysis.cs" />
     <Compile Include="Analyzers\Results\RetractResult.cs" />
     <Compile Include="Summarizers\ReachRetractSummarizer.cs" />
-    <Compile Include="Analyzers\SelectAnalysis.cs" />
+    <Compile Include="Analyzers\SelectSimpsonAnalysis.cs" />
     <Compile Include="Constants\OutputDirs.cs" />
     <Compile Include="Constants\InputFile.cs" />
     <Compile Include="Constants\PauseOutput.cs" />
@@ -91,6 +93,10 @@
     <Compile Include="Analyzers\Results\SelectResult.cs" />
     <Compile Include="Summarizers\SelectSummarizer.cs" />
     <Compile Include="Common\Extensions.cs" />
+    <Compile Include="Analyzers\SelectAnalysis.cs" />
+    <Compile Include="Common\MathService.cs" />
+    <Compile Include="Transformers\LabelCleanupTransformer.cs" />
+    <Compile Include="Common\PhaseInput.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

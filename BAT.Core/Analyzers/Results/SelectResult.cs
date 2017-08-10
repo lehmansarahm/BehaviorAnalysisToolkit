@@ -1,4 +1,6 @@
-﻿using BAT.Core.Common;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BAT.Core.Common;
 
 namespace BAT.Core.Analyzers.Results
 {
@@ -17,20 +19,24 @@ namespace BAT.Core.Analyzers.Results
 
         public decimal Duration { get; set; }
 		public int TaskStartRecordNum { get; set; }
-		public int? FirstPauseRecordNum { get; set; }
-		public bool WasContinuous
-        {
-            get
-            {
-                return (!FirstPauseRecordNum.HasValue);
-            }
-		}
+        public IEnumerable<PauseResult> Pauses { get; set; }
 		public bool StartedImmediately
 		{
 			get
 			{
-				return (!FirstPauseRecordNum.HasValue ||
-						TaskStartRecordNum != FirstPauseRecordNum.Value);
+                var firstPause = Pauses.FirstOrDefault();
+                if (firstPause == null) return true;
+                return (firstPause.StartNum != TaskStartRecordNum);
+			}
+		}
+		public bool WasContinuous
+		{
+			get
+			{
+                // either there are no pauses at all, or there is a single pause 
+                // and it occurred right at the beginning (all movement after 
+                // that point was continuous)
+                return (!Pauses.Any() || (!StartedImmediately && Pauses?.Count() == 1));
 			}
 		}
 
@@ -54,14 +60,12 @@ namespace BAT.Core.Analyzers.Results
         /// <returns>The csv.</returns>
         public string ToCsv()
 		{
-			string[] props = {
+            string[] props = {
                 Label,
                 Duration.ToString(),
                 TaskStartRecordNum.ToString(),
-                FirstPauseRecordNum.HasValue 
-                    ? FirstPauseRecordNum.Value.ToString() 
-                    : "N/A",
-                FirstPauseRecordNum.ToString(),
+                Pauses?.Count().ToString() ?? "0",                  // pause count
+                Pauses?.Select(x => x.Duration)?.Sum().ToString(),  // time spent paused
                 AccelXStdDev.ToString(),
                 AccelYStdDev.ToString(),
                 AccelZStdDev.ToString(),

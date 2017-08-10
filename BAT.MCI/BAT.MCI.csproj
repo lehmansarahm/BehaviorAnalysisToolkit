@@ -54,12 +54,6 @@
     <None Include="SupportFiles\OA5-Lunch.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="SupportFiles\ReachAndGrabStraight.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="SupportFiles\ReachAndNoTouchStraight.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SupportFiles\" />
@@ -71,6 +65,7 @@
       <MergeAssemblies Include="$(OutputPath)\BAT.Core.dll" />
       <MergeAssemblies Include="$(OutputPath)\log4net.dll" />
       <MergeAssemblies Include="$(OutputPath)\Newtonsoft.Json.dll" />
+      <MergeAssemblies Include="$(OutputPath)\MathNet.Numerics.dll" />
     </ItemGroup>
     <PropertyGroup>
       <OutputAssembly>$(OutputPath)\MCIAnalysisToolkit.exe</OutputAssembly>

@@ -37,14 +37,16 @@ namespace BAT.Core.Config
         }
 
         /// <summary>
-        /// Gets the labeled filename.
+        /// Gets the filter filename.
         /// </summary>
-        /// <returns>The labeled filename.</returns>
-        /// <param name="key">Key.</param>
+        /// <returns>The filter filename.</returns>
         /// <param name="id">Identifier.</param>
-        public static string GetFilterFilename(string key, string id)
+        /// <param name="filterKey">Key.</param>
+        public static string GetFilterFilename(string id, string filterKey)
         {
-            return $"{key}_{id}{Constants.BAT.DEFAULT_INPUT_FILE_EXT}";
+            if (!String.IsNullOrEmpty(filterKey) && !filterKey.Equals(id))
+                return $"{id}_{filterKey}{Constants.BAT.DEFAULT_INPUT_FILE_EXT}";
+            return $"{id}{Constants.BAT.DEFAULT_INPUT_FILE_EXT}";
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using BAT.Core.Common;
 using BAT.Core.Constants;
 
@@ -13,29 +14,55 @@ namespace BAT.Core.Config
         public List<KeyValuePair<string, string>> Clauses { get; set; }
 
         /// <summary>
+        /// Gets the filter value.
+        /// </summary>
+        /// <returns>The filter value.</returns>
+        /// <param name="filterField">Filter field.</param>
+        /// <param name="input">Input.</param>
+        public static string GetFilterValue(PropertyInfo filterField, SensorReading input)
+        {
+            return filterField.GetValue(input, null).ToString();
+        }
+
+        /// <summary>
+        /// Matcheses the clause.
+        /// </summary>
+        /// <returns><c>true</c>, if clause was matchesed, <c>false</c> otherwise.</returns>
+        /// <param name="filterField">Filter field.</param>
+        /// <param name="input">Input.</param>
+        public bool MatchesClause(PropertyInfo filterField, SensorReading input)
+        {
+            var filterValue = GetFilterValue(filterField, input);
+            return MatchesClause(filterValue);
+        }
+
+        /// <summary>
         /// Matcheses the clause.
         /// </summary>
         /// <returns><c>true</c>, if clause was matchesed, <c>false</c> otherwise.</returns>
         /// <param name="source">Input value.</param>
         public bool MatchesClause(string source)
         {
-            bool isMatch = true;
+            bool isMatch = true, isLocalMatch = false;
 			foreach (var clause in Clauses)
 			{
 				switch (clause.Key)
 				{
 					case CommandParameters.Contains:
-                        isMatch = (Constants.BAT.CULTURE
-                                   .CompareInfo.IndexOf(source, clause.Value,
-                                                        CompareOptions.IgnoreCase) >= 0);
+                        isLocalMatch = (Constants.BAT.CULTURE
+                                        .CompareInfo.IndexOf(source, clause.Value,
+                                                             CompareOptions.IgnoreCase) >= 0);
+                        isMatch &= isLocalMatch;    // isMatch = true if both are true
 						break;
 					case CommandParameters.EqualTo:
-						isMatch = (source.Equals(clause.Key, 
-                                                 StringComparison.InvariantCultureIgnoreCase));
+						isLocalMatch = (source.Equals(clause.Key,
+													  StringComparison.InvariantCultureIgnoreCase));
+						isMatch &= isLocalMatch;
 						break;
 					case CommandParameters.NotEqualTo:
-						isMatch = !(source.Equals(clause.Key, 
-                                                  StringComparison.InvariantCultureIgnoreCase));
+						isLocalMatch = !(source.Equals(clause.Key,
+													   StringComparison.InvariantCultureIgnoreCase));
+						isMatch &= isLocalMatch;
 						break;
 				}
 			}

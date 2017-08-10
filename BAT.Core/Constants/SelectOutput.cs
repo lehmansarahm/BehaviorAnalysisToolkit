@@ -18,13 +18,13 @@
 					"Source",
                     "Task Length (sec)",
                     "Task Start Record Num",
-                    "First Pause Record Num",
-                    "Number of Pauses",
+                    "Pause Count",
+                    "Time Spent Paused",
                     "Accel-X Std. Dev",
 					"Accel-Y Std. Dev",
 					"Accel-Z Std. Dev",
 					"Immediate Start",
-                    "Contained Pauses",
+                    "Was Continuous",
                     "Was Single Trajectory",
 					"Was Normal"
 				};
@@ -85,8 +85,8 @@
                     "Avg Task Time (ALL)",
 					"Avg Min Task Time (ALL)",
 					"Avg Max Task Time (ALL)",
-					"Normal Select Total",
-					"Abnormal Select Total"
+					"Avg Normal Select Count",
+					"Avg Abnormal Select Count"
 				};
 			}
 		}

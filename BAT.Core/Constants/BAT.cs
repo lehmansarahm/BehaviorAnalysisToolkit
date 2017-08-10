@@ -16,6 +16,7 @@ namespace BAT.Core.Constants
 
 		// milliseconds ... approx 29 times per second
 		public const decimal SAMPLING_PERIOD_IN_MS = 34.4827586207M;
+        public const decimal SAMPLING_PERIOD_IN_SEC = (SAMPLING_PERIOD_IN_MS / 1000.0M);
 		public const string EMPTY = "";
     }
 }

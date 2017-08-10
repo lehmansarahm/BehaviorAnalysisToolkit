@@ -2,11 +2,11 @@
   "inputs": [ { "username": "OA14", "source": "SupportFiles" } ],
   "transformers": [ "LinearAcceleration", "LabelCleanup", "Normalization", "Smoothing" ],
   "filters": [
-    { "Name": "Activity",
+    { "Name": "Completion",
       "Parameters": [
         { "Field": "Label",
           "Clauses": [
-            { "Key": "Contains", "Value": "Select" },
+            { "Key": "Percentage", "Value": "94" },
             { "Key": "Split", "Value": "true" }
           ] }
       ] }
