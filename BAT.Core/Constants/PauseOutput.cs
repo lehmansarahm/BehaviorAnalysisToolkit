@@ -70,6 +70,7 @@
 			{
 				return new string[]
 				{
+                    "",
 					"Total Number of Pauses",
 					"Total Time Paused (sec)",
 					"Total Average Pause Duration (sec)"

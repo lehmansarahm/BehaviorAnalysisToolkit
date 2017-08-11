@@ -85,8 +85,12 @@ namespace BAT.Core.Common
         public decimal InstantSpeed
         { 
             get
-            {
-                return AccelMag * (Constants.BAT.SAMPLING_PERIOD_IN_MS / 1000.0M);
+			{
+				if (HasValidAccelVector)
+                    return (decimal)Math.Sqrt(Math.Pow((double)(AccelX * Constants.BAT.SAMPLING_PERIOD_IN_SEC), 2)
+											  + Math.Pow((double)(AccelY * Constants.BAT.SAMPLING_PERIOD_IN_SEC), 2)
+											  + Math.Pow((double)(AccelZ * Constants.BAT.SAMPLING_PERIOD_IN_SEC), 2));
+				return 0.0M;
             }
         }
 
@@ -226,8 +230,8 @@ namespace BAT.Core.Common
 			{
 				try
 				{
-                    if (!contentLine[0].Equals(Header[0]))
-					    sensorReadings.Add(new SensorReading(contentLine));
+					if (!contentLine[0].Equals(Header[0]))
+						sensorReadings.Add(new SensorReading(contentLine));
 				}
 				catch (FormatException ex)
 				{

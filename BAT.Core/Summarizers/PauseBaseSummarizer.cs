@@ -35,6 +35,7 @@ namespace BAT.Core.Summarizers
 		public string[] GetFooterValues()
 		{
 			return new string[] {
+                "",
                 $"{durations.Count}",
 				$"{UtilityService.Total(durations)}",
 				$"{UtilityService.Average(durations)}"

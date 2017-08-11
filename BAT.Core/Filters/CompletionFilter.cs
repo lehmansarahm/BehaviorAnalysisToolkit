@@ -53,7 +53,7 @@ namespace BAT.Core.Filters
 
 			// double check ...
 			LogManager.Info("The following distinct field values were found for Completion Filter:\n\t" +
-			    string.Join(", ", distinctValues), this);
+			    string.Join("\n\t", distinctValues), this);
 
 			// proceed with results gathering ...
 			var results = new List<PhaseData<SensorReading>>();
