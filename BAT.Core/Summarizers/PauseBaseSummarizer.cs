@@ -35,8 +35,8 @@ namespace BAT.Core.Summarizers
         public string[] FooterValues => new string[] {
                     "",
                     $"{durations.Count}",
-                    $"{UtilityService.Total(durations)}",
-                    $"{UtilityService.Average(durations)}"
+                    $"{MathService.Total(durations)}",
+                    $"{MathService.Average(durations)}"
                 };
 
 		/// <summary>
@@ -76,8 +76,8 @@ namespace BAT.Core.Summarizers
                     results.Add(new string[] {
                         key,                                            // source
                         $"{sourceDurations.Count}",                     // num of pauses
-                        $"{UtilityService.Total(sourceDurations)}",     // total time paused
-                        $"{UtilityService.Average(sourceDurations)}"    // average time paused
+                        $"{MathService.Total(sourceDurations)}",     // total time paused
+                        $"{MathService.Average(sourceDurations)}"    // average time paused
                     });
                 }
 			}

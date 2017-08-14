@@ -33,9 +33,9 @@ namespace BAT.Core.Summarizers
         /// </summary>
         /// <returns>The footer values.</returns>
         public string[] FooterValues => new string[] {
-                $"{UtilityService.Total(durations)}",
-                $"{UtilityService.Average(durations)}",
-                $"{UtilityService.StandardDeviation(durations)}"
+                $"{MathService.Total(durations)}",
+                $"{MathService.Average(durations)}",
+                $"{MathService.StandardDeviation(durations)}"
             };
 
 		/// <summary>

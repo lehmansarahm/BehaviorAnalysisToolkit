@@ -6,59 +6,9 @@
     }
   ],
   "transformers": [ "LinearAcceleration", "LabelCleanup", "Smoothing" ],
-  "filters": [
-    {
-      "Name": "Activity",
-      "Parameters": [
-        {
-          "Field": "Label",
-          "Clauses": [
-            {
-              "Key": "Split",
-              "Value": "false"
-            }
-          ]
-        }
-      ]
-    }
-  ],
   "analyzers": [
     {
-      "Name": "ForwardReach",
-      "Parameters": [
-        {
-          "Field": "Acceleration",
-          "Clauses": [
-            {
-              "Key": "Window",
-              "Value": "75"
-            },
-            {
-              "Key": "Margin",
-              "Value": "5"
-            }
-          ]
-        },
-        {
-          "Field": "AccelX",
-          "Clauses": [
-            {
-              "Key": "Threshold",
-              "Value": "0.1"
-            }
-          ]
-        },
-        {
-          "Field": "AccelY",
-          "Clauses": [
-            {
-              "Key": "Threshold",
-              "Value": "0.1"
-            }
-          ]
-        }
-      ]
+      "Name": "MLDataPrep"
     }
-  ],
-  "summarizers": [ "ForwardReach" ]
+  ]
 }

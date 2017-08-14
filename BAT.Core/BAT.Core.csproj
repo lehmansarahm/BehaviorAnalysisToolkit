@@ -102,6 +102,9 @@
     <Compile Include="Summarizers\ForwardReachSummarizer.cs" />
     <Compile Include="Analyzers\Results\ForwardReachResult.cs" />
     <Compile Include="Constants\ForwardReachOutput.cs" />
+    <Compile Include="Analyzers\MLDataPrepAnalysis.cs" />
+    <Compile Include="Analyzers\Results\MLDataResult.cs" />
+    <Compile Include="Constants\MLDataOutput.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

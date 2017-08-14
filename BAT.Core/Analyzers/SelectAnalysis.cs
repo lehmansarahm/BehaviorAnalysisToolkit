@@ -70,9 +70,9 @@ namespace BAT.Core.Analyzers
                     Pauses = PauseDurationAnalysis.EvaluatePause(inputGroup, 
                                                                  CommandParameters.InstantaneousSpeed, 
                                                                  pauseThreshold, pauseWindow),
-					AccelXStdDev = UtilityService.StandardDeviation(inputGroup.Select(x => x.AccelX)),
-					AccelYStdDev = UtilityService.StandardDeviation(inputGroup.Select(x => x.AccelY)),
-					AccelZStdDev = UtilityService.StandardDeviation(inputGroup.Select(x => x.AccelZ)),
+                    AccelXStdDev = MathService.StandardDeviation(inputGroup.Select(x => x.AccelX)),
+					AccelYStdDev = MathService.StandardDeviation(inputGroup.Select(x => x.AccelY)),
+					AccelZStdDev = MathService.StandardDeviation(inputGroup.Select(x => x.AccelZ)),
                     StdDevThreshold = decimal.Parse(varianceThreshold)
                 };
                 results.Add(result);

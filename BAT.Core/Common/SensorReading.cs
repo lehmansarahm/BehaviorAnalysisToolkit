@@ -71,9 +71,7 @@ namespace BAT.Core.Common
             get
 			{
                 if (HasValidAccelVector)
-                    return (decimal)Math.Sqrt(Math.Pow((double)AccelX, 2)
-                                              + Math.Pow((double)AccelY, 2)
-                                              + Math.Pow((double)AccelZ, 2));
+                    return MathService.GetMagnitude(AccelX, AccelY, AccelZ);
                 return 0.0M;
             }
         }

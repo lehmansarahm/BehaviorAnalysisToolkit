@@ -50,7 +50,7 @@ namespace BAT.Core.Filters
 					{
                         var calibRecords = input.Data.Where(x => x.Label.Contains(calibStep)).ToList();
 						var calibVals = calibRecords.Select(x => (decimal)calibrationField.GetValue(x, null)).ToList();
-						var avgVal = UtilityService.Average(calibVals);
+						var avgVal = MathService.Average(calibVals);
 						var threshVal = avgVal * (decimal.Parse(calibPercentage) / 100.0M);
 
 						CalibratedThresholds.Add(new KeyValuePair<string, decimal>(param.Field, threshVal));
