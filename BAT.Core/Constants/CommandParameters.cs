@@ -9,12 +9,15 @@
 		//      FIELDS
 		// ---------------------------------------------------------------------
 		public const string Acceleration = "Acceleration";
+		public const string AccelX = "AccelX";
+		public const string AccelY = "AccelY";
 		public const string InstantaneousSpeed = "InstantSpeed";
 		public const string Label = "Label";
 
-		// ---------------------------------------------------------------------
-		//      CLAUSES
-		// ---------------------------------------------------------------------
+        // ---------------------------------------------------------------------
+        //      CLAUSES
+        // ---------------------------------------------------------------------
+        public const string Margin = "Margin";
 		public const string Percentage = "Percentage";
 		public const string Step = "Step";
 		public const string Threshold = "Threshold";
@@ -25,6 +28,7 @@
 		//      COMPARATORS
 		// ---------------------------------------------------------------------
 		public const string Contains = "Contains";
+        public const string DoesNotContain = "DoesNotContain";
 		public const string EqualTo = "EqualTo";
 		public const string GreaterThan = "GreaterThan";
 		public const string LessThan = "LessThan";

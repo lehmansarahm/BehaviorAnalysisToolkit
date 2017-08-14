@@ -14,13 +14,13 @@ namespace BAT.Core.Analyzers
 		/// Gets the header.
 		/// </summary>
 		/// <returns>The header.</returns>
-        public string[] GetHeader() { return ReachRetractOutput.ResultHeader; }
+		public string[] Header => ReachRetractOutput.ResultHeader;
 
 		/// <summary>
 		/// Gets the header csv.
 		/// </summary>
 		/// <returns>The header csv.</returns>
-		public string GetHeaderCsv() { return ReachRetractOutput.ResultHeaderCsv; }
+		public string HeaderCsv => ReachRetractOutput.ResultHeaderCsv;
 
         /// <summary>
         /// Analyze the specified input and parameters.

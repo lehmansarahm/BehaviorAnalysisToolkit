@@ -97,6 +97,11 @@
     <Compile Include="Common\MathService.cs" />
     <Compile Include="Transformers\LabelCleanupTransformer.cs" />
     <Compile Include="Common\PhaseInput.cs" />
+    <Compile Include="Analyzers\ForwardReachAnalysis.cs" />
+    <Compile Include="Common\MotionShift.cs" />
+    <Compile Include="Summarizers\ForwardReachSummarizer.cs" />
+    <Compile Include="Analyzers\Results\ForwardReachResult.cs" />
+    <Compile Include="Constants\ForwardReachOutput.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

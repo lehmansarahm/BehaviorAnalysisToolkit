@@ -44,28 +44,34 @@ namespace BAT.Core.Config
         public bool MatchesClause(string source)
         {
             bool isMatch = true, isLocalMatch = false;
-			foreach (var clause in Clauses)
-			{
-				switch (clause.Key)
+            foreach (var clause in Clauses)
+            {
+                switch (clause.Key)
 				{
 					case CommandParameters.Contains:
-                        isLocalMatch = (Constants.BAT.CULTURE
-                                        .CompareInfo.IndexOf(source, clause.Value,
-                                                             CompareOptions.IgnoreCase) >= 0);
-                        isMatch &= isLocalMatch;    // isMatch = true if both are true
+						isLocalMatch = (Constants.BAT.CULTURE
+										.CompareInfo.IndexOf(source, clause.Value,
+															 CompareOptions.IgnoreCase) >= 0);
+						isMatch &= isLocalMatch;    // isMatch = true if both are true
 						break;
-					case CommandParameters.EqualTo:
-						isLocalMatch = (source.Equals(clause.Key,
-													  StringComparison.InvariantCultureIgnoreCase));
-						isMatch &= isLocalMatch;
+                    case CommandParameters.DoesNotContain:
+						isLocalMatch = (Constants.BAT.CULTURE
+										.CompareInfo.IndexOf(source, clause.Value,
+															 CompareOptions.IgnoreCase) < 0);
+						isMatch &= isLocalMatch;    // isMatch = true if both are true
 						break;
-					case CommandParameters.NotEqualTo:
-						isLocalMatch = !(source.Equals(clause.Key,
-													   StringComparison.InvariantCultureIgnoreCase));
-						isMatch &= isLocalMatch;
-						break;
-				}
-			}
+                    case CommandParameters.EqualTo:
+                        isLocalMatch = (source.Equals(clause.Key,
+                                                      StringComparison.InvariantCultureIgnoreCase));
+                        isMatch &= isLocalMatch;
+                        break;
+                    case CommandParameters.NotEqualTo:
+                        isLocalMatch = !(source.Equals(clause.Key,
+                                                       StringComparison.InvariantCultureIgnoreCase));
+                        isMatch &= isLocalMatch;
+                        break;
+                }
+            }
 
             return isMatch;
         }
@@ -89,8 +95,7 @@ namespace BAT.Core.Config
         /// <param name="clauseKey">Clause key.</param>
         public string GetClauseValue(string clauseKey)
         {
-            var clauseValue = Clauses.Where(x => x.Key.Equals(clauseKey, StringComparison.InvariantCultureIgnoreCase))
-                                     .FirstOrDefault().Value;
+            var clauseValue = Clauses.FirstOrDefault(x => x.Key.Equals(clauseKey, StringComparison.InvariantCultureIgnoreCase)).Value;
             return clauseValue;
         }
     }

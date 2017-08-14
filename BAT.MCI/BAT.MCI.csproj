@@ -54,6 +54,9 @@
     <None Include="SupportFiles\OA5-Lunch.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="SupportFiles\Reach3D.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SupportFiles\" />

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
@@ -10,17 +9,17 @@ namespace BAT.Core.Analyzers
 {
     public abstract class BasePauseAnalysis : IAnalyzer
 	{
-		/// <summary>
-		/// Gets the header.
-		/// </summary>
-		/// <returns>The header.</returns>
-		public string[] GetHeader() { return PauseOutput.ResultHeader; }
+        /// <summary>
+        /// Gets the header.
+        /// </summary>
+        /// <returns>The header.</returns>
+        public string[] Header => PauseOutput.ResultHeader;
 
 		/// <summary>
 		/// Gets the header csv.
 		/// </summary>
 		/// <returns>The header csv.</returns>
-		public string GetHeaderCsv() { return PauseOutput.ResultHeaderCsv; }
+        public string HeaderCsv => PauseOutput.ResultHeaderCsv;
 
         /// <summary>
         /// Analyze the specified input and parameters.

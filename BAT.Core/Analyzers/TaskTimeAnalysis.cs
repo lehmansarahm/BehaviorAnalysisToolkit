@@ -13,13 +13,13 @@ namespace BAT.Core.Analyzers
 		/// Gets the header.
 		/// </summary>
 		/// <returns>The header.</returns>
-        public string[] GetHeader() { return TaskTimeOutput.ResultHeader; }
+        public string[] Header => TaskTimeOutput.ResultHeader;
 
 		/// <summary>
 		/// Gets the header csv.
 		/// </summary>
 		/// <returns>The header csv.</returns>
-		public string GetHeaderCsv() { return TaskTimeOutput.ResultHeaderCsv; }
+        public string HeaderCsv => TaskTimeOutput.ResultHeaderCsv;
 
         /// <summary>
         /// Analyze the specified input and parameters.

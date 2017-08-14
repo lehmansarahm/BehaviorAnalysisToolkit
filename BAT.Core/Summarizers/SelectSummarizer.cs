@@ -11,46 +11,53 @@ namespace BAT.Core.Summarizers
 		List<decimal> avgDurs, minDurs, maxDurs;
 		List<int> taskCounts, normalCounts, abnormalCounts;
 
-		/// <summary>
-		/// Gets the header.
-		/// </summary>
-		/// <returns>The header.</returns>
-        public string[] GetHeader() { return SelectOutput.SummaryHeader; }
+        /// <summary>
+        /// Gets the header.
+        /// </summary>
+        /// <returns>The header.</returns>
+        public string[] Header => SelectOutput.SummaryHeader;
 
-		/// <summary>
-		/// Gets the header csv.
-		/// </summary>
-		/// <returns>The header csv.</returns>
-		public string GetHeaderCsv() { return SelectOutput.SummaryHeaderCsv; }
+        /// <summary>
+        /// Gets the header csv.
+        /// </summary>
+        /// <returns>The header csv.</returns>
+        public string HeaderCsv => SelectOutput.SummaryHeaderCsv;
 
         /// <summary>
         /// Gets the footer labels.
         /// </summary>
         /// <returns>The footer labels.</returns>
-        public string[] GetFooterLabels() { return SelectOutput.SummaryFooter; }
+        public string[] FooterLabels => SelectOutput.SummaryFooter;
 
         /// <summary>
         /// Gets the footer values.
         /// </summary>
         /// <returns>The footer values.</returns>
-        public string[] GetFooterValues()
-		{
-			return new string[] {
-				"",
-				taskCounts.Any() ? taskCounts.Average().ToString() : "N/A",
-				avgDurs.Any() ? avgDurs.Average().ToString() : "N/A",
-				minDurs.Any() ? minDurs.Average().ToString() : "N/A",
-				maxDurs.Any() ? maxDurs.Average().ToString() : "N/A",
-				normalCounts.Any() ? normalCounts.Average().ToString() : "N/A",
-				abnormalCounts.Any() ? abnormalCounts.Average().ToString() : "N/A"
-			};
-        }
+        public string[] FooterValues => new string[] {
+                "",
+                taskCounts.Any() ? taskCounts.Average().ToString() : "N/A",
+                avgDurs.Any() ? avgDurs.Average().ToString() : "N/A",
+                minDurs.Any() ? minDurs.Average().ToString() : "N/A",
+                maxDurs.Any() ? maxDurs.Average().ToString() : "N/A",
+                normalCounts.Any() ? normalCounts.Average().ToString() : "N/A",
+                abnormalCounts.Any() ? abnormalCounts.Average().ToString() : "N/A"
+            };
 
-        /// <summary>
-        /// Gets the footer csv.
-        /// </summary>
-        /// <returns>The footer csv.</returns>
-		public string GetFooterCsv() { return SelectOutput.SummaryFooterCsv; }
+		/// <summary>
+		/// Gets the footer csv.
+		/// </summary>
+		/// <returns>The footer csv.</returns>
+		public string FooterCsv => SelectOutput.SummaryFooterCsv;
+
+		/// <summary>
+		/// Initialize the specified InputData.
+		/// </summary>
+		/// <returns>The initialize.</returns>
+		/// <param name="InputData">Input data.</param>
+		public void Initialize(Dictionary<string, IEnumerable<SensorReading>> InputData)
+		{
+			// do nothing
+		}
 
         /// <summary>
         /// Summarize the specified input.

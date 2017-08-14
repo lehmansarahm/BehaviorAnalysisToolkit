@@ -1,46 +1,64 @@
 ﻿{
-  "inputs": [ { "username": "OA14", "source": "SupportFiles" } ],
-  "transformers": [ "LinearAcceleration", "LabelCleanup", "Normalization", "Smoothing" ],
+  "inputs": [
+    {
+      "username": "sarah",
+      "source": "SupportFiles"
+    }
+  ],
+  "transformers": [ "LinearAcceleration", "LabelCleanup", "Smoothing" ],
   "filters": [
-    { "Name": "Completion",
+    {
+      "Name": "Activity",
       "Parameters": [
-        { "Field": "Label",
+        {
+          "Field": "Label",
           "Clauses": [
-            { "Key": "Percentage", "Value": "94" },
-            { "Key": "Split", "Value": "true" }
-          ] }
-      ] }
+            {
+              "Key": "Split",
+              "Value": "false"
+            }
+          ]
+        }
+      ]
+    }
   ],
   "analyzers": [
-    { "Name": "PauseCount",
+    {
+      "Name": "ForwardReach",
       "Parameters": [
-        { "Field": "InstantSpeed",
+        {
+          "Field": "Acceleration",
           "Clauses": [
-            { "Key": "Threshold", "Value": "0.01" },
-            { "Key": "Window", "Value": "12" }
-          ] }
-      ] },
-    { "Name": "PauseDuration",
-      "Parameters": [
-        { "Field": "InstantSpeed",
+            {
+              "Key": "Window",
+              "Value": "75"
+            },
+            {
+              "Key": "Margin",
+              "Value": "5"
+            }
+          ]
+        },
+        {
+          "Field": "AccelX",
           "Clauses": [
-            { "Key": "Threshold", "Value": "0.01" },
-            { "Key": "Window", "Value": "12" }
-          ] }
-      ] },
-    { "Name": "TaskTime" },
-    { "Name": "Select",
-      "Parameters": [
-        { "Field": "InstantSpeed",
+            {
+              "Key": "Threshold",
+              "Value": "0.1"
+            }
+          ]
+        },
+        {
+          "Field": "AccelY",
           "Clauses": [
-            { "Key": "Threshold", "Value": "0.01" },
-            { "Key": "Window", "Value": "12" }
-          ] },
-        { "Field": "Acceleration",
-          "Clauses": [
-            { "Key": "Variance", "Value": "0.01" }
-          ] }
-      ] }
+            {
+              "Key": "Threshold",
+              "Value": "0.1"
+            }
+          ]
+        }
+      ]
+    }
   ],
-  "summarizers": [ "PauseCount", "PauseDuration", "TaskTime" ]
+  "summarizers": [ "ForwardReach" ]
 }

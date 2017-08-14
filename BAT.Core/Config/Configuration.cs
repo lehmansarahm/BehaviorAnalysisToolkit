@@ -68,10 +68,12 @@ namespace BAT.Core.Config
 
 						// add data to collection using file name, not file path
                         InputData.Add(inputFile.Key, sensorReadings);
-                        ReachRetractSummarizer.SelectTaskCounts[inputFile.Key] = 
-                            sensorReadings.Where(x => x.Label.Contains("select")).Select(x => x.Label).Distinct().Count();
                     }
                 }
+
+                // run any initialization methods for selected modules
+                foreach (var summarizer in Summarizers)
+                    SummarizerManager.GetSummarizer(summarizer).Initialize(InputData);
 
                 // confirm that everything worked
                 LogManager.Debug($"{InputData.Keys.Count} files processed.");
@@ -287,7 +289,7 @@ namespace BAT.Core.Config
 							if (WriteOutputFile)
 								CsvFileWriter.WriteResultsToFile
 											 (new string[] { OutputDirs.Analyzers, analyzerName },
-											  key, analyzer.GetHeaderCsv(), analysisResult);
+                                              key, analyzer.HeaderCsv, analysisResult);
 
 							// -------------------------------------------------
 							//  If requested, summarize file-specific results
@@ -303,8 +305,8 @@ namespace BAT.Core.Config
 									CsvFileWriter.WriteSummaryToFile
                                                  (new string[] { OutputDirs.Summarizers, analyzerName },
                                                   $"{origInputFile}{Constants.BAT.DEFAULT_INPUT_FILE_EXT}",
-												  summarizer.GetHeaderCsv(), summarizedValues,
-												  summarizer.GetFooterCsv(), summarizer.GetFooterValues());
+												  summarizer.HeaderCsv, summarizedValues,
+												  summarizer.FooterCsv, summarizer.FooterValues);
 							}
 						}
                         // consolidate the results by input file
@@ -326,8 +328,8 @@ namespace BAT.Core.Config
 							CsvFileWriter.WriteSummaryToFile
 										 (new string[] { OutputDirs.Summarizers },
 										  $"{analyzerName}Aggregate{Constants.BAT.DEFAULT_INPUT_FILE_EXT}",
-										  summarizer.GetHeaderCsv(), summarizedValues,
-										  summarizer.GetFooterCsv(), summarizer.GetFooterValues());
+										  summarizer.HeaderCsv, summarizedValues,
+										  summarizer.FooterCsv, summarizer.FooterValues);
 					}
 
                     success = true;

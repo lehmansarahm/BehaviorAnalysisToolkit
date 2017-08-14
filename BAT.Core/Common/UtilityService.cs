@@ -104,5 +104,20 @@ namespace BAT.Core.Common
 			var rawString = GetString(inputFields, field, Constants.BAT.EMPTY);
 			return decimal.Parse(rawString);
 		}
+
+        /// <summary>
+        /// Gets the max.
+        /// </summary>
+        /// <returns>The max.</returns>
+        /// <param name="vals">Vals.</param>
+        public static int? GetMaxInt(params int?[] vals)
+        {
+            return (vals.ToList().Max());
+        }
+
+        public static int? GetMinInt(params int?[] vals)
+        {
+            return (vals.ToList().Min());
+        }
     }
 }

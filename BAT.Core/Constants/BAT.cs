@@ -18,5 +18,12 @@ namespace BAT.Core.Constants
 		public const decimal SAMPLING_PERIOD_IN_MS = 34.4827586207M;
         public const decimal SAMPLING_PERIOD_IN_SEC = (SAMPLING_PERIOD_IN_MS / 1000.0M);
 		public const string EMPTY = "";
+
+        public enum Axes
+        {
+            X,
+            Y,
+            Z
+        }
     }
 }

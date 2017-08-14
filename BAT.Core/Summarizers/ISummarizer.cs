@@ -5,13 +5,14 @@ namespace BAT.Core.Summarizers
 {
     public interface ISummarizer
 	{
-		string[] GetHeader();
-		string GetHeaderCsv();
+        string[] Header { get; }
+        string HeaderCsv { get; }
 
-		string[] GetFooterLabels();
-		string[] GetFooterValues();
-		string GetFooterCsv();
+        string[] FooterLabels { get; }
+        string[] FooterValues { get; }
+        string FooterCsv { get; }
 
+        void Initialize(Dictionary<string, IEnumerable<SensorReading>> InputData);
         IEnumerable<string[]> Summarize<T>(Dictionary<string, IEnumerable<T>> input) where T : ICsvWritable;
     }
 }
