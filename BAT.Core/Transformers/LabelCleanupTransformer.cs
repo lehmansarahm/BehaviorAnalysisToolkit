@@ -6,6 +6,13 @@ namespace BAT.Core.Transformers
 {
 	public class LabelCleanupTransformer : ITransformer
 	{
+        static readonly List<string> UNSUPPORTED_CHARS = new List<string>
+        {
+            "(",
+            ")",
+            "/"
+        };
+
 		/// <summary>
 		/// Gets the header.
 		/// </summary>
@@ -40,6 +47,10 @@ namespace BAT.Core.Transformers
 
                 // remove leading, trailing whitespace
                 label = label.Trim();
+
+                // remove unsupported characters
+                foreach (var character in UNSUPPORTED_CHARS)
+                    label = label.Replace(character, string.Empty);
 
                 // replace remaining whitespace with underscores
                 label = label.Replace(' ', '-');

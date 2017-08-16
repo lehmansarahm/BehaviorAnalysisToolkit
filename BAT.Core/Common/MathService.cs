@@ -42,19 +42,16 @@ namespace BAT.Core.Common
                 double ret = 0;
                 if (values.Any())
                 {
-                    //Compute the Average      
-                    double avg = (double)values.Average();
-                    //Perform the Sum of (value-avg)_2_2      
-                    double sum = values.Sum(d => Math.Pow((double)d - avg, 2));
-                    //Put it all together      
+                    var avg = values.Average();
+                    var sum = values.Sum(d => Math.Pow((double)(d - avg), 2));
                     ret = Math.Sqrt((sum) / (values.Count() - 1));
                 }
                 return (decimal)ret;
             }
             catch (OverflowException ex)
             {
-                //LogManager.Error("Something went wrong while attempting to calculate "
-                //                 + "standard deviation", ex, typeof(UtilityService));
+                LogManager.Error("Overflow encountered while attempting to calculate "
+                                 + "standard deviation", ex, typeof(UtilityService));
                 return 0.0M;
             }
         }
@@ -90,17 +87,7 @@ namespace BAT.Core.Common
         /// <param name="values">Values.</param>
         public static decimal GetSkewness(List<decimal> values)
         {
-            var mean = values.Average();
-            var stdDev = StandardDeviation(values);
-			var nMinusOne = (values.Count() - 1);
-            if (nMinusOne == 0) return 0.0M;
-
-            var cubesOfDiffs = values.Select(x => Math.Pow(Math.Abs((double)(x - mean)), 3));
-            var sum = cubesOfDiffs.Sum();
-            var stdDevCubed = Math.Pow((double)stdDev, 3);
-            if (Math.Abs(stdDevCubed) < EPSILON) return 0.0M;
-
-            return (decimal)(sum / nMinusOne * stdDevCubed);
+            return GetStandardizedMovement(values, 3);
         }
 
         /// <summary>
@@ -110,17 +97,28 @@ namespace BAT.Core.Common
         /// <param name="values">Values.</param>
         public static decimal GetKurtosis(List<decimal> values)
 		{
+            return GetStandardizedMovement(values, 4);
+		}
+
+        /// <summary>
+        /// Gets the standardized movement.
+        /// </summary>
+        /// <returns>The standardized movement.</returns>
+        /// <param name="values">Values.</param>
+        /// <param name="power">Power.</param>
+        static decimal GetStandardizedMovement(List<decimal> values, int power)
+		{
 			var mean = values.Average();
 			var stdDev = StandardDeviation(values);
 			var nMinusOne = (values.Count() - 1);
 			if (nMinusOne == 0) return 0.0M;
 
-            var foursOfDiffs = values.Select(x => Math.Pow(Math.Abs((double)(x - mean)), 4));
-			var sum = foursOfDiffs.Sum();
-			var stdDevFourthed = Math.Pow((double)stdDev, 4);
-			if (Math.Abs(stdDevFourthed) < EPSILON) return 0.0M;
+            var powerOfDiffs = values.Select(x => Math.Pow(Math.Abs((double)(x - mean)), power));
+			var sum = powerOfDiffs.Sum();
+            var stdDevToPower = Math.Pow((double)stdDev, power);
+			if (Math.Abs(stdDevToPower) < EPSILON) return 0.0M;
 
-			return (decimal)(sum / nMinusOne * stdDevFourthed);
+			return (decimal)(sum / nMinusOne * stdDevToPower);
         }
 
         /// <summary>

@@ -66,6 +66,14 @@ namespace BAT.Core.Config
 						// read in the sensor data
                         var sensorReadings = SensorReading.ReadSensorFile(inputFile.Value);
 
+                        // verify input - only take records between the "start" and "quit" flags
+                        var startRecord = sensorReadings.FirstOrDefault(x => x.Start);
+                        if (startRecord != null)
+                            sensorReadings = sensorReadings.Where(x => x.RecordNum >= startRecord.RecordNum).ToList();
+						var quitRecord = sensorReadings.FirstOrDefault(x => x.End);
+						if (quitRecord != null)
+							sensorReadings = sensorReadings.Where(x => x.RecordNum <= quitRecord.RecordNum).ToList();
+
 						// add data to collection using file name, not file path
                         InputData.Add(inputFile.Key, sensorReadings);
                     }
