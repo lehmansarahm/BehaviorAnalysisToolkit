@@ -66,21 +66,35 @@ namespace BAT.Core.Analyzers.Results
         }
 
         /// <summary>
+        /// Tos the csv array.
+        /// </summary>
+        /// <returns>The csv array.</returns>
+        public string[] CsvArray
+        {
+            get
+            {
+                return new string[] {
+                Convert.ToString(FirstShiftRecordNum[X_INDEX]),
+                Convert.ToString(FirstShiftRecordNum[Y_INDEX]),
+                Convert.ToString(SecondShiftRecordNum[X_INDEX]),
+                Convert.ToString(SecondShiftRecordNum[Y_INDEX]),
+                Convert.ToString(ThirdShiftRecordNum[X_INDEX]),
+                Convert.ToString(ThirdShiftRecordNum[Y_INDEX]),
+                Duration.ToString()
+            };
+            }
+        }
+
+        /// <summary>
         /// Tos the csv.
         /// </summary>
         /// <returns>The csv.</returns>
-        public string ToCsv()
-		{
-			string[] props = {
-				Convert.ToString(FirstShiftRecordNum[X_INDEX]),
-				Convert.ToString(FirstShiftRecordNum[Y_INDEX]),
-				Convert.ToString(SecondShiftRecordNum[X_INDEX]),
-				Convert.ToString(SecondShiftRecordNum[Y_INDEX]),
-				Convert.ToString(ThirdShiftRecordNum[X_INDEX]),
-				Convert.ToString(ThirdShiftRecordNum[Y_INDEX]),
-				Duration.ToString()
-			};
-			return string.Join(",", props);
+        public string CsvString
+        {
+            get
+            {
+                return string.Join(",", CsvArray);
+            }
         }
     }
 }

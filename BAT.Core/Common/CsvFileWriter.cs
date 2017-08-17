@@ -38,7 +38,7 @@ namespace BAT.Core.Common
 									   string header, IEnumerable<ICsvWritable> input)
 		{
 			string output = (header + "\n") +
-				(input != null ? string.Join("\n", input.Select(x => x.ToCsv())) : "");
+				(input != null ? string.Join("\n", input.Select(x => x.CsvString)) : "");
 			WriteToFile(outputDirs, filename, output);
 		}
 

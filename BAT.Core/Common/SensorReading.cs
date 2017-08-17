@@ -185,12 +185,10 @@ namespace BAT.Core.Common
 		}
 
         /// <summary>
-        /// Tos the csv.
+        /// Tos the csv array.
         /// </summary>
-        /// <returns>The csv.</returns>
-        public String ToCsv()
-        {
-            string[] props = {
+        /// <returns>The csv array.</returns>
+        public string[] CsvArray => new string[] {
                 Time.ToString(),
                 RecordNum.ToString(),
                 Azimuth.ToString(),
@@ -204,8 +202,12 @@ namespace BAT.Core.Common
                 (Start ? "Start" : (End ? "Quit" : "")),
                 Label
             };
-            return string.Join(",", props);
-        }
+
+        /// <summary>
+        /// Tos the csv.
+        /// </summary>
+        /// <returns>The csv.</returns>
+        public string CsvString => string.Join(",", CsvArray);
 
         /// <summary>
         /// Reads the sensor file.

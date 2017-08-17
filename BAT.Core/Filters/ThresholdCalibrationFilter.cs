@@ -106,28 +106,10 @@ namespace BAT.Core.Filters
         public decimal AvgVal { get; set; }
         public decimal ThresholdVal { get; set; }
 
-        public static string[] Header
-        {
-            get
-			{
-				return new string[] { "Source", "Avg. Val.", "Threshold Val." };
-            }
-        }
+        public static string[] Header => new string[] { "Source", "Avg. Val.", "Threshold Val." };
+        public static string HeaderCsv => string.Join(",", Header);
 
-        public static string HeaderCsv
-        {
-            get
-			{
-                return string.Join(",", Header);
-            }
-        }
-
-        public string ToCsv()
-        {
-            return string.Join(",", new string[]
-            {
-                Source, AvgVal.ToString(), ThresholdVal.ToString()
-            });
-        }
+        public string[] CsvArray => new string[] { Source, AvgVal.ToString(), ThresholdVal.ToString() };
+        public string CsvString => string.Join(",", CsvArray);
     }
 }

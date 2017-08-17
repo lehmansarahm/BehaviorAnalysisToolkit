@@ -5,10 +5,7 @@
       "source": "SupportFiles"
     }
   ],
-  "transformers": [ "LinearAcceleration", "LabelCleanup", "Smoothing" ],
-  "analyzers": [
-    {
-      "Name": "MLDataPrep"
-    }
-  ]
+  "transformers": [ "LinearAcceleration", "LabelCleanup", "Normalization", "Smoothing" ],
+  "analyzers": [ { "Name": "MLDataPrep" } ],
+  "summarizers": [ "MLDataPrep" ]
 }

@@ -55,12 +55,14 @@ namespace BAT.Core.Analyzers.Results
         }
 
         /// <summary>
-        /// Tos the csv.
+        /// Tos the csv array.
         /// </summary>
-        /// <returns>The csv.</returns>
-        public string ToCsv()
-		{
-            string[] props = {
+        /// <returns>The csv array.</returns>
+        public string[] CsvArray
+        {
+            get
+            {
+                return new string[] {
                 Label,
                 Duration.ToString(),
                 TaskStartRecordNum.ToString(),
@@ -73,9 +75,20 @@ namespace BAT.Core.Analyzers.Results
                 WasContinuous.ToString(),
                 WasSingleTrajectory.ToString(),
                 WasNormal.ToString()
-			};
+            };
+            }
+        }
 
-			return string.Join(",", props);
+        /// <summary>
+        /// Tos the csv.
+        /// </summary>
+        /// <returns>The csv.</returns>
+        public string CsvString
+        {
+            get
+            {
+                return string.Join(",", CsvArray);
+            }
         }
     }
 }

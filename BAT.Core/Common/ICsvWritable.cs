@@ -2,6 +2,7 @@
 {
     public interface ICsvWritable
 	{
-		string ToCsv();
+        string[] CsvArray { get; }
+        string CsvString { get; }
     }
 }

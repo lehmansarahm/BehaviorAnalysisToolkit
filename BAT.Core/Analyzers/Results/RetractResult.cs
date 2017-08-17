@@ -23,22 +23,36 @@ namespace BAT.Core.Analyzers.Results
         public bool WasGrab { get; set; }
 
         /// <summary>
-        /// Tos the csv.
+        /// Tos the csv array.
         /// </summary>
-        /// <returns>The csv.</returns>
-        public string ToCsv()
-		{
-            string[] props = {
+        /// <returns>The csv array.</returns>
+        public string[] CsvArray
+        {
+            get
+            {
+                return new string[] {
                 Start.ToString(),
                 StartNum.ToString(),
                 StartLabel,
                 End.ToString(),
                 EndNum.ToString(),
                 EndLabel,
-				Duration.ToString(),
+                Duration.ToString(),
                 WasGrab.ToString()
-			};
-			return string.Join(",", props);
+            };
+            }
+        }
+
+        /// <summary>
+        /// Tos the csv.
+        /// </summary>
+        /// <returns>The csv.</returns>
+        public string CsvString
+        {
+            get
+            {
+                return string.Join(",", CsvArray);
+            }
         }
     }
 }

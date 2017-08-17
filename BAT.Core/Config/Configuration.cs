@@ -317,6 +317,7 @@ namespace BAT.Core.Config
 												  summarizer.FooterCsv, summarizer.FooterValues);
 							}
 						}
+
                         // consolidate the results by input file
                         var inputFileResults = analyzer.ConsolidateData(analysisDataByInputFile);
 						if (analyzedData.ContainsKey(origInputFile))

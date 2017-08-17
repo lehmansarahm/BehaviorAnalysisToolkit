@@ -13,13 +13,13 @@ namespace BAT.Core.Analyzers
         /// Gets the header.
         /// </summary>
         /// <value>The header.</value>
-        public string[] Header => MLDataOutput.Header;
+        public string[] Header => SensorReading.Header;
 
         /// <summary>
         /// Gets the header csv.
         /// </summary>
         /// <value>The header csv.</value>
-        public string HeaderCsv => MLDataOutput.HeaderCsv;
+        public string HeaderCsv => SensorReading.HeaderCsv;
 
         /// <summary>
         /// Analyze the specified input and parameters.
@@ -30,51 +30,15 @@ namespace BAT.Core.Analyzers
         public IEnumerable<ICsvWritable> Analyze(IEnumerable<SensorReading> input,
 										  IEnumerable<Parameter> parameters)
         {
-            var results = new List<MLDataResult>();
-            var inputGroups = input.GroupBy(x => x.Label);
-
-            foreach (var inputGroup in inputGroups)
+            var results = new List<SensorReading>();
+            foreach (var record in input)
             {
-                var accelX = inputGroup.Select(x => x.AccelX);
-                var accelY = inputGroup.Select(x => x.AccelY);
-                var accelZ = inputGroup.Select(x => x.AccelZ);
-
-                results.Add(new MLDataResult
+                var newRecord = new SensorReading(record)
                 {
-                    Source = inputGroup.Key,
-                    Mean = new decimal[]
-					{
-						accelX.Average(),
-						accelY.Average(),
-						accelZ.Average()
-                    },
-                    Variance = new decimal[]
-					{
-						MathService.GetVariance(accelX.ToList()),
-						MathService.GetVariance(accelY.ToList()),
-						MathService.GetVariance(accelZ.ToList())
-                    },
-                    Skewness = new decimal[]
-					{
-						MathService.GetSkewness(accelX.ToList()),
-						MathService.GetSkewness(accelY.ToList()),
-						MathService.GetSkewness(accelZ.ToList())
-                    },
-                    Kurtosis = new decimal[]
-					{
-                        MathService.GetKurtosis(accelX.ToList()),
-						MathService.GetKurtosis(accelY.ToList()),
-						MathService.GetKurtosis(accelZ.ToList())
-                    },
-                    RMS = new decimal[]
-					{
-                        MathService.GetRMS(accelX.ToList()),
-						MathService.GetRMS(accelY.ToList()),
-						MathService.GetRMS(accelZ.ToList())
-                    }
-                });
+                    Label = record.Label.Contains("select") ? "select" : "non-select"
+                };
+                results.Add(newRecord);
             }
-
             return results;
         }
 
@@ -84,8 +48,8 @@ namespace BAT.Core.Analyzers
         /// <returns>The data.</returns>
         /// <param name="data">Data.</param>
 		public IEnumerable<ICsvWritable> ConsolidateData(Dictionary<string, IEnumerable<ICsvWritable>> data)
-        {
-            return null;
+		{
+            return data.Values.SelectMany(x => (List<SensorReading>)x).ToList();
         }
     }
 }
