@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Pause output.
 	/// </summary>
-	public static class MLDataOutput
+	public static class SciKitOutput
 	{
 		public static string[] Header => new string[] 
         {
@@ -32,7 +32,9 @@
 			"RMS-X",
 			"RMS-Y",
 			"RMS-Z",
-			"RMS-Mag" 
+			"RMS-Mag",
+            // ------------------
+            "Label"
         };
 
 		public static string HeaderCsv => string.Join(",", Header);
@@ -41,13 +43,7 @@
         /// Gets the summary header.
         /// </summary>
         /// <value>The summary header.</value>
-        public static string[] SummaryHeader => new string[]
-        {
-            "",
-            "Number of Pauses",
-            "Time Paused (sec)",
-            "Average Pause Duration (sec)"
-        };
+        public static string[] SummaryHeader => new string[] { };
 
         /// <summary>
         /// Gets the summary header csv.
@@ -59,7 +55,7 @@
         /// Gets the summary footer.
         /// </summary>
         /// <value>The summary footer.</value>
-        public static string[] SummaryFooter => new string[] {};
+        public static string[] SummaryFooter => new string[] { };
 
         /// <summary>
         /// Gets the summary footer csv.

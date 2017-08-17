@@ -50,8 +50,8 @@ namespace BAT.Core.Common
             }
             catch (OverflowException ex)
             {
-                LogManager.Error("Overflow encountered while attempting to calculate "
-                                 + "standard deviation", ex, typeof(UtilityService));
+                //LogManager.Error("Overflow encountered while attempting to calculate "
+                //                 + "standard deviation", ex, typeof(UtilityService));
                 return 0.0M;
             }
         }

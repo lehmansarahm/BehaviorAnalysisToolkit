@@ -287,6 +287,11 @@ namespace BAT.Core.Config
                                         (analyzerCommand.Parameters, calibData);
                             }
 
+							// -------------------------------------------------
+							if (analyzer is Analyzers.SciKitPrepAnalysis skAnalyzer)
+								skAnalyzer.CurrentInput = key;
+							// -------------------------------------------------
+
 							var analysisResult =
 								analyzer.Analyze(InputData[key], analyzerCommand.Parameters);
 							analysisDataByInputFile[key] = analysisResult;
@@ -388,29 +393,5 @@ namespace BAT.Core.Config
                 return new Configuration();
             }
         }
-
-		bool EvaluateResults(IEnumerable<PhaseData<SensorReading>> filteredResultSets,
-							 Dictionary<string, IEnumerable<SensorReading>> filteredData,
-							 string inputName, string commandName, string headerCSV)
-		{
-			bool success = false;
-			if (filteredResultSets != null && filteredResultSets.Any())
-			{
-				foreach (var filterResult in filteredResultSets)
-				{
-					var newFilename =
-						FilterManager.GetFilterFilename(inputName, filterResult.Name);
-					filteredData[newFilename] = filterResult.Data;
-
-					if (WriteOutputFile)
-						CsvFileWriter.WriteResultsToFile
-									 (new string[] { OutputDirs.Filters, commandName },
-									  newFilename, headerCSV, filterResult.Data);
-				}
-
-				success = true;
-			}
-			return success;
-		}
     }
 }

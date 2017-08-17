@@ -1,23 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
-using BAT.Core.Constants;
 
 namespace BAT.Core.Summarizers
 {
-    public class MLDataPrepSummarizer : ISummarizer
+    public class SciKitPrepSummarizer : ISummarizer
 	{
         /// <summary>
         /// Gets the header.
         /// </summary>
         /// <returns>The header.</returns>
-        public string[] Header => SensorReading.Header;
+        public string[] Header => SciKitResult.Header;
 
         /// <summary>
         /// Gets the header csv.
         /// </summary>
         /// <returns>The header csv.</returns>
-        public string HeaderCsv => SensorReading.HeaderCsv;
+        public string HeaderCsv => SciKitResult.HeaderCsv;
 
         /// <summary>
         /// Gets the footer labels.
@@ -58,9 +58,9 @@ namespace BAT.Core.Summarizers
             var results = new List<string[]>();
             foreach (var key in input.Keys)
 			{
-                if (input[key] is List<SensorReading>)
+                if (input[key] is List<SciKitResult>)
                 {
-                    List<SensorReading> analysisResults = (List<SensorReading>)input[key];
+                    List<SciKitResult> analysisResults = (List<SciKitResult>)input[key];
                     results.AddRange(analysisResults.Select(x => x.CsvArray).ToList());
                 }
             }

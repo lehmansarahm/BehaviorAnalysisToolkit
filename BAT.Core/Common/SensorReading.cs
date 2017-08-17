@@ -237,8 +237,8 @@ namespace BAT.Core.Common
 				{
 					// We've encountered an input line that is missing crucial data.
 					// Add to list of failed lines.  (do something with the ex message?)
-					LogManager.Error("Format exception encountered while attempting to parse "
-                                     + "content line.", ex, typeof(SensorReading));
+					//LogManager.Error("Format exception encountered while attempting to parse "
+                    //                 + "content line.", ex, typeof(SensorReading));
 					failedInputLines.Add(contentLine[0]);
                     continue;
 				}
