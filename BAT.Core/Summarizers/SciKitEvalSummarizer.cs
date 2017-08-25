@@ -2,49 +2,40 @@
 using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
-using BAT.Core.Constants;
 
 namespace BAT.Core.Summarizers
 {
-    public class TaskTimeSummarizer : ISummarizer
+    public class SciKitEvalSummarizer : ISummarizer
 	{
-        List<decimal> durations = new List<decimal>();
-
         /// <summary>
         /// Gets the header.
         /// </summary>
         /// <returns>The header.</returns>
-        public string[] Header => TaskTimeOutput.SummaryHeader;
+        public string[] Header => SciKitResult.Header;
 
         /// <summary>
         /// Gets the header csv.
         /// </summary>
         /// <returns>The header csv.</returns>
-        public string HeaderCsv => TaskTimeOutput.SummaryHeaderCsv;
+        public string HeaderCsv => SciKitResult.HeaderCsv;
 
         /// <summary>
         /// Gets the footer labels.
         /// </summary>
         /// <returns>The footer labels.</returns>
-        public string[] FooterLabels => TaskTimeOutput.SummaryFooter;
+        public string[] FooterLabels => new string[] {};
 
         /// <summary>
         /// Gets the footer values.
         /// </summary>
         /// <returns>The footer values.</returns>
-        public string[] FooterValues => new string[] {
-                "",
-                $"{durations.Count()}",
-                $"{MathService.Total(durations)}",
-                $"{MathService.Average(durations)}",
-                $"{MathService.StandardDeviation(durations)}"
-            };
+        public string[] FooterValues => new string[] {};
 
 		/// <summary>
 		/// Gets the footer csv.
 		/// </summary>
 		/// <returns>The footer csv.</returns>
-		public string FooterCsv => TaskTimeOutput.SummaryFooterCsv;
+        public string FooterCsv => string.Empty;
 
 		/// <summary>
 		/// Initialize the specified InputData.
@@ -65,18 +56,12 @@ namespace BAT.Core.Summarizers
         public IEnumerable<string[]> Summarize<T>(Dictionary<string, IEnumerable<T>> input) where T : ICsvWritable
         {
             var results = new List<string[]>();
-
             foreach (var key in input.Keys)
 			{
-                if (input[key] is List<TaskTimeResult> analysisResults)
+                if (input[key] is List<SciKitResult>)
                 {
-                    var currentDurations = analysisResults.Select(x => x.Duration).ToList();
-                    durations.AddRange(currentDurations);
-                    results.Add(new string[] {
-                        key,
-                        currentDurations.Count().ToString(),
-                        currentDurations.Sum().ToString()
-                    });
+                    List<SciKitResult> analysisResults = (List<SciKitResult>)input[key];
+                    results.AddRange(analysisResults.Select(x => x.CsvArray).ToList());
                 }
             }
 

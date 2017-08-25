@@ -106,6 +106,9 @@
     <Compile Include="Constants\SciKitOutput.cs" />
     <Compile Include="Analyzers\SciKitPrepAnalysis.cs" />
     <Compile Include="Summarizers\SciKitPrepSummarizer.cs" />
+    <Compile Include="Analyzers\Results\SciKitFeatureVector.cs" />
+    <Compile Include="Analyzers\SciKitEvalAnalysis.cs" />
+    <Compile Include="Summarizers\SciKitEvalSummarizer.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

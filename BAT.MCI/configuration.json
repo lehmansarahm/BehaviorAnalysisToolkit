@@ -6,6 +6,26 @@
     }
   ],
   "transformers": [ "LinearAcceleration", "LabelCleanup", "Normalization", "Smoothing" ],
-  "analyzers": [ { "Name": "MLDataPrep" } ],
-  "summarizers": [ "MLDataPrep" ]
+  "filters": [
+    {
+      "Name": "Activity",
+      "Parameters": [
+        {
+          "Field": "Label",
+          "Clauses": [
+            {
+              "Key": "Contains",
+              "Value": "select"
+            },
+            {
+              "Key": "Split",
+              "Value": "true"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "analyzers": [ { "Name": "TaskTime" } ],
+  "summarizers": [ "TaskTime" ]
 }

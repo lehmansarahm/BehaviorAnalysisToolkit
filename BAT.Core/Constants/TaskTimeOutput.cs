@@ -44,7 +44,8 @@
 				return new string[]
 				{
 					"Source",
-					"Task Duration (sec)"
+                    "Total Task Count",
+					"Total Task Duration (sec)"
 				};
 			}
 		}
@@ -68,6 +69,8 @@
 			{
 				return new string[]
 				{
+                    "",
+                    "Total Task Count",
 					"Total Task Time (sec)",
 					"Average Task Time (sec)",
 					"Standard Deviation"

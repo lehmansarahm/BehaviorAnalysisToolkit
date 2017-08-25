@@ -288,8 +288,12 @@ namespace BAT.Core.Config
                             }
 
 							// -------------------------------------------------
-							if (analyzer is Analyzers.SciKitPrepAnalysis skAnalyzer)
-								skAnalyzer.CurrentInput = key;
+							//      Any required analyzer-specific prep
+							// -------------------------------------------------
+							if (analyzer is Analyzers.SciKitPrepAnalysis skpAnalyzer)
+								skpAnalyzer.CurrentInput = key;
+							else if (analyzer is Analyzers.SciKitEvalAnalysis skeAnalyzer)
+								skeAnalyzer.CurrentInput = key;
 							// -------------------------------------------------
 
 							var analysisResult =

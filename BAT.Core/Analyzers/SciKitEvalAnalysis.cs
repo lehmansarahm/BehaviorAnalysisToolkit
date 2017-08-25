@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BAT.Core.Analyzers.Results;
 using BAT.Core.Common;
@@ -7,7 +8,7 @@ using BAT.Core.Constants;
 
 namespace BAT.Core.Analyzers
 {
-    public class SciKitPrepAnalysis : IAnalyzer
+    public class SciKitEvalAnalysis : IAnalyzer
 	{
         /// <summary>
         /// Gets the header.
@@ -37,26 +38,24 @@ namespace BAT.Core.Analyzers
                                                  IEnumerable<Parameter> parameters)
         {
 			var results = new List<SciKitResult>();
-			var labelParam = parameters.FirstOrDefault(x => x.Field.Equals(CommandParameters.Label));
-            if (labelParam == null) return results;
+            var param = parameters.FirstOrDefault(x => x.Field.Equals(CommandParameters.All));
+            if (param == null) return results;
 
-            var labelValue = labelParam.GetClauseValue(CommandParameters.Contains);
-            if (string.IsNullOrEmpty(labelValue)) return results;
-            var labelValues = labelValue.Split(',');
+            var windowSizeRaw = param.GetClauseValue(CommandParameters.Window);
+            if (!int.TryParse(windowSizeRaw, out int windowSize)) return results;
 
-			var inputGroups = input.GroupBy(x => x.Label);
-			foreach (var inputGroup in inputGroups)
-			{
+            for (int i = 0; i < input.Count(); i += (windowSize / 2))
+            {
+                var inputGroup = (input.Skip(i).Take(windowSize));
 				var newResult = (new SciKitResult
 				{
-                    Source = $"{CurrentInput}_{inputGroup.Key}",
+                    Source = $"{CurrentInput}_{inputGroup.First().RecordNum}",
                     FeatureVectors = new SciKitFeatureVector[]
 					{
 						new SciKitFeatureVector(inputGroup.Select(x => x.AccelX)),
 						new SciKitFeatureVector(inputGroup.Select(x => x.AccelY)),
 						new SciKitFeatureVector(inputGroup.Select(x => x.AccelZ))
-					},
-                    Label = GetNumericLabel(inputGroup.Key, labelValues) 
+					}
 				});
 
                 if (newResult.IsValid) results.Add(newResult);
@@ -73,21 +72,6 @@ namespace BAT.Core.Analyzers
 		public IEnumerable<ICsvWritable> ConsolidateData(Dictionary<string, IEnumerable<ICsvWritable>> data)
 		{
             return data.Values.SelectMany(x => (List<SciKitResult>)x).ToList();
-        }
-
-        /// <summary>
-        /// Gets the numeric label.
-        /// </summary>
-        /// <returns>The numeric label.</returns>
-        /// <param name="readingLabel">Key.</param>
-        /// <param name="keywords">Label values.</param>
-        static int GetNumericLabel(string readingLabel, string[] keywords)
-		{
-			var keywordList = keywords.ToList();
-            var matchinglabel = keywordList.FirstOrDefault(readingLabel.StartsWith);
-
-			if (string.IsNullOrEmpty(matchinglabel)) return 0;
-			return (keywordList.FindIndex(x => x.Equals(matchinglabel)) + 1);
         }
     }
 }

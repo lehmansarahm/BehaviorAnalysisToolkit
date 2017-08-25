@@ -11,6 +11,7 @@
 		public const string Acceleration = "Acceleration";
 		public const string AccelX = "AccelX";
 		public const string AccelY = "AccelY";
+        public const string All = "All";
 		public const string InstantaneousSpeed = "InstantSpeed";
 		public const string Label = "Label";
 
